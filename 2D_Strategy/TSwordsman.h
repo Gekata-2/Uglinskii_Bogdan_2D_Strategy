@@ -9,7 +9,8 @@ private:
 public:
 	TSwordsman(int position_x=-1,int position_y=-1,std::string def_name = "\0")
 	{
-		HP = 100;
+		current_HP = 100;
+		max_HP = 100;
 		mana = 50;
 		base_attack_damage = 25;
 		max_attack_radius = 1;
@@ -30,6 +31,8 @@ public:
 
 		pos_x = position_x;
 		pos_y = position_y;
+
+		type = "swordsman";
 
 		PrintInfo();
 

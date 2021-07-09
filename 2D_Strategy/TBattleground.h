@@ -29,13 +29,16 @@ public:
 		}
 
 	}
-	void Attack(TUnit* attack_unit, TUnit* attacked_unit);
+	
 
 	void AddUnit(TUnit* unit, int pos_x, int pos_y);
 
 	void Print() const;
 
 	void Move(TUnit* unit,int x,int y);
+
+	void Attack(TUnit* attack_unit, TUnit* attacked_unit);
+	void Death(TUnit* unit);
 	
 	~TBattleground()
 	{

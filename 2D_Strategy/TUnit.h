@@ -4,38 +4,42 @@
 class TUnit
 {
 protected:
-	float HP = 1;
+	float current_HP = 1;
+	float max_HP = 1;
 	float mana = 1;
 	int pos_x, pos_y;
-	int max_attack_radius = 1;//РјР°РєСЃРёРјР°Р»СЊРЅС‹Р№ СЂР°РґРёСѓСЃ Р°С‚Р°РєРё
-	int max_move_tiles=1;//РјР°РєСЃРёРјР°Р»СЊРЅРѕРµ С‡РёР»СЃР»Рѕ РєР»РµС‚РѕРє, РєРѕС‚РѕСЂС‹Рµ СЋРЅРёС‚ РјРѕР¶РµС‚ РїСЂРѕР№С‚Рё Р·Р° С…РѕРґ
+	int max_attack_radius = 1;//максимальный радиус атаки
+	int max_move_tiles=1;//максимальное чилсло клеток, которые юнит может пройти за ход
 	std::string name = "\0";
 	float base_attack_damage = 1;
-	bool is_on_battleground = false;//РЅР°С…РѕРґРёС‚СЃСЏ Р»Рё СЋРЅРёС‚ РЅР° РґРѕСЃРєРµ
+	std::string type = "\0";
+	bool is_on_battleground = false;//находится ли юнит на доске
 public:
-	//РіРµС‚С‚РµСЂС‹
-	virtual float		GetCurrentHP() const;//Р·РґРѕСЂРѕРІСЊСЏ
-	virtual float		GetBaseDamage() const;//Р±Р°Р·РѕРІС‹Р№ СѓСЂРѕРЅ
-	virtual float		GetMaxAttackRadius() const;//РјР°РєСЃРёРјР°Р»СЊРЅС‹Р№ СЂР°РґРёСѓСЃ Р°С‚Р°РєРё
+	//геттеры
+	virtual float		GetCurrentHP() const;//здоровья
+	virtual float		GetMaxHP() const;//здоровья
+	virtual float		GetBaseDamage() const;//базовый урон
+	virtual float		GetMaxAttackRadius() const;//максимальный радиус атаки
 
-	virtual int*	    GetPos() const;//РїРѕР»СѓС‡РёС‚СЊ С‚РµРєСѓС‰СѓСЋ РїРѕР·РёС†РёСЋ РЅР° РґРѕСЃРєРµ РІ РІРёРґРµ РјР°СЃСЃРёРІР°
-	virtual int			GetX() const;//РїРѕР»СѓС‡РёС‚СЊ РєРѕРѕСЂРґРёРЅР°С‚Сѓ X
-	virtual int		    GetY() const;//РїРѕР»СѓС‡РёС‚СЊ РєРѕРѕСЂРґРёРЅР°С‚Сѓ Y
+	virtual int*	    GetPos() const;//получить текущую позицию на доске в виде массива
+	virtual int			GetX() const;//получить координату X
+	virtual int		    GetY() const;//получить координату Y
 	virtual int		    GetMaxMoveTiles() const;
-	virtual bool		IsOnBattleground() const;//РЅР°С…РѕРґРёС‚СЃСЏ Р»Рё СЃРµР№С‡Р°СЃ СЋРЅРёС‚ РЅР° РґРѕСЃРєРµ
-	virtual std::string GetName() const;//РёРјСЏ
+	virtual bool		IsOnBattleground() const;//находится ли сейчас юнит на доске
+	virtual std::string GetName() const;//имя
+	virtual std::string GetType() const;
 
-	//СЃРµС‚С‚РµСЂС‹
-	virtual void SetOnBattleground();//СѓСЃС‚Р°РЅРѕРІРёС‚СЊ С‡С‚Рѕ СЋРЅРёС‚ С‚РµРїРµСЂСЊ РЅР°С…РѕРґРёС‚СЃСЏ РЅР° РґРѕСЃРєРµ
-	virtual void SetCurrentHP(float new_hp);//Р·РґРѕСЂРѕРІСЊРµ
-	virtual void SetBaseDamage(float new_base_damage);//Р±Р°Р·РѕРІС‹Р№ СѓСЂРѕРЅ
-	virtual void SetMaxAttackRadius(float new_max_radius);//СЂР°РґРёСѓСЃ Р°С‚Р°РєРё
+	//сеттеры
+	virtual void SetOnBattleground();//установить что юнит теперь находится на доске
+	virtual void SetCurrentHP(float new_hp);//здоровье
+	virtual void SetBaseDamage(float new_base_damage);//базовый урон
+	virtual void SetMaxAttackRadius(float new_max_radius);//радиус атаки
 	virtual void SetMaxMoveTiles(int new_max_move_tiles);
 
-	virtual void PrintInfo() const =0 ;//РІС‹РІРµСЃС‚Рё РёРЅС„РѕСЂРјР°С†РёСЋ Рѕ СЋРЅРёС‚Рµ
+	virtual void PrintInfo() const =0 ;//вывести информацию о юните
 
 private:
-	 virtual void SetPos(int x, int y);//СѓСЃС‚Р°РЅРѕРІРёС‚СЊ РїРѕР·РёС†РёСЋ.РќРёРєС‚Рѕ РєСЂРѕРјРµ РґРѕСЃРєРё РЅРµ РјРѕР¶РµС‚ РїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ 
+	 virtual void SetPos(int x, int y);//установить позицию.Никто кроме доски не может пользоваться 
 
 	friend class TBattleground;
 };

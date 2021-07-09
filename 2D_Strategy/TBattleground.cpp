@@ -33,10 +33,53 @@ void TBattleground::Attack(TUnit* attack_unit, TUnit* attacked_unit)
 	{
 		std::cout << "Attack" << std::endl;
 		attacked_unit->SetCurrentHP(attacked_unit->GetCurrentHP() - attack_unit->GetBaseDamage());
+		if (attacked_unit->GetCurrentHP()<=0)
+		{
+			Death(attacked_unit);
+		}
 	}
 
 }
 
+
+void TBattleground::Death(TUnit* unit)
+{
+	tiles[unit->GetX()][unit->GetY()] = NULL;
+	unit->SetPos(-1, -1);//сделать через delete
+	std::cout << "Unit "<<unit->GetName()<<" is dead *\n" << std::endl;
+}
+
+
+void TBattleground::Move(TUnit* unit, int x, int y)
+{
+	int tmp_x = 0, tmp_y = 0;
+
+	tmp_x = abs(x - unit->GetX());
+	tmp_y = abs(y - unit->GetY());
+
+	if ((tmp_x + tmp_y) > (unit->GetMaxMoveTiles()))
+	{
+		std::cout << "Unit cant go this far\n";
+		return;
+	}
+	else if (tiles[x][y] != NULL)
+	{
+		std::cout << "This tile [" << x << "][" << y << "] already taken\n";
+	}
+	else if ((x >= bg_size) || (y >= bg_size) || (x < 0) || (y < 0))
+	{
+		std::cout << "Incorrect distinaition to move\n";
+		return;
+	}
+	else
+	{
+		tiles[unit->GetX()][unit->GetY()] = NULL;
+		tiles[x][y] = unit;
+		std::cout << "Unit <" << unit->GetName() << "> is moved : [" << unit->GetX() << "][" << unit->GetY();
+		unit->SetPos(x, y);
+		std::cout << "] --> [" << x << "][" << y << "]\n";
+	}
+}
 void TBattleground::AddUnit(TUnit* unit, int pos_x, int pos_y)
 {
 	std::cout << "AddUnit is called\n";
@@ -53,36 +96,7 @@ void TBattleground::AddUnit(TUnit* unit, int pos_x, int pos_y)
 	tiles[pos_x][pos_y]->PrintInfo();
 }
 
-void TBattleground::Move(TUnit* unit,int x,int y)
-{
-	int tmp_x=0, tmp_y=0;
 
-	tmp_x = abs(x - unit->GetX());
-	tmp_y = abs(y - unit->GetY());
-
-	if ((tmp_x+tmp_y)>(unit->GetMaxMoveTiles()))
-	{
-		std::cout << "Unit cant go this far\n";
-		return;
-	}
-	else if(tiles[x][y]!=NULL)
-	{
-		std::cout << "This tile ["<<x<<"]["<<y<<"] already taken\n";
-	}
-	else if((x >= bg_size) || (y >= bg_size) || (x < 0) || (y < 0))
-	{
-		std::cout << "Incorrect distinaition to move\n";
-		return;
-	}
-	else
-	{	
-		tiles[unit->GetX()][unit->GetY()] = NULL;
-		tiles[x][y] = unit;
-		std::cout << "Unit <" << unit->GetName() << "> is moved : [" << unit->GetX() << "][" << unit->GetY();
-		unit->SetPos(x, y);
-		std::cout <<"] --> ["<<x<<"]["<<y<<"]\n";
-	}
-}
 
 void TBattleground::Print() const
 {
@@ -92,14 +106,22 @@ void TBattleground::Print() const
 		{
 			if (tiles[i][j]==NULL)
 			{
-				std::cout << " 0 ";
+				std::cout << "    0    ";
 			}
 			else
 			{
-				std::cout << " 1 ";
+				if (tiles[i][j]->GetType()=="swordsman")
+				{
+					std::cout << "S:"<< tiles[i][j]->GetCurrentHP()<<"/"<< tiles[i][j]->GetMaxHP();
+				}
+				if (tiles[i][j]->GetType() == "archer")
+				{
+					std::cout << "A:" << tiles[i][j]->GetCurrentHP() << "/" << tiles[i][j]->GetMaxHP();
+				}
+				//std::cout << " 1 ";
 			}
 		
 		}
-		std::cout << "\n";
+		std::cout << "\n\n";
 	}
 }

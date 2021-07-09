@@ -3,7 +3,7 @@
 #include "TBattleground.h"
 #include "TArcher.h"
 #include "TSwordsman.h"
-
+#include "TConsoleView.h"
 
 
 int main()
@@ -30,8 +30,22 @@ int main()
     bg.Print();
     bg.Move(&ArA, 4, 6);
     bg.Print();
+    bg.AddUnit(&SwA, 4, 3);
+    bg.AddUnit(&SwB, 5, 7);
+    bg.Print();
 
+    bg.Attack(&SwA, &ArA);
+    bg.Attack(&SwB, &ArA);
+    bg.Attack(&ArA, &SwA);
+    bg.Attack(&SwB, &ArA);
+    bg.Attack(&SwB, &ArA);
 
+    SwA.PrintInfo();
+    SwB.PrintInfo();
+    ArA.PrintInfo();
+    bg.Print();
+    /*TConsoleView view;
+    view.Display();*/
 
     /*sw_vec.push_back(SwA);
     sw_vec.push_back(SwB);
