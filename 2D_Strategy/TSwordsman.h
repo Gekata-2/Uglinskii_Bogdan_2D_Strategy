@@ -7,11 +7,17 @@ class TSwordsman : public TUnit
 private:
 
 public:
-	TSwordsman(int position_x,int position_y,std::string def_name = "\0")
+	TSwordsman(int position_x=-1,int position_y=-1,std::string def_name = "\0")
 	{
+		HP = 100;
+		mana = 50;
+		base_attack_damage = 25;
+		max_attack_radius = 1;
+
 		if (def_name =="\0")
 		{
-			for (size_t i = 0; i < 5; i++)
+			name = "Swordsman ";
+			for (size_t i = 0; i < 3; i++)
 			{
 				char c = 65 + rand() % 26;
 				name = name + c;
@@ -21,14 +27,14 @@ public:
 		{
 			name = def_name;
 		}
+
 		pos_x = position_x;
 		pos_y = position_y;
+
 		PrintInfo();
-	}
-	void Attack(TUnit* unit) override
-	{
 
 	}
+	void PrintInfo() const override;
 
 
 	
