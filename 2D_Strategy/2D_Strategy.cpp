@@ -34,9 +34,12 @@ int main()
 	TSwordsman SwB;
 
 	TArcher ArA;
+	TArcher ArB;
 	bool showTab=true;
 
 	bg.AddUnit(&ArA, 4, 4);
+	bg.PrintUnits();
+	bg.AddUnit(&ArB, 0, 0);
 	bg.PrintUnits();
 	bg.Move(&ArA, 5, 5);
 	bg.PrintUnits();
@@ -56,10 +59,13 @@ int main()
 	font.loadFromFile("CyrilicOld.ttf");
 
 	Text tab_text("", font, 100);
-	tab_text.setFillColor(Color::Red);
+	tab_text.setFillColor(Color(0, 0, 0));
 
 	Text text("", font, 35);
 	text.setFillColor(Color::Blue);
+
+	Text unit_info_text("", font, 35);
+	unit_info_text.setFillColor(Color::Blue);
 
 	Clock clock;
 	TKeyPressEvent key_pressed;
@@ -82,7 +88,7 @@ int main()
 	
 	//	window.setView(view);
 
-		window.clear();
+		window.clear(Color(63,72,204));
 		///////////////////////////////Рисуем карту/////////////////////
 	/*	for (int i = 0; i < HEIGHT_MAP; i++)
 		{
@@ -114,9 +120,12 @@ int main()
 			{
 				if ((event.key.code == Keyboard::Tab))
 				{//если клавиша ТАБ
-					tab_text.setPosition(WIDTH_MAP*64+64, 0);
-					tab_text.setString(key_pressed.PressedTab());
+					int tab_pos_x = 32,tab_pos_y=HEIGHT_MAP*64-20;
 
+					tab_text.setPosition(tab_pos_x, tab_pos_y);
+					tab_text.setString(key_pressed.PressedTab());
+					unit_info_text.setPosition(tab_pos_x-32, tab_pos_y+96);
+					unit_info_text.setString(bg.GetInfoAboutTile(0, 0));
 				}
 				
 			
@@ -159,6 +168,7 @@ int main()
 		}
 
 		window.draw(tab_text);
+		window.draw(unit_info_text);
 		window.display();
 	
 	}

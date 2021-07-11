@@ -66,6 +66,8 @@ public:
 
 	void FillUnitsMap();
 
+	sf::String GetInfoAboutTile(int x,int y) const;
+
 	void Move(TUnit* unit,int x,int y);
 
 	void Attack(TUnit* attack_unit, TUnit* attacked_unit);

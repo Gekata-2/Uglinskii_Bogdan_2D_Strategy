@@ -154,3 +154,22 @@ void TBattleground::FillUnitsMap()
 	
 	}
 }
+
+
+
+sf::String TBattleground::GetInfoAboutTile(int x,int y) const
+{
+	sf::String str;
+	if (tiles[x][y]==NULL)
+	{
+		str = '[' + std::to_string(x) + ']' + '[' + std::to_string(y) + ']'+'\n';
+	
+	}
+	else
+	{
+		str = tiles[x][y]->GetInfo();
+		
+		std::cout << str.getData();
+	}
+	return str;
+}

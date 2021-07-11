@@ -28,6 +28,7 @@ public:
 	virtual bool		IsOnBattleground() const;//находится ли сейчас юнит на доске
 	virtual std::string GetName() const;//имя
 	virtual std::string GetType() const;
+	virtual std::string GetInfo() const = 0;
 
 	//сеттеры
 	virtual void SetOnBattleground();//установить что юнит теперь находится на доске

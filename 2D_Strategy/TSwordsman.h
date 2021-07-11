@@ -39,6 +39,8 @@ public:
 	}
 	void PrintInfo() const override;
 
+	std::string  GetInfo() const;
+	
 
 	
 
