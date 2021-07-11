@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <Windows.h>
+#include "TBattleground.h"
 using namespace sf;
 class TKeyPressEvent
 {
@@ -11,34 +12,42 @@ public:
 	{
 		if ((event.key.code == Keyboard::Tab))
 		{//если клавиша ТАБ
-			PressedTab();			
+			/*PressedTab();		*/	
 		}
 	}
 
-	sf::String PressedTab()
+	sf::String PressedTab(sf::Text* tab_text, sf::Text* unit_info_text,sf::String unit_info_str,int x,int y)
 	{
 		sf::String str;
-
+	
+		
 		switch (showTab)
-		{//переключатель, реагирующий на логическую переменную showMissionText
+		{
 			case true: 
 			{
 				std::cout << "Key  TAB  is pressed\n";
-				Sleep(1000);
+				Sleep(100);
 				str = "TAB";
-				showTab = false;// а эта строка позволяет снова нажать клавишу таб и получить вывод на экран
+		
+				tab_text->setPosition(x, y);
+				tab_text->setString(str);
+				unit_info_text->setPosition(x - 32, y + 96);
+				unit_info_text->setString(unit_info_str);
+				showTab = false;
 				break;
-				//	key_pressed.KeyPressed(event);
 			}
 			case false: 
 			{
-				Sleep(1000);
+				Sleep(100);
 				std::cout << "Key  TAB  is pressed twice\n";
 				str = "";
-				showTab = true;// а эта строка позволяет снова нажать клавишу таб и получить вывод на экран
+				tab_text->setString(str);
+				unit_info_text->setString("");
+				showTab = true;
 				break;
 			}
 		}
+
 		return str;
 	}
 

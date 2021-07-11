@@ -173,3 +173,43 @@ sf::String TBattleground::GetInfoAboutTile(int x,int y) const
 	}
 	return str;
 }
+
+
+
+
+
+
+
+sf::Vector2i TBattleground::MoveFocusTile(sf::Event event)
+{
+	if (event.key.code == sf::Keyboard::Left)
+	{
+		if (focus_tile.x != 0)
+		{
+			focus_tile.x -= 1;
+		}
+	}
+	if (event.key.code == sf::Keyboard::Right)
+	{
+		if (focus_tile.x != WIDTH_MAP - 1)
+		{
+			focus_tile.x += 1;
+		}
+	}
+	if (event.key.code == sf::Keyboard::Up)
+	{
+		if (focus_tile.y != 0)
+		{
+			focus_tile.y -= 1;
+		}
+	}
+	if (event.key.code == sf::Keyboard::Down)
+	{
+		if (focus_tile.y != HEIGHT_MAP - 1)
+		{
+			focus_tile.y += 1;
+		}
+	}
+	return focus_tile;
+
+}

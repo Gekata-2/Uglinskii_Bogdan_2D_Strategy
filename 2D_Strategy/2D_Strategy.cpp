@@ -67,6 +67,9 @@ int main()
 	Text unit_info_text("", font, 35);
 	unit_info_text.setFillColor(Color::Blue);
 
+	Text focus_tile_text("", font, 22);
+	focus_tile_text.setFillColor(Color::Green);
+
 	Clock clock;
 	TKeyPressEvent key_pressed;
 	while (window.isOpen())
@@ -120,12 +123,16 @@ int main()
 			{
 				if ((event.key.code == Keyboard::Tab))
 				{//если клавиша ТАБ
-					int tab_pos_x = 32,tab_pos_y=HEIGHT_MAP*64-20;
-
-					tab_text.setPosition(tab_pos_x, tab_pos_y);
-					tab_text.setString(key_pressed.PressedTab());
-					unit_info_text.setPosition(tab_pos_x-32, tab_pos_y+96);
-					unit_info_text.setString(bg.GetInfoAboutTile(0, 0));
+					key_pressed.PressedTab(&tab_text, &unit_info_text,bg.GetInfoAboutTile(0,0), 32, HEIGHT_MAP * 64 - 20);
+				}
+				if ((event.key.code == Keyboard::Left) || (event.key.code == Keyboard::Right)|| (event.key.code == Keyboard::Up)|| (event.key.code == Keyboard::Down))
+				{//если клавиша ТАБ
+					std::cout << "pointer is pressed" << (char)event.key.code<<std::endl;
+					bg.MoveFocusTile(event);
+					focus_tile_text.setPosition(WIDTH_MAP * 64, 0);
+					Vector2i v_f=bg.GetFocusTile();
+				sf:String tmp_s = "Focus tile :" + std::to_string(v_f.x) + "  " + std::to_string(v_f.y);
+					focus_tile_text.setString(tmp_s);
 				}
 				
 			
@@ -166,8 +173,9 @@ int main()
 			}
 			//	std::cout << "\n";
 		}
-
+		
 		window.draw(tab_text);
+		window.draw(focus_tile_text);
 		window.draw(unit_info_text);
 		window.display();
 	

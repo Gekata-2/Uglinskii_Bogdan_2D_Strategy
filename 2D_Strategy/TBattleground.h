@@ -25,6 +25,7 @@ public:	sf::String TileBackgroundMap[HEIGHT_MAP] = {
 	"0     s0",
 	"00000000",
 	};
+	  sf::Vector2i focus_tile = { 0,0 };
 
 	  sf::String TileUnitsMap[HEIGHT_MAP] = {
 	"        ",
@@ -69,6 +70,13 @@ public:
 	sf::String GetInfoAboutTile(int x,int y) const;
 
 	void Move(TUnit* unit,int x,int y);
+
+	sf::Vector2i MoveFocusTile(sf::Event event);
+	
+	sf::Vector2i GetFocusTile()
+	{
+		return focus_tile;
+	}
 
 	void Attack(TUnit* attack_unit, TUnit* attacked_unit);
 	void Death(TUnit* unit);
