@@ -2,6 +2,7 @@
 
 
 
+
 void TBattleground::Attack(TUnit* attack_unit, TUnit* attacked_unit)
 {
 	int tmp_x, tmp_y;
@@ -98,7 +99,7 @@ void TBattleground::AddUnit(TUnit* unit, int pos_x, int pos_y)
 
 
 
-void TBattleground::Print() const
+void TBattleground::PrintUnits() const
 {
 	for (size_t i = 0; i < bg_size; i++)
 	{
@@ -123,5 +124,33 @@ void TBattleground::Print() const
 		
 		}
 		std::cout << "\n\n";
+	}
+}
+
+void TBattleground::FillUnitsMap() 
+{
+	for (size_t i = 0; i < bg_size; i++)
+	{
+		for (size_t j = 0; j < bg_size; j++)
+		{	
+			if (tiles[i][j]!=NULL)
+			{
+				if (tiles[i][j]->GetType() == "swordsman")
+				{
+					TileUnitsMap[i][j] = 'S';
+				}
+				if (tiles[i][j]->GetType() == "archer")
+				{
+					TileUnitsMap[i][j] = 'A';
+				}
+			}
+			else
+			{
+				TileUnitsMap[i][j] = '0';
+			}
+
+					
+		}
+	
 	}
 }
