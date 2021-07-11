@@ -26,7 +26,7 @@ public:	sf::String TileBackgroundMap[HEIGHT_MAP] = {
 	"00000000",
 	};
 	  sf::Vector2i focus_tile = { 0,0 };
-
+	  TUnit* p_focus_tile = NULL;
 	  sf::String TileUnitsMap[HEIGHT_MAP] = {
 	"        ",
 	"        ",
@@ -47,7 +47,7 @@ public:
 		{
 			tiles[i] = new TUnit* [bg_size];
 		}
-
+		
 		for (size_t i = 0; i < bg_size; i++)
 		{
 			for (size_t j = 0; j < bg_size; j++)
@@ -57,7 +57,7 @@ public:
 			}
 			
 		}
-
+		p_focus_tile = tiles[0][0];
 	}
 	
 
@@ -67,7 +67,7 @@ public:
 
 	void FillUnitsMap();
 
-	sf::String GetInfoAboutTile(int x,int y) const;
+	sf::String GetInfoAboutTile(int x=0,int y=0) const;
 
 	void Move(TUnit* unit,int x,int y);
 

@@ -147,9 +147,7 @@ void TBattleground::FillUnitsMap()
 			else
 			{
 				TileUnitsMap[i][j] = '0';
-			}
-
-					
+			}		
 		}
 	
 	}
@@ -160,18 +158,19 @@ void TBattleground::FillUnitsMap()
 sf::String TBattleground::GetInfoAboutTile(int x,int y) const
 {
 	sf::String str;
-	if (tiles[x][y]==NULL)
-	{
-		str = '[' + std::to_string(x) + ']' + '[' + std::to_string(y) + ']'+'\n';
+	std::cout << "Focus tile : " << std::to_string(focus_tile.x) << " " << std::to_string(focus_tile.y)<<std::endl;
+		if (tiles[focus_tile.y][focus_tile.x] != NULL)
+		{
+			str=tiles[focus_tile.y][focus_tile.x]->GetInfo();
+			tiles[focus_tile.y][focus_tile.x]->PrintInfo();
+		}
+		else
+		{
+			str = "NULL";
+		}
 	
-	}
-	else
-	{
-		str = tiles[x][y]->GetInfo();
-		
-		std::cout << str.getData();
-	}
 	return str;
+
 }
 
 
@@ -210,6 +209,7 @@ sf::Vector2i TBattleground::MoveFocusTile(sf::Event event)
 			focus_tile.y += 1;
 		}
 	}
+	p_focus_tile = tiles[focus_tile.x][focus_tile.y];
 	return focus_tile;
 
 }

@@ -10,6 +10,12 @@
 #include <SFML/Graphics.hpp>
 using namespace sf;
 
+
+
+/**
+72 255 213 зелёный
+14 42 71 синий
+*/
 int main()
 {
     TBattleground bg;
@@ -24,6 +30,14 @@ int main()
 	Sprite s_map;
 	s_map.setTexture(map);
 
+	Image focus_tile_image;
+	focus_tile_image.loadFromFile("images/focus_tile_tr.png");
+	Texture focus_tile_texture;
+	focus_tile_texture.loadFromImage(focus_tile_image);
+	Sprite s_focus_tile;
+	s_focus_tile.setTexture(focus_tile_texture);
+
+
 	Texture unit_map;
 	unit_map.loadFromImage(map_image);
 
@@ -35,11 +49,13 @@ int main()
 
 	TArcher ArA;
 	TArcher ArB;
-	bool showTab=true;
+	
 
 	bg.AddUnit(&ArA, 4, 4);
 	bg.PrintUnits();
-	bg.AddUnit(&ArB, 0, 0);
+	bg.AddUnit(&ArB, 1, 0);
+	bg.PrintUnits();
+	bg.GetInfoAboutTile(1, 0);
 	bg.PrintUnits();
 	bg.Move(&ArA, 5, 5);
 	bg.PrintUnits();
@@ -59,19 +75,20 @@ int main()
 	font.loadFromFile("CyrilicOld.ttf");
 
 	Text tab_text("", font, 100);
-	tab_text.setFillColor(Color(0, 0, 0));
+	tab_text.setFillColor(Color(72, 255, 213));
 
 	Text text("", font, 35);
 	text.setFillColor(Color::Blue);
 
 	Text unit_info_text("", font, 35);
-	unit_info_text.setFillColor(Color::Blue);
+	unit_info_text.setFillColor(Color(72, 255, 213));
 
 	Text focus_tile_text("", font, 22);
-	focus_tile_text.setFillColor(Color::Green);
+	focus_tile_text.setFillColor(Color::White);
 
 	Clock clock;
 	TKeyPressEvent key_pressed;
+
 	while (window.isOpen())
 	{
 		float time = clock.getElapsedTime().asMicroseconds();
@@ -91,7 +108,7 @@ int main()
 	
 	//	window.setView(view);
 
-		window.clear(Color(63,72,204));
+		window.clear(Color(14, 42 ,71));
 		///////////////////////////////Рисуем карту/////////////////////
 	/*	for (int i = 0; i < HEIGHT_MAP; i++)
 		{
@@ -123,42 +140,16 @@ int main()
 			{
 				if ((event.key.code == Keyboard::Tab))
 				{//если клавиша ТАБ
-					key_pressed.PressedTab(&tab_text, &unit_info_text,bg.GetInfoAboutTile(0,0), 32, HEIGHT_MAP * 64 - 20);
+					key_pressed.PressedTab(&tab_text, &unit_info_text,bg.GetInfoAboutTile(), 32, HEIGHT_MAP * 64 - 20);
 				}
 				if ((event.key.code == Keyboard::Left) || (event.key.code == Keyboard::Right)|| (event.key.code == Keyboard::Up)|| (event.key.code == Keyboard::Down))
-				{//если клавиша ТАБ
-					std::cout << "pointer is pressed" << (char)event.key.code<<std::endl;
-					bg.MoveFocusTile(event);
-					focus_tile_text.setPosition(WIDTH_MAP * 64, 0);
-					Vector2i v_f=bg.GetFocusTile();
-				sf:String tmp_s = "Focus tile :" + std::to_string(v_f.x) + "  " + std::to_string(v_f.y);
-					focus_tile_text.setString(tmp_s);
+				{//если нажаты стрелки
+					key_pressed.ArrowsPressd(&bg, &focus_tile_text, &s_focus_tile, event,WIDTH_MAP * 64, 0);
+									
 				}
 				
 			
-			}//событие нажатия клавиши
-				//if ((event.key.code == Keyboard::Tab)) 
-				//{//если клавиша ТАБ
-				//	switch (showTab) {//переключатель, реагирующий на логическую переменную showMissionText
-				//	case true: {
-				//		std::cout << "Key  TAB  is pressed\n";
-				//		Sleep(500);
-				//		std::ostringstream tab;
-				//		tab << (char)event.key.code;
-				//		занесли в нее число очков, то есть формируем строку
-				//		text.setString("TAB");//задаем строку тексту и вызываем сформированную выше строку методом .str() 
-				//		text.setPosition(300, 300);//задаем позицию текста, отступая от центра камеры
-				//		showTab = false;// а эта строка позволяет снова нажать клавишу таб и получить вывод на экран
-				//		break;
-				//		key_pressed.KeyPressed(event);
-				//	}
-				//	case false: {
-				//		text.setString("");//если не нажата клавиша таб, то весь этот текст пустой
-				//		showTab = true;// а эта строка позволяет снова нажать клавишу таб и получить вывод на экран
-				//		break;
-				//	}
-				//	}
-				//}
+			}
 		}
 		for (int i = 0; i < HEIGHT_MAP; i++)
 		{
@@ -174,18 +165,21 @@ int main()
 			//	std::cout << "\n";
 		}
 		
+	
+		
 		window.draw(tab_text);
 		window.draw(focus_tile_text);
 		window.draw(unit_info_text);
+		window.draw(s_focus_tile);
 		window.display();
 	
 	}
 
+	bg.GetInfoAboutTile(1,0);
 
 
 
-
-    bg.Attack(&SwA, &ArA);
+   /* bg.Attack(&SwA, &ArA);
     bg.Attack(&SwB, &ArA);
     bg.Attack(&ArA, &SwA);
     bg.Attack(&SwB, &ArA);
@@ -194,7 +188,7 @@ int main()
     SwA.PrintInfo();
     SwB.PrintInfo();
     ArA.PrintInfo();
-    bg.PrintUnits();
+    bg.PrintUnits();*/
 
   
     std::cout << "Hello World!\n";
