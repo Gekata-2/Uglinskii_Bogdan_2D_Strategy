@@ -56,7 +56,7 @@ public:
 	    sf:String tmp_s = "Focus tile :" + std::to_string(v_f.x) + "  " + std::to_string(v_f.y);
 		focus_tile_txt->setString(tmp_s);
 		sprite->setTextureRect(sf::IntRect(0, 0, 64, 64));
-		sprite->setPosition(v_f.x * 64, v_f.y * 64);
+		sprite->setPosition((v_f.x +1)* 64, (v_f.y +1)* 64);
 		//std::cout << "Focus tile :" << std::to_string(v_f.x) << "  " << std::to_string(v_f.y);
 		return v_f;
 	}

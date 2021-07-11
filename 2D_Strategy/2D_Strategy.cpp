@@ -19,7 +19,7 @@ using namespace sf;
 int main()
 {
     TBattleground bg;
-    RenderWindow window(sf::VideoMode(800, 800), "Lesson 11. kychka-pc.ru");
+    RenderWindow window(sf::VideoMode(1000, 900), "Lesson 11. kychka-pc.ru");
 
 	
 
@@ -37,6 +37,14 @@ int main()
 	Sprite s_focus_tile;
 	s_focus_tile.setTexture(focus_tile_texture);
 
+
+
+	Image empty_image;
+	empty_image.loadFromFile("images/empty_tile.png");
+	Texture empty_texture;
+	empty_texture.loadFromImage(empty_image);
+	Sprite s_empty_tile;
+	s_empty_tile.setTexture(empty_texture);
 
 	Texture unit_map;
 	unit_map.loadFromImage(map_image);
@@ -156,13 +164,33 @@ int main()
 			for (int j = 0; j < WIDTH_MAP; j++)
 			{
 				//std::cout << (char)bg.TileUnitsMap[i][j]<<" ";
-				if (bg.TileUnitsMap[i][j] == 'A')  s_unit_map.setTextureRect(IntRect(192, 0, 64, 64));
-				if (bg.TileUnitsMap[i][j] == 'S')  s_unit_map.setTextureRect(IntRect(256, 0, 64, 64));
-				if ((bg.TileUnitsMap[i][j] == '0')) s_unit_map.setTextureRect(IntRect(64, 0, 64, 64));
-				s_unit_map.setPosition(j * 64, i * 64);
-				window.draw(s_unit_map);
+				if ((bg.TileBackgroundMap[i][j] == '0')) s_map.setTextureRect(IntRect(128, 0, 64, 64));
+				if ((bg.TileBackgroundMap[i][j] == ' ')) s_map.setTextureRect(IntRect(0, 0, 64, 64));
+				if ((bg.TileBackgroundMap[i][j] == 's')) s_map.setTextureRect(IntRect(64, 0, 64, 64));
+				
+				
+				s_map.setPosition(j * 64, i * 64);
+				window.draw(s_map);
 			}
 			//	std::cout << "\n";
+		}
+
+		for (int i = 0; i < HEIGHT_MAP-2; i++)
+		{
+			for (int j = 0; j < WIDTH_MAP-2; j++)
+			{
+				//std::cout << (char)bg.TileUnitsMap[i][j]<<" ";			
+			    if (bg.TileUnitsMap[i][j] == 'A')  s_unit_map.setTextureRect(IntRect(192, 0, 64, 64));
+				if (bg.TileUnitsMap[i][j] == 'S')  s_unit_map.setTextureRect(IntRect(256, 0, 64, 64));
+
+				if(bg.TileUnitsMap[i][j] == ' ')
+				{
+					continue;
+				}
+				s_unit_map.setPosition((j * 64)+64, (i * 64)+64);
+				window.draw(s_unit_map);
+			}
+				std::cout << "\n";
 		}
 		
 	

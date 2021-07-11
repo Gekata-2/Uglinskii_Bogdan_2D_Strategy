@@ -146,7 +146,7 @@ void TBattleground::FillUnitsMap()
 			}
 			else
 			{
-				TileUnitsMap[i][j] = '0';
+				TileUnitsMap[i][j] = ' ';
 			}		
 		}
 	
@@ -190,7 +190,7 @@ sf::Vector2i TBattleground::MoveFocusTile(sf::Event event)
 	}
 	if (event.key.code == sf::Keyboard::Right)
 	{
-		if (focus_tile.x != WIDTH_MAP - 1)
+		if (focus_tile.x != WIDTH_MAP - 2 - 1)
 		{
 			focus_tile.x += 1;
 		}
@@ -204,7 +204,7 @@ sf::Vector2i TBattleground::MoveFocusTile(sf::Event event)
 	}
 	if (event.key.code == sf::Keyboard::Down)
 	{
-		if (focus_tile.y != HEIGHT_MAP - 1)
+		if (focus_tile.y != HEIGHT_MAP - 2 - 1)
 		{
 			focus_tile.y += 1;
 		}
