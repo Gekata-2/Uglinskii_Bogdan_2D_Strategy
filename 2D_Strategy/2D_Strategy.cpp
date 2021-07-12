@@ -94,6 +94,9 @@ int main()
 	Text focus_tile_text("", font, 22);
 	focus_tile_text.setFillColor(Color::White);
 
+	Text unit_abilities("", font, 25);
+	unit_abilities.setFillColor(Color::White);
+
 	Clock clock;
 	TKeyPressEvent key_pressed;
 
@@ -118,20 +121,6 @@ int main()
 
 		window.clear(Color(14, 42 ,71));
 		///////////////////////////////Рисуем карту/////////////////////
-	/*	for (int i = 0; i < HEIGHT_MAP; i++)
-		{
-			for (int j = 0; j < WIDTH_MAP; j++)
-			{
-				std::cout << bg.TileBackgroundMap[i][j] << " ";
-				if (bg.TileBackgroundMap[i][j] == 's')  s_map.setTextureRect(IntRect(0, 0, 64, 64));
-				if (bg.TileBackgroundMap[i][j] == ' ')  s_map.setTextureRect(IntRect(64, 0, 64, 64));
-				if ((bg.TileBackgroundMap[i][j] == '0')) s_map.setTextureRect(IntRect(128, 0, 64, 64));
-				s_map.setPosition(j * 64, i * 64);
-				window.draw(s_map);
-			}
-			std::cout << "\n";
-		}*/
-		bg.FillUnitsMap();
 
 	
 		
@@ -153,7 +142,18 @@ int main()
 				if ((event.key.code == Keyboard::Left) || (event.key.code == Keyboard::Right)|| (event.key.code == Keyboard::Up)|| (event.key.code == Keyboard::Down))
 				{//если нажаты стрелки
 					key_pressed.ArrowsPressd(&bg, &focus_tile_text, &s_focus_tile, event,WIDTH_MAP * 64, 0);
-									
+					/*if (bg.GetFocusUnit()!=NULL)
+					{
+						key_pressed.PressedTab(&tab_text, &unit_info_text, bg.GetInfoAboutTile(), 32, HEIGHT_MAP * 64 - 20);
+					}*/					
+				}
+				if ((event.key.code == Keyboard::Enter))
+				{//если клавиша ТАБ
+					key_pressed.PressedEnter(&bg,&unit_abilities);
+				}
+				if ((event.key.code == Keyboard::M))
+				{//если клавиша ТАБ
+					key_pressed.PressedM(&bg, &unit_abilities);
 				}
 				
 			
@@ -172,14 +172,12 @@ int main()
 				s_map.setPosition(j * 64, i * 64);
 				window.draw(s_map);
 			}
-			//	std::cout << "\n";
 		}
-
+		bg.FillUnitsMap();
 		for (int i = 0; i < HEIGHT_MAP-2; i++)
 		{
 			for (int j = 0; j < WIDTH_MAP-2; j++)
-			{
-				//std::cout << (char)bg.TileUnitsMap[i][j]<<" ";			
+			{	
 			    if (bg.TileUnitsMap[i][j] == 'A')  s_unit_map.setTextureRect(IntRect(192, 0, 64, 64));
 				if (bg.TileUnitsMap[i][j] == 'S')  s_unit_map.setTextureRect(IntRect(256, 0, 64, 64));
 
@@ -198,13 +196,14 @@ int main()
 		window.draw(tab_text);
 		window.draw(focus_tile_text);
 		window.draw(unit_info_text);
+		window.draw(unit_abilities);
 		window.draw(s_focus_tile);
 		window.display();
 	
 	}
 
-	bg.GetInfoAboutTile(1,0);
-
+	std::cout<<bg.GetInfoAboutTile(1,0).getData();
+	
 
 
    /* bg.Attack(&SwA, &ArA);

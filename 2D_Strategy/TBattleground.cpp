@@ -75,9 +75,13 @@ void TBattleground::Move(TUnit* unit, int x, int y)
 	else
 	{
 		tiles[unit->GetX()][unit->GetY()] = NULL;
+		TileUnitsMap[unit->GetX()][unit->GetY()] = ' ';
+
 		tiles[x][y] = unit;
+		TileUnitsMap[x][y] = unit->GetType()[0];
 		std::cout << "Unit <" << unit->GetName() << "> is moved : [" << unit->GetX() << "][" << unit->GetY();
 		unit->SetPos(x, y);
+		
 		std::cout << "] --> [" << x << "][" << y << "]\n";
 	}
 }
@@ -135,14 +139,9 @@ void TBattleground::FillUnitsMap()
 		{	
 			if (tiles[i][j]!=NULL)
 			{
-				if (tiles[i][j]->GetType() == "swordsman")
-				{
-					TileUnitsMap[i][j] = 'S';
-				}
-				if (tiles[i][j]->GetType() == "archer")
-				{
-					TileUnitsMap[i][j] = 'A';
-				}
+				
+					TileUnitsMap[i][j] = tiles[i][j]->GetType()[0];
+				
 			}
 			else
 			{
@@ -159,10 +158,10 @@ sf::String TBattleground::GetInfoAboutTile(int x,int y) const
 {
 	sf::String str;
 	std::cout << "Focus tile : " << std::to_string(focus_tile.x) << " " << std::to_string(focus_tile.y)<<std::endl;
-		if (tiles[focus_tile.y][focus_tile.x] != NULL)
+		if (tiles[focus_tile.x][focus_tile.y] != NULL)
 		{
-			str=tiles[focus_tile.y][focus_tile.x]->GetInfo();
-			tiles[focus_tile.y][focus_tile.x]->PrintInfo();
+			str=tiles[focus_tile.x][focus_tile.y]->GetInfo();
+			tiles[focus_tile.x][focus_tile.y]->PrintInfo();
 		}
 		else
 		{
@@ -181,35 +180,53 @@ sf::String TBattleground::GetInfoAboutTile(int x,int y) const
 
 sf::Vector2i TBattleground::MoveFocusTile(sf::Event event)
 {
-	if (event.key.code == sf::Keyboard::Left)
+	if (focus_stoped==false)
 	{
-		if (focus_tile.x != 0)
+		if (event.key.code == sf::Keyboard::Up)
 		{
-			focus_tile.x -= 1;
+			if (focus_tile.x != 0)
+			{
+				focus_tile.x -= 1;
+			}
 		}
-	}
-	if (event.key.code == sf::Keyboard::Right)
-	{
-		if (focus_tile.x != WIDTH_MAP - 2 - 1)
+		if (event.key.code == sf::Keyboard::Down)
 		{
-			focus_tile.x += 1;
+			if (focus_tile.x != WIDTH_MAP - 2 - 1)
+			{
+				focus_tile.x += 1;
+			}
 		}
-	}
-	if (event.key.code == sf::Keyboard::Up)
-	{
-		if (focus_tile.y != 0)
+		if (event.key.code == sf::Keyboard::Left)
 		{
-			focus_tile.y -= 1;
+			if (focus_tile.y != 0)
+			{
+				focus_tile.y -= 1;
+			}
 		}
-	}
-	if (event.key.code == sf::Keyboard::Down)
-	{
-		if (focus_tile.y != HEIGHT_MAP - 2 - 1)
+		if (event.key.code == sf::Keyboard::Right)
 		{
-			focus_tile.y += 1;
+			if (focus_tile.y != HEIGHT_MAP - 2 - 1)
+			{
+				focus_tile.y += 1;
+			}
 		}
+		
+		
 	}
 	p_focus_tile = tiles[focus_tile.x][focus_tile.y];
 	return focus_tile;
+}
 
+
+
+TUnit* TBattleground::GetFocusUnit()
+{
+	if (tiles[focus_tile.x][focus_tile.y]!=NULL)
+	{
+		return tiles[focus_tile.x][focus_tile.y];
+	}
+	else
+	{
+		return NULL;
+	}
 }

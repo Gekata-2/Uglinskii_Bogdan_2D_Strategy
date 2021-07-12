@@ -25,7 +25,7 @@ public:
 		{
 			name = def_name;
 		}
-		type = "archer";
+		type = "A";
 
 		pos_x = position_x;
 		pos_y = position_y;

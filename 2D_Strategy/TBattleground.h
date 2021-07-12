@@ -14,8 +14,9 @@ class TBattleground
 {
 	int bg_size = 8;
 	TUnit*** tiles = new TUnit** [bg_size];
+	bool focus_stoped = false;
 
-public:	sf::String TileBackgroundMap[HEIGHT_MAP] = 
+public:	 std::string TileBackgroundMap[HEIGHT_MAP] =
     {
 		"0000000000",
 		"0     sss0",
@@ -30,7 +31,7 @@ public:	sf::String TileBackgroundMap[HEIGHT_MAP] =
 	};
 	  sf::Vector2i focus_tile = { 0,0 };
 	  TUnit* p_focus_tile = NULL;
-	  sf::String TileUnitsMap[HEIGHT_MAP-2] = 
+	 std::string TileUnitsMap[HEIGHT_MAP-2] = 
 	  {
 		"        ",
 		"        ",
@@ -64,6 +65,15 @@ public:
 		p_focus_tile = tiles[0][0];
 	}
 	
+	void StopFocus()
+	{
+		focus_stoped = true;
+	}
+
+	void ReleaseFocus()
+	{
+		focus_stoped = false;
+	}
 
 	void AddUnit(TUnit* unit, int pos_x, int pos_y);
 
@@ -81,6 +91,7 @@ public:
 	{
 		return focus_tile;
 	}
+	TUnit* GetFocusUnit();
 
 	void Attack(TUnit* attack_unit, TUnit* attacked_unit);
 	void Death(TUnit* unit);
