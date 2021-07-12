@@ -51,7 +51,7 @@ void TBattleground::Death(TUnit* unit)
 }
 
 
-void TBattleground::Move(TUnit* unit, int x, int y)
+int TBattleground::Move(TUnit* unit, int x, int y)
 {
 	int tmp_x = 0, tmp_y = 0;
 
@@ -60,17 +60,18 @@ void TBattleground::Move(TUnit* unit, int x, int y)
 
 	if ((tmp_x + tmp_y) > (unit->GetMaxMoveTiles()))
 	{
-		std::cout << "Unit cant go this far\n";
-		return;
+		std::cout << "Unit can't go this far\n";
+		return TOO_FAR;
 	}
 	else if (tiles[x][y] != NULL)
 	{
 		std::cout << "This tile [" << x << "][" << y << "] already taken\n";
+		return ALREADY_TAKEN;
 	}
 	else if ((x >= bg_size) || (y >= bg_size) || (x < 0) || (y < 0))
 	{
 		std::cout << "Incorrect distinaition to move\n";
-		return;
+		return INCORRECT_DISTINATION;
 	}
 	else
 	{

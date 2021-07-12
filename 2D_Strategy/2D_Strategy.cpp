@@ -80,15 +80,15 @@ int main()
 	bg.PrintUnits();
 
 	Font font;
-	font.loadFromFile("CyrilicOld.ttf");
+	font.loadFromFile("MilknBalls-BlackDemo.ttf");
 
-	Text tab_text("", font, 100);
+	Text tab_text("", font, 75);
 	tab_text.setFillColor(Color(72, 255, 213));
 
 	Text text("", font, 35);
 	text.setFillColor(Color::Blue);
 
-	Text unit_info_text("", font, 35);
+	Text unit_info_text("", font, 20);
 	unit_info_text.setFillColor(Color(72, 255, 213));
 
 	Text focus_tile_text("", font, 22);
@@ -97,16 +97,36 @@ int main()
 	Text unit_abilities("", font, 25);
 	unit_abilities.setFillColor(Color::White);
 
+
+	Text exceptions("", font, 25);
+	exceptions.setFillColor(Color::Red);
+
 	Clock clock;
 	TKeyPressEvent key_pressed;
+	
+	Clock exception_clock;
+
+	bool show_exceptions=false;
+	int exceptions_time = 0;
 
 	while (window.isOpen())
 	{
+		if (show_exceptions==true)
+		{
+			exceptions_time+= exception_clock.getElapsedTime().asMicroseconds();
+			//std::cout << "exceptions_time=" + std::to_string(exceptions_time)<<std::endl;
+		}
+		if (exceptions_time>=3000000)
+		{
+			show_exceptions = false;
+			exceptions_time = 0;
+			//std::cout << "show_exceptions=" + std::to_string(show_exceptions);
+		}
 		float time = clock.getElapsedTime().asMicroseconds();
-		//std::cout << "time =" << time << std::endl;
+	//	std::cout << "time =" << time << std::endl;
 
+		exception_clock.restart();
 		clock.restart();
-				time = time / 800;
 
 		sf::Event event;//переменная-событие
 		
@@ -120,12 +140,7 @@ int main()
 	//	window.setView(view);
 
 		window.clear(Color(14, 42 ,71));
-		///////////////////////////////Рисуем карту/////////////////////
 
-	
-		
-
-		
 		while (window.pollEvent(event))//если никакого события не произошло, то в цикл не попадаем
 		{
 			if (event.type == sf::Event::Closed)//если мы  каким то способом сгенерировали  событие "закрытие" , то закрываем окно
@@ -141,24 +156,21 @@ int main()
 				}
 				if ((event.key.code == Keyboard::Left) || (event.key.code == Keyboard::Right)|| (event.key.code == Keyboard::Up)|| (event.key.code == Keyboard::Down))
 				{//если нажаты стрелки
-					key_pressed.ArrowsPressd(&bg, &focus_tile_text, &s_focus_tile, event,WIDTH_MAP * 64, 0);
-					/*if (bg.GetFocusUnit()!=NULL)
-					{
-						key_pressed.PressedTab(&tab_text, &unit_info_text, bg.GetInfoAboutTile(), 32, HEIGHT_MAP * 64 - 20);
-					}*/					
+					key_pressed.ArrowsPressd(&bg, &focus_tile_text, &s_focus_tile, event,10, HEIGHT_MAP * 64 + 10);
+									
 				}
 				if ((event.key.code == Keyboard::Enter))
 				{//если клавиша ТАБ
-					key_pressed.PressedEnter(&bg,&unit_abilities);
+					key_pressed.PressedEnter(&bg,&unit_abilities,&exceptions, &show_exceptions);
 				}
 				if ((event.key.code == Keyboard::M))
 				{//если клавиша ТАБ
 					key_pressed.PressedM(&bg, &unit_abilities);
-				}
-				
-			
+				}		
 			}
 		}
+
+		///////////////////////////////Рисуем карту/////////////////////
 		for (int i = 0; i < HEIGHT_MAP; i++)
 		{
 			for (int j = 0; j < WIDTH_MAP; j++)
@@ -188,7 +200,7 @@ int main()
 				s_unit_map.setPosition((j * 64)+64, (i * 64)+64);
 				window.draw(s_unit_map);
 			}
-				std::cout << "\n";
+				
 		}
 		
 	
@@ -198,12 +210,15 @@ int main()
 		window.draw(unit_info_text);
 		window.draw(unit_abilities);
 		window.draw(s_focus_tile);
+
+		if (show_exceptions == true)
+		{
+			window.draw(exceptions);
+		}
+		
 		window.display();
 	
 	}
-
-	std::cout<<bg.GetInfoAboutTile(1,0).getData();
-	
 
 
    /* bg.Attack(&SwA, &ArA);

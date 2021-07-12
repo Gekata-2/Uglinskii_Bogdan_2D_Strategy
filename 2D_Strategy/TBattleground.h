@@ -7,8 +7,9 @@
 const int HEIGHT_MAP = 10;//размер карты высота
 const int WIDTH_MAP = 10;//размер карты ширина 
 
-
-
+#define TOO_FAR 1
+#define ALREADY_TAKEN 2
+#define INCORRECT_DISTINATION 3
 
 class TBattleground
 {
@@ -83,7 +84,7 @@ public:
 
 	sf::String GetInfoAboutTile(int x=0,int y=0) const;
 
-	void Move(TUnit* unit,int x,int y);
+	int Move(TUnit* unit,int x,int y);
 
 	sf::Vector2i MoveFocusTile(sf::Event event);
 	

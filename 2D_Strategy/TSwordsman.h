@@ -4,8 +4,6 @@
 
 class TSwordsman : public TUnit
 {
-private:
-
 public:
 	TSwordsman(int position_x=-1,int position_y=-1,std::string def_name = "\0")
 	{
@@ -14,6 +12,7 @@ public:
 		mana = 50;
 		base_attack_damage = 25;
 		max_attack_radius = 1;
+		max_move_tiles = 2;
 
 		if (def_name =="\0")
 		{

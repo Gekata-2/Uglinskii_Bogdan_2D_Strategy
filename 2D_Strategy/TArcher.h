@@ -25,10 +25,12 @@ public:
 		{
 			name = def_name;
 		}
-		type = "A";
+
 
 		pos_x = position_x;
 		pos_y = position_y;
+
+		type = "A";
 
 		PrintInfo();
 	}
