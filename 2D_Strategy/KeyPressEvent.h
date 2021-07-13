@@ -8,6 +8,7 @@
 #define NOT_A_UNIT 5
 #define ALL_OK 0
 
+
 using namespace sf;
 
 class TKeyPressEvent
@@ -15,6 +16,8 @@ class TKeyPressEvent
 	bool showTab = true;
 	bool enter_pressed = false;
 	bool move = false;
+
+	enum{NOTHING,MOVE,ATTACK} EState;
 
 	TUnit* focus_unit=NULL;
 	TUnit* unit_to_move=NULL;
@@ -26,7 +29,7 @@ public:
 	{
 		sf::String str;
 	
-		if (move==true)
+		if (EState==MOVE)
 		{
 			showTab = false;
 		}
@@ -71,7 +74,7 @@ public:
 
 		std::string focus_unit_pos = "";
 
-		if (move == true)// и если нажата M 
+		if (EState==MOVE)// и если нажата M 
 		{
 			focus_unit_pos = "\n\nFrom[" + std::to_string(unit_to_move->GetX()) + "][" + std::to_string(unit_to_move->GetY()) +
 				"] to [" + std::to_string(bg->GetFocusTile().x) + "][" + std::to_string(bg->GetFocusTile().y) + "]";
@@ -97,7 +100,7 @@ public:
 				all_abilities = "asdas";
 			}
 		}
-		if (move == true)
+		if (EState==MOVE)
 		{
 		
 			all_abilities = "[M-move character]\n";
@@ -158,7 +161,7 @@ public:
 		}
 	}
 
-	sf::Vector2i ArrowsPressd(TBattleground* bg,sf::Text* focus_tile_txt,sf::Sprite* sprite, sf::Event event)
+	sf::Vector2i ArrowsPressd(TBattleground* bg,sf::Sprite* sprite, sf::Event event)
 	{
 		std::cout << "Arrow is pressed" << (char)event.key.code << std::endl;
 		bg->MoveFocusTile(event);
@@ -191,7 +194,7 @@ public:
 			case true://чтобы вновь позволить игроку передвигать фокус
 				{
 					bg->ReleaseFocus();
-					if (move == true)// и если пытаемся переместиться на место занятое другим юнитом
+					if (EState == MOVE)// и если пытаемся переместиться на место занятое другим юнитом
 					{
 						exceptions = ALREADY_TAKEN;
 						break;
@@ -209,7 +212,7 @@ public:
 			{
 				exceptions = NOT_A_UNIT;
 			}
-			if (move == true)// и если нажата M 
+			if (EState==MOVE)// и если нажата M 
 			{
 				exceptions = bg->Move(unit_to_move, bg->GetFocusTile().x, bg->GetFocusTile().y);//перемещаем юнита в новое место
 				
@@ -218,28 +221,27 @@ public:
 				unit_abilities->setString("");
 				unit_to_move = NULL;
 
-				move = false;
+				EState = NOTHING;
 				enter_pressed = false;//отпускаем энтер
-
 			}
 		}		
 	}
 
-	void PressedM(TBattleground* bg, sf::Text* unit_abilities)
+	void PressedM(TBattleground* bg)
 	{
 		if (enter_pressed==true)//если энтер нажат
 		{
-			if (move ==true)
+		
+			if (EState == MOVE)
 			{
-				move = false;
+				EState = NOTHING;
 				enter_pressed = false;
 				unit_to_move = NULL;
 				return;
 			}
-			move = true;//говорим,что мы теперь двигаем юнита
+			EState = MOVE;//говорим,что мы теперь двигаем юнита
 			unit_to_move= bg->GetFocusUnit();//запоминаем указатель на юнит, который нужно передвинуть
 			bg->ReleaseFocus();//позволяем игроку выбрать место куда переместиться
-		
 			//enter_pressed = false;
 		}
 		else
@@ -247,6 +249,14 @@ public:
 			exceptions = NO_CHARACTERS_SELECTED;
 		}
 
+	}
+
+	void PressedA(TBattleground* bg)
+	{
+		if (enter_pressed==true)
+		{
+
+		}
 	}
 
 };

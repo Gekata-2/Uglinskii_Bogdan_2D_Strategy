@@ -160,7 +160,7 @@ int main()
 				}
 				if ((event.key.code == Keyboard::Left) || (event.key.code == Keyboard::Right)|| (event.key.code == Keyboard::Up)|| (event.key.code == Keyboard::Down))
 				{//если нажаты стрелки
-					key_pressed.ArrowsPressd(&bg, &focus_tile_text, &s_focus_tile, event);						
+					key_pressed.ArrowsPressd(&bg, &s_focus_tile, event);						
 				}
 				if ((event.key.code == Keyboard::Enter))
 				{//если клавиша Enter
@@ -168,7 +168,7 @@ int main()
 				}
 				if ((event.key.code == Keyboard::M))
 				{//если клавиша M
-					key_pressed.PressedM(&bg, &unit_abilities);
+					key_pressed.PressedM(&bg);
 				}		
 			}
 		}
