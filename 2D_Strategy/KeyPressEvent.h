@@ -4,9 +4,6 @@
 #include <Windows.h>
 #include "TBattleground.h"
 
-#define NO_CHARACTERS_SELECTED 4
-#define NOT_A_UNIT 5
-#define ALL_OK 0
 
 
 using namespace sf;
@@ -20,46 +17,16 @@ class TKeyPressEvent
 	enum{NOTHING,MOVE,ATTACK} EState;
 
 	TUnit* focus_unit=NULL;
-	TUnit* unit_to_move=NULL;
+	TUnit* memorized_unit=NULL;
 
 	int exceptions=0;
 public:
 
-	sf::String PressedTab(sf::Text* tab_text, sf::Text* unit_info_text, sf::String unit_info_str,int x,int y)
+	void SetException(int i)
 	{
-		sf::String str;
-	
-		if (EState==MOVE)
-		{
-			showTab = false;
-		}
-		switch (showTab)
-		{
-			case true: 
-			{
-				str = "info(TAB)";
-			
-				tab_text->setPosition(x, y);
-				tab_text->setString(str);
-
-				unit_info_text->setPosition(x - 32, y + 96);
-				unit_info_text->setString(unit_info_str);
-
-				showTab = false;
-				break;
-			}
-			case false: 
-			{				
-				str = "";
-				tab_text->setString(str);
-				unit_info_text->setString("");
-				showTab = true;
-				break;
-			}
-		}
-
-		return str;
+		exceptions = i;
 	}
+
 	void SetFocusUnit(TUnit* f_u)
 	{
 		focus_unit = f_u;
@@ -70,13 +37,13 @@ public:
 	{
 		////////////////Инфа о текущей клетке
 		Vector2i v_f = bg->GetFocusTile();
-		sf:String tmp_s = "Focus tile :" + std::to_string(v_f.x) + "  " + std::to_string(v_f.y) + "\n Focus unit:\n" + bg->GetInfoAboutTile();
+		String tmp_s = "Focus tile :" + std::to_string(v_f.x) + "  " + std::to_string(v_f.y) + "\n Focus unit:\n" + bg->GetInfoAboutTile();
 
 		std::string focus_unit_pos = "";
 
 		if (EState==MOVE)// и если нажата M 
 		{
-			focus_unit_pos = "\n\nFrom[" + std::to_string(unit_to_move->GetX()) + "][" + std::to_string(unit_to_move->GetY()) +
+			focus_unit_pos = "\n\nFrom[" + std::to_string(memorized_unit->GetX()) + "][" + std::to_string(memorized_unit->GetY()) +
 				"] to [" + std::to_string(bg->GetFocusTile().x) + "][" + std::to_string(bg->GetFocusTile().y) + "]";
 			tmp_s = "Focus tile :" + std::to_string(v_f.x) + "  " + std::to_string(v_f.y);
 		}
@@ -93,7 +60,7 @@ public:
 		{
 			if (enter_pressed == true)
 			{
-				all_abilities += "M-move character\n";
+				all_abilities = "M-move character\nA-attack";
 			}
 			if (enter_pressed == false)
 			{
@@ -105,14 +72,15 @@ public:
 		
 			all_abilities = "[M-move character]\n";
 		}
+		if (EState==ATTACK)
+		{
+			all_abilities = "[A-move attack]\n";
+		}
 		unit_abilities->setString(all_abilities);
 		
 	}
 
-	void SetException(int i)
-	{
-		exceptions = i;
-	}
+	
 
 	void UpdateExceptions(sf::Text* exception_text, bool* show_exception, int* exceptions_time)
 	{
@@ -156,6 +124,12 @@ public:
 			*show_exception = true;
 			break;
 		}
+		case TOO_FAR_TO_ATTACK:
+		{
+			exception_text->setString("Distance between units is more than maximum\n range of attack unit");
+			*show_exception = true;
+			break;
+		}
 		default:
 			break;
 		}
@@ -177,7 +151,7 @@ public:
 		return v_f;
 	}
 
-	void PressedEnter(TBattleground* bg, sf::Text* unit_abilities)
+	void PressedEnter(TBattleground* bg)
 	{		
 	
 		if (focus_unit!=NULL)//навели на юнита
@@ -199,6 +173,14 @@ public:
 						exceptions = ALREADY_TAKEN;
 						break;
 					}
+					if ((EState==ATTACK)&&(memorized_unit!=focus_unit))//если мы атакуем юнита и при этом только вражеского
+					{
+						exceptions=bg->Attack(memorized_unit, focus_unit);
+
+						focus_unit = bg->GetFocusUnit();//перемещаем фокус на атакованного юнита
+						memorized_unit = NULL;//забываем атаковавшего юнита
+						EState = NOTHING;//атака завершена и персонаж переходит в нейтральное состояние
+					}
 					enter_pressed = false;//отпускаем энтер
 					break;
 				}
@@ -214,15 +196,18 @@ public:
 			}
 			if (EState==MOVE)// и если нажата M 
 			{
-				exceptions = bg->Move(unit_to_move, bg->GetFocusTile().x, bg->GetFocusTile().y);//перемещаем юнита в новое место
+				exceptions = bg->Move(memorized_unit, bg->GetFocusTile().x, bg->GetFocusTile().y);//перемещаем юнита в новое место
 				
-				focus_unit = bg->GetFocusUnit();
+				focus_unit = bg->GetFocusUnit();//т.к. юнит переместился, то нужно перевести указатель на "новое место" юнита
 				
-				unit_abilities->setString("");
-				unit_to_move = NULL;
+				memorized_unit = NULL;
 
 				EState = NOTHING;
 				enter_pressed = false;//отпускаем энтер
+			}
+			if (EState==ATTACK)
+			{
+				exceptions = NOT_A_UNIT;
 			}
 		}		
 	}
@@ -236,11 +221,11 @@ public:
 			{
 				EState = NOTHING;
 				enter_pressed = false;
-				unit_to_move = NULL;
+				memorized_unit = NULL;
 				return;
 			}
 			EState = MOVE;//говорим,что мы теперь двигаем юнита
-			unit_to_move= bg->GetFocusUnit();//запоминаем указатель на юнит, который нужно передвинуть
+			memorized_unit= bg->GetFocusUnit();//запоминаем указатель на юнит, который нужно передвинуть
 			bg->ReleaseFocus();//позволяем игроку выбрать место куда переместиться
 			//enter_pressed = false;
 		}
@@ -253,11 +238,60 @@ public:
 
 	void PressedA(TBattleground* bg)
 	{
-		if (enter_pressed==true)
+		if (enter_pressed==true)//если энтер нажат то можно выполнять атаку
 		{
-
+			if (EState == ATTACK)
+			{
+				EState = NOTHING;
+				enter_pressed = false;
+				memorized_unit = NULL;
+				return;
+			}
+			EState = ATTACK;//говорим что совершается атака
+			memorized_unit = bg->GetFocusUnit();//запоминаем кто атакует
+			bg->ReleaseFocus();//позволяем игроку выбрать место кого атаковать
+		}
+		else//если энтер не нажат то говорим что персонаж не выбран
+		{
+			exceptions = NO_CHARACTERS_SELECTED;
 		}
 	}
 
+
+	sf::String PressedTab(sf::Text* tab_text, sf::Text* unit_info_text, sf::String unit_info_str, int x, int y)
+	{
+		sf::String str;
+
+		if (EState == MOVE)
+		{
+			showTab = false;
+		}
+		switch (showTab)
+		{
+		case true:
+		{
+			str = "info(TAB)";
+
+			tab_text->setPosition(x, y);
+			tab_text->setString(str);
+
+			unit_info_text->setPosition(x - 32, y + 96);
+			unit_info_text->setString(unit_info_str);
+
+			showTab = false;
+			break;
+		}
+		case false:
+		{
+			str = "";
+			tab_text->setString(str);
+			unit_info_text->setString("");
+			showTab = true;
+			break;
+		}
+		}
+
+		return str;
+	}
 };
 

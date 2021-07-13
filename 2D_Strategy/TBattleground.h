@@ -7,13 +7,18 @@
 const int HEIGHT_MAP = 10;//размер карты высота
 const int WIDTH_MAP = 10;//размер карты ширина 
 
+#define ALL_OK 0
 #define TOO_FAR 1
 #define ALREADY_TAKEN 2
 #define INCORRECT_DISTINATION 3
+#define NO_CHARACTERS_SELECTED 4
+#define NOT_A_UNIT 5
+#define NOT_ON_BATTLEGROUND 6
+#define TOO_FAR_TO_ATTACK 7
 
 class TBattleground
 {
-	int bg_size = 8;
+	size_t bg_size = 8;
 	TUnit*** tiles = new TUnit** [bg_size];
 	bool focus_stoped = false;
 
@@ -97,7 +102,7 @@ public:
 	}
 	TUnit* GetFocusUnit();
 
-	void Attack(TUnit* attack_unit, TUnit* attacked_unit);
+	int Attack(TUnit* attack_unit, TUnit* attacked_unit);
 	void Death(TUnit* unit);
 	
 	~TBattleground()

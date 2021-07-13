@@ -3,7 +3,7 @@
 
 
 
-void TBattleground::Attack(TUnit* attack_unit, TUnit* attacked_unit)
+int TBattleground::Attack(TUnit* attack_unit, TUnit* attacked_unit)
 {
 	int tmp_x, tmp_y;
 	int units_distance_x, units_distance_y;
@@ -11,12 +11,12 @@ void TBattleground::Attack(TUnit* attack_unit, TUnit* attacked_unit)
 	if (!attack_unit->IsOnBattleground())
 	{
 		std::cout << "Attack is failed/Unit <"<< attack_unit->GetName() <<"> is not on the battleground"<< std::endl;
-		return;
+		return NOT_ON_BATTLEGROUND;
 	}
 	if(!attacked_unit->IsOnBattleground())
 	{
 		std::cout << "Attack is failed/Unit <" << attacked_unit->GetName() << "> is not on the battleground" << std::endl;
-		return;
+		return NOT_ON_BATTLEGROUND;
 	}
 
 	tmp_x = attack_unit->GetX() - attacked_unit->GetX();
@@ -28,7 +28,7 @@ void TBattleground::Attack(TUnit* attack_unit, TUnit* attacked_unit)
 		|| (units_distance_y > attack_unit->GetMaxAttackRadius()))
 	{
 		std::cout << "Distance between units is more than maximum range of attack unit";
-		return;
+		return TOO_FAR_TO_ATTACK;
 	}
 	else
 	{
@@ -38,6 +38,7 @@ void TBattleground::Attack(TUnit* attack_unit, TUnit* attacked_unit)
 		{
 			Death(attacked_unit);
 		}
+		return ALL_OK;
 	}
 
 }
@@ -84,13 +85,14 @@ int TBattleground::Move(TUnit* unit, int x, int y)
 		TileUnitsMap[x][y] = unit->GetType()[0];
 
 		//перемещаем фокус
-		/*focus_tile.x = x;
+	/*	focus_tile.x = x;
 		focus_tile.y = y;*/
 
 		std::cout << "Unit <" << unit->GetName() << "> is moved : [" << unit->GetX() << "][" << unit->GetY();
 		unit->SetPos(x, y);
 		
 		std::cout << "] --> [" << x << "][" << y << "]\n";
+		return ALL_OK;
 	}
 }
 void TBattleground::AddUnit(TUnit* unit, int pos_x, int pos_y)

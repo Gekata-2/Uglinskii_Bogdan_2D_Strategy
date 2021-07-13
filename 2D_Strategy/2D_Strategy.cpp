@@ -164,12 +164,16 @@ int main()
 				}
 				if ((event.key.code == Keyboard::Enter))
 				{//если клавиша Enter
-					key_pressed.PressedEnter(&bg,&unit_abilities);
+					key_pressed.PressedEnter(&bg);
 				}
 				if ((event.key.code == Keyboard::M))
 				{//если клавиша M
 					key_pressed.PressedM(&bg);
 				}		
+				if (event.key.code==Keyboard::A)
+				{//если клавиша A
+					key_pressed.PressedA(&bg); 
+				}
 			}
 		}
 
