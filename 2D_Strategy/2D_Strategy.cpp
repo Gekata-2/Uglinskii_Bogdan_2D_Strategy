@@ -53,7 +53,7 @@ int main()
 
 	TKeyPressEvent key_pressed;
 	
-
+	/////////Спрайт карты/////////
 	Image map_image;
 	map_image.loadFromFile("images/map.png");
 	Texture map;
@@ -61,6 +61,7 @@ int main()
 	Sprite s_map;
 	s_map.setTexture(map);
 
+	/////////Спрат выбранной клетки/////////
 	Image focus_tile_image;
 	focus_tile_image.loadFromFile("images/focus_tile_tr.png");
 	Texture focus_tile_texture;
@@ -71,10 +72,10 @@ int main()
 	s_focus_tile.setTextureRect(sf::IntRect(0, 0, 64, 64));
 	s_focus_tile.setPosition(64, 64);
 
-	key_pressed.SetFocusUnit(bg.GetFocusUnit());
+	key_pressed.SetFocusUnit(bg.GetFocusUnit());//по умолчанию выбранная клетка - 0,0
 
 
-
+	/////////Спрайт юнитов/////////
 	Texture unit_map;
 	unit_map.loadFromImage(map_image);
 
@@ -82,38 +83,36 @@ int main()
 	s_unit_map.setTexture(unit_map);
 
 	
-
+	///////////Шрифт и тексты/////////////
 	Font font;
-	font.loadFromFile("MilknBalls-BlackDemo.ttf");
+	font.loadFromFile("MilknBalls-BlackDemo.ttf");//шрифт
 
 	Text tab_text("", font, 75);
-	tab_text.setFillColor(Color(72, 255, 213));
+	tab_text.setFillColor(Color(72, 255, 213));//текст при табуляции
 
 	Text text("", font, 35);
-	text.setFillColor(Color::Blue);
+	text.setFillColor(Color::Blue);//просто шаблон текста
 
 	Text unit_info_text("", font, 20);
-	unit_info_text.setFillColor(Color(72, 255, 213));
+	unit_info_text.setFillColor(Color(72, 255, 213));//информация о юните
 
 	Text focus_tile_text("", font, 22);
-	focus_tile_text.setFillColor(Color::White);
+	focus_tile_text.setFillColor(Color::White);//информация о текущей выбранной клетки
 
 	Text unit_abilities("", font, 25);
-	unit_abilities.setFillColor(Color::White);
+	unit_abilities.setFillColor(Color::White);//информация о возможностях юнита
 
 
 	Text exceptions("", font, 25);
-	exceptions.setFillColor(Color::Red);
+	exceptions.setFillColor(Color::Red);//информацию об ошибках
 
 	Clock clock;
 	
-	
+	///обаботка ошибок
 	Clock exception_clock;
 
 	bool show_exceptions=false;
 	int exceptions_time = 0;
-
-	
 
 
 	while (window.isOpen())
@@ -121,32 +120,30 @@ int main()
 		if (show_exceptions==true)
 		{
 			exceptions_time+= exception_clock.getElapsedTime().asMicroseconds();
-			//std::cout << "exceptions_time=" + std::to_string(exceptions_time)<<std::endl;
+			std::cout << "exceptions_time=" + std::to_string(exceptions_time)<<std::endl;
 		}
 		if (exceptions_time>=3000000)
 		{
-			show_exceptions = false;
+	
+			key_pressed.SetException(ALL_OK);
 			exceptions_time = 0;
-			//std::cout << "show_exceptions=" + std::to_string(show_exceptions);
 		}
 		float time = clock.getElapsedTime().asMicroseconds();
 	//	std::cout << "time =" << time << std::endl;
 
 		exception_clock.restart();
 		clock.restart();
-
-		sf::Event event;//переменная-событие
 		
-	
+		window.clear(Color(14, 42 ,71));
+
+		///////////////////////////////Обработка клавиш/////////////////////
 		if (Keyboard::isKeyPressed(Keyboard::Escape))
 		{
 			std::cout << "window is closed";
 			window.close();
 		}
-	
-	//	window.setView(view);
 
-		window.clear(Color(14, 42 ,71));
+		sf::Event event;//переменная-событие
 
 		while (window.pollEvent(event))//если никакого события не произошло, то в цикл не попадаем
 		{
@@ -163,12 +160,11 @@ int main()
 				}
 				if ((event.key.code == Keyboard::Left) || (event.key.code == Keyboard::Right)|| (event.key.code == Keyboard::Up)|| (event.key.code == Keyboard::Down))
 				{//если нажаты стрелки
-					key_pressed.ArrowsPressd(&bg, &focus_tile_text, &s_focus_tile, event);
-									
+					key_pressed.ArrowsPressd(&bg, &focus_tile_text, &s_focus_tile, event);						
 				}
 				if ((event.key.code == Keyboard::Enter))
 				{//если клавиша Enter
-					key_pressed.PressedEnter(&bg,&unit_abilities,&exceptions, &show_exceptions,&exceptions_time);
+					key_pressed.PressedEnter(&bg,&unit_abilities);
 				}
 				if ((event.key.code == Keyboard::M))
 				{//если клавиша M
@@ -182,7 +178,6 @@ int main()
 		{
 			for (int j = 0; j < WIDTH_MAP; j++)
 			{
-				//std::cout << (char)bg.TileUnitsMap[i][j]<<" ";
 				if ((bg.TileBackgroundMap[i][j] == '0')) s_map.setTextureRect(IntRect(128, 0, 64, 64));
 				if ((bg.TileBackgroundMap[i][j] == ' ')) s_map.setTextureRect(IntRect(0, 0, 64, 64));
 				if ((bg.TileBackgroundMap[i][j] == 's')) s_map.setTextureRect(IntRect(64, 0, 64, 64));
@@ -192,7 +187,8 @@ int main()
 				window.draw(s_map);
 			}
 		}
-		bg.FillUnitsMap();
+		///////////////////////////////Рисуем юнитов/////////////////////
+		bg.FillUnitsMap();//заполняем карту юнитами
 		for (int i = 0; i < HEIGHT_MAP-2; i++)
 		{
 			for (int j = 0; j < WIDTH_MAP-2; j++)
@@ -209,22 +205,23 @@ int main()
 			}
 				
 		}
-		
+		///////////////////////////////Обновляем тексты/////////////////////
 		key_pressed.UpdateTilesText(&bg, &focus_tile_text, &tab_text, &unit_info_text, bg.GetInfoAboutTile());
+		key_pressed.UpdateUnitAbilitiesText(&unit_abilities);
+		key_pressed.UpdateExceptions(&exceptions, &show_exceptions, &exceptions_time);
 		
+		///Рисуем тексты ///
 		window.draw(tab_text);
 		window.draw(focus_tile_text);
 		window.draw(unit_info_text);
 		window.draw(unit_abilities);
+		///Рисуем выбраннуб клетку///
 		window.draw(s_focus_tile);
 
-		if (show_exceptions == true)
-		{
-			window.draw(exceptions);
-		}
+		///Рисуем исключения///
+		window.draw(exceptions);
 		
 		window.display();
-	
 	}
 
 

@@ -110,7 +110,6 @@ void TBattleground::AddUnit(TUnit* unit, int pos_x, int pos_y)
 }
 
 
-
 void TBattleground::PrintUnits() const
 {
 	for (size_t i = 0; i < bg_size; i++)
@@ -219,7 +218,6 @@ sf::Vector2i TBattleground::MoveFocusTile(sf::Event event)
 	p_focus_tile = tiles[focus_tile.x][focus_tile.y];
 	return focus_tile;
 }
-
 
 
 TUnit* TBattleground::GetFocusUnit()
