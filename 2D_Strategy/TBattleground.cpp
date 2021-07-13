@@ -75,11 +75,18 @@ int TBattleground::Move(TUnit* unit, int x, int y)
 	}
 	else
 	{
+		//очищаем место в котором юнит находился до перемещения
 		tiles[unit->GetX()][unit->GetY()] = NULL;
 		TileUnitsMap[unit->GetX()][unit->GetY()] = ' ';
 
+		//перемещаем юнита
 		tiles[x][y] = unit;
 		TileUnitsMap[x][y] = unit->GetType()[0];
+
+		//перемещаем фокус
+		/*focus_tile.x = x;
+		focus_tile.y = y;*/
+
 		std::cout << "Unit <" << unit->GetName() << "> is moved : [" << unit->GetX() << "][" << unit->GetY();
 		unit->SetPos(x, y);
 		
@@ -172,11 +179,6 @@ sf::String TBattleground::GetInfoAboutTile(int x,int y) const
 	return str;
 
 }
-
-
-
-
-
 
 
 sf::Vector2i TBattleground::MoveFocusTile(sf::Event event)

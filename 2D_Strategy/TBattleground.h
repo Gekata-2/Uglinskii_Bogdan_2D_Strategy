@@ -30,7 +30,7 @@ public:	 std::string TileBackgroundMap[HEIGHT_MAP] =
 		"0     sss0",
 		"0000000000",
 	};
-	  sf::Vector2i focus_tile = { 0,0 };
+	  sf::Vector2i focus_tile;
 	  TUnit* p_focus_tile = NULL;
 	 std::string TileUnitsMap[HEIGHT_MAP-2] = 
 	  {
@@ -63,7 +63,10 @@ public:
 			}
 			
 		}
+		focus_tile.x = 0;
+		focus_tile.y = 0;
 		p_focus_tile = tiles[0][0];
+		
 	}
 	
 	void StopFocus()

@@ -19,49 +19,17 @@ using namespace sf;
 int main()
 {
     TBattleground bg;
-    RenderWindow window(sf::VideoMode(1000, 900), "Lesson 11. kychka-pc.ru");
-
-	
-
-	Image map_image;
-	map_image.loadFromFile("images/map.png");
-	Texture map;
-	map.loadFromImage(map_image);
-	Sprite s_map;
-	s_map.setTexture(map);
-
-	Image focus_tile_image;
-	focus_tile_image.loadFromFile("images/focus_tile_tr.png");
-	Texture focus_tile_texture;
-	focus_tile_texture.loadFromImage(focus_tile_image);
-	Sprite s_focus_tile;
-	s_focus_tile.setTexture(focus_tile_texture);
-
-
-
-	Image empty_image;
-	empty_image.loadFromFile("images/empty_tile.png");
-	Texture empty_texture;
-	empty_texture.loadFromImage(empty_image);
-	Sprite s_empty_tile;
-	s_empty_tile.setTexture(empty_texture);
-
-	Texture unit_map;
-	unit_map.loadFromImage(map_image);
-
-	Sprite s_unit_map;
-	s_unit_map.setTexture(unit_map);
 
 	TSwordsman SwA;
 	TSwordsman SwB;
 
 	TArcher ArA;
 	TArcher ArB;
-	
+
 
 	bg.AddUnit(&ArA, 4, 4);
 	bg.PrintUnits();
-	bg.AddUnit(&ArB, 1, 0);
+	bg.AddUnit(&ArB, 0, 0);
 	bg.PrintUnits();
 	bg.GetInfoAboutTile(1, 0);
 	bg.PrintUnits();
@@ -78,6 +46,42 @@ int main()
 	bg.AddUnit(&SwA, 4, 3);
 	bg.AddUnit(&SwB, 5, 7);
 	bg.PrintUnits();
+
+
+    RenderWindow window(sf::VideoMode(1000, 900), "Lesson 11. kychka-pc.ru");
+
+
+	TKeyPressEvent key_pressed;
+	
+
+	Image map_image;
+	map_image.loadFromFile("images/map.png");
+	Texture map;
+	map.loadFromImage(map_image);
+	Sprite s_map;
+	s_map.setTexture(map);
+
+	Image focus_tile_image;
+	focus_tile_image.loadFromFile("images/focus_tile_tr.png");
+	Texture focus_tile_texture;
+	focus_tile_texture.loadFromImage(focus_tile_image);
+	Sprite s_focus_tile;
+	s_focus_tile.setTexture(focus_tile_texture);
+
+	s_focus_tile.setTextureRect(sf::IntRect(0, 0, 64, 64));
+	s_focus_tile.setPosition(64, 64);
+
+	key_pressed.SetFocusUnit(bg.GetFocusUnit());
+
+
+
+	Texture unit_map;
+	unit_map.loadFromImage(map_image);
+
+	Sprite s_unit_map;
+	s_unit_map.setTexture(unit_map);
+
+	
 
 	Font font;
 	font.loadFromFile("MilknBalls-BlackDemo.ttf");
@@ -102,12 +106,15 @@ int main()
 	exceptions.setFillColor(Color::Red);
 
 	Clock clock;
-	TKeyPressEvent key_pressed;
+	
 	
 	Clock exception_clock;
 
 	bool show_exceptions=false;
 	int exceptions_time = 0;
+
+	
+
 
 	while (window.isOpen())
 	{
@@ -156,15 +163,15 @@ int main()
 				}
 				if ((event.key.code == Keyboard::Left) || (event.key.code == Keyboard::Right)|| (event.key.code == Keyboard::Up)|| (event.key.code == Keyboard::Down))
 				{//если нажаты стрелки
-					key_pressed.ArrowsPressd(&bg, &focus_tile_text, &s_focus_tile, event,10, HEIGHT_MAP * 64 + 10);
+					key_pressed.ArrowsPressd(&bg, &focus_tile_text, &s_focus_tile, event);
 									
 				}
 				if ((event.key.code == Keyboard::Enter))
-				{//если клавиша ТАБ
-					key_pressed.PressedEnter(&bg,&unit_abilities,&exceptions, &show_exceptions);
+				{//если клавиша Enter
+					key_pressed.PressedEnter(&bg,&unit_abilities,&exceptions, &show_exceptions,&exceptions_time);
 				}
 				if ((event.key.code == Keyboard::M))
-				{//если клавиша ТАБ
+				{//если клавиша M
 					key_pressed.PressedM(&bg, &unit_abilities);
 				}		
 			}
@@ -203,7 +210,7 @@ int main()
 				
 		}
 		
-	
+		key_pressed.UpdateTilesText(&bg, &focus_tile_text, &tab_text, &unit_info_text, bg.GetInfoAboutTile());
 		
 		window.draw(tab_text);
 		window.draw(focus_tile_text);

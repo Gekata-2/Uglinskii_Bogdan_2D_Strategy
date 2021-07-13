@@ -49,8 +49,31 @@ public:
 
 		return str;
 	}
+	void SetFocusUnit(TUnit* f_u)
+	{
+		focus_unit = f_u;
+	}
 
-	sf::Vector2i ArrowsPressd(TBattleground* bg,sf::Text* focus_tile_txt,sf::Sprite* sprite, sf::Event event, int x, int y)
+
+	void UpdateTilesText(TBattleground* bg,sf::Text* focus_tile_txt, sf::Text* tab_text, sf::Text* unit_info_text, sf::String unit_info_str)
+	{
+		////////////////Инфа о текущей клетке
+		Vector2i v_f = bg->GetFocusTile();
+		sf:String tmp_s = "Focus tile :" + std::to_string(v_f.x) + "  " + std::to_string(v_f.y) + "\n Focus unit:" + bg->GetInfoAboutTile();
+
+		std::string focus_unit_pos = "";
+
+		if (move == true)// и если нажата M 
+		{
+			focus_unit_pos = "\n\nFrom[" + std::to_string(unit_to_move->GetX()) + "][" + std::to_string(unit_to_move->GetY()) +
+				"] to [" + std::to_string(bg->GetFocusTile().x) + "][" + std::to_string(bg->GetFocusTile().y) + "]";
+			tmp_s = "Focus tile :" + std::to_string(v_f.x) + "  " + std::to_string(v_f.y);
+		}
+		focus_tile_txt->setPosition(10, HEIGHT_MAP * 64 + 10);
+		focus_tile_txt->setString(tmp_s + focus_unit_pos);
+	}
+
+	sf::Vector2i ArrowsPressd(TBattleground* bg,sf::Text* focus_tile_txt,sf::Sprite* sprite, sf::Event event)
 	{
 		std::cout << "Arrow is pressed" << (char)event.key.code << std::endl;
 		bg->MoveFocusTile(event);
@@ -59,18 +82,18 @@ public:
 	
 		
 		Vector2i v_f = bg->GetFocusTile();
-		sf:String tmp_s = "Focus tile :" + std::to_string(v_f.x) + "  " + std::to_string(v_f.y)+"\n Focus unit:"+bg->GetInfoAboutTile();
+		//sf:String tmp_s = "Focus tile :" + std::to_string(v_f.x) + "  " + std::to_string(v_f.y)+"\n Focus unit:"+bg->GetInfoAboutTile();
 
-		std::string focus_unit_pos = "";
+		//std::string focus_unit_pos = "";
 
-		if (move == true)// и если нажата M 
-		{
-			 focus_unit_pos = "\n\nFrom[" + std::to_string(unit_to_move->GetX()) + "][" + std::to_string(unit_to_move->GetY()) +
-			"] to [" + std::to_string(bg->GetFocusTile().x) + "][" + std::to_string(bg->GetFocusTile().y) + "]";
-			 tmp_s = "Focus tile :" + std::to_string(v_f.x) + "  " + std::to_string(v_f.y);
-		}
-		focus_tile_txt->setPosition(x, y);
-		focus_tile_txt->setString(tmp_s+ focus_unit_pos);
+		//if (move == true)// и если нажата M 
+		//{
+		//	 focus_unit_pos = "\n\nFrom[" + std::to_string(unit_to_move->GetX()) + "][" + std::to_string(unit_to_move->GetY()) +
+		//	"] to [" + std::to_string(bg->GetFocusTile().x) + "][" + std::to_string(bg->GetFocusTile().y) + "]";
+		//	 tmp_s = "Focus tile :" + std::to_string(v_f.x) + "  " + std::to_string(v_f.y);
+		//}
+		//focus_tile_txt->setPosition(10, HEIGHT_MAP * 64 + 10);
+		//focus_tile_txt->setString(tmp_s+ focus_unit_pos);
 
 		sprite->setTextureRect(sf::IntRect(0, 0, 64, 64));
 		sprite->setPosition((v_f.y +1)* 64, (v_f.x +1)* 64);
@@ -78,11 +101,12 @@ public:
 		return v_f;
 	}
 
-	void PressedEnter(TBattleground* bg, sf::Text* unit_abilities, sf::Text* exception,bool* show_exception)
+	void PressedEnter(TBattleground* bg, sf::Text* unit_abilities, sf::Text* exception,bool* show_exception,int* exceptions_time)
 	{		
+	
 		if (focus_unit!=NULL)//навели на юнита
 		{
-			
+			std::cout << "ENTER:" << focus_unit->GetInfo() << std::endl;
 			switch (enter_pressed)
 			{
 			case false://если до этого энтер не был нажат
@@ -93,12 +117,27 @@ public:
 					enter_pressed = true;//говорим что энтер нажат
 					break;
 				}
-			case true:
+			case true://чтобы вновь позволить игроку передвигать фокус
 				{
 					
 					bg->ReleaseFocus();
 					unit_abilities->setString("");//убираем информацию о возможностях 
+					if (move == true)// и если нажата M 
+					{
+	
+						exception->setPosition(10, HEIGHT_MAP * 64 + 200);
+						
+						exception->setString("This tile already taken");
+						*exceptions_time = 0;
+						*show_exception = true;
+
+						unit_abilities->setPosition(WIDTH_MAP * 64 + 10, 10);//выводим информацию о возможностях героя
+						unit_abilities->setString("[M-move character]\n");
+
+						break;
+					}
 					enter_pressed = false;//отпускаем энтер
+					break;
 				}
 			default:
 				break;
@@ -106,39 +145,56 @@ public:
 		}
 		else//если место фокуса не персонаж
 		{
+			exception->setPosition(10, HEIGHT_MAP * 64 + 200);
+
+			if (enter_pressed == false)
+			{
+				exception->setString("Not a unit");
+				*show_exception = true;
+			}
 			if (move == true)// и если нажата M 
 			{
-				/*std::string focus_unit_pos = "From[" + std::to_string(unit_to_move->GetX()) + "][" + std::to_string(unit_to_move->GetY()) +
-					"] to [" + std::to_string(bg->GetFocusTile().x) + "][" + std::to_string(bg->GetFocusTile().y)+"]";*/
-
 				exceptions=bg->Move(unit_to_move, bg->GetFocusTile().x, bg->GetFocusTile().y);//перемещаем юнита в новое место
-				exception->setPosition(10, HEIGHT_MAP * 64 + 200);
-				if (exceptions==TOO_FAR)
+				
+				
+				
+				switch (exceptions)
 				{
-					exception->setString("Unit can't go this far");
-					*show_exception = true;
-				}
-				if (exceptions == ALREADY_TAKEN)
-				{
-					exception->setString("This tile already taken");
-					*show_exception = true;
-				}
-				if (exceptions == INCORRECT_DISTINATION)
-				{
-					exception->setString("Incorrect distinaition to move");
-					*show_exception = true;
-				}
-				//unit_abilities->setPosition(WIDTH_MAP * 64 + 10, 10);//выводим информацию о возможностях героя
-				unit_abilities->setString("");
+				case TOO_FAR:
+					{
+						exception->setString("Unit can't go this far");
+						*show_exception = true;
+						break;
+					}
+				case ALREADY_TAKEN:
+					{
+						exception->setString("This tile already taken");
+						*show_exception = true;
+						break;
+					}
+				case INCORRECT_DISTINATION:
+					{
+						exception->setString("Incorrect distinaition to move");
+						*show_exception = true;
+						break;
+					}
 
-				unit_to_move = NULL;
+				default:
+					{	
+					focus_unit = bg->GetFocusUnit();
+					unit_abilities->setString("");
+					unit_to_move = NULL;
 
-				move = false;
-				enter_pressed = false;//отпускаем энтер
-			
+					move = false;
+					enter_pressed = false;//отпускаем энтер
+					break;
+					}
+				}				
 			}
-		}
+			
+				
 		
+		}		
 	}
 
 	void PressedM(TBattleground* bg, sf::Text* unit_abilities)
@@ -149,9 +205,9 @@ public:
 			unit_to_move= bg->GetFocusUnit();//запоминаем указатель на юнит, который нужно передвинуть
 			bg->ReleaseFocus();//позволяем игроку выбрать место куда переместиться
 			
-			std::string focus_unit_pos = "From[" + std::to_string(focus_unit->GetX()) + "][" + std::to_string(focus_unit->GetY()) +"]";
+		//	std::string focus_unit_pos = "From[" + std::to_string(focus_unit->GetX()) + "][" + std::to_string(focus_unit->GetY()) +"]";
 			unit_abilities->setPosition(WIDTH_MAP * 64 + 10,10);//выводим информацию о возможностях героя
-			unit_abilities->setString("[M-move character]\n" + focus_unit_pos);
+			unit_abilities->setString("[M-move character]\n");
 		
 			//bg->Move(focus_unit, bg->GetFocusTile().x, bg->GetFocusTile().y);
 
