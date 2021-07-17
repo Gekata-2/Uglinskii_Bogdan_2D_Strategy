@@ -15,6 +15,13 @@ class TKeyPressEvent
 	bool move = false;
 
 	enum{NOTHING,MOVE,ATTACK} EState;
+	enum{PLAY=0,EXIT} EMenu;
+
+	int menu=2;
+	const int menu_size = 2;
+	sf::Vector2i select_pos = { 733,300 };
+	const sf::Vector2i max_pos = { 700,520 };
+	const sf::Vector2i min_pos = { 733,300 };
 
 	TUnit* focus_unit=NULL;
 	TUnit* memorized_unit=NULL;
@@ -80,7 +87,28 @@ public:
 		
 	}
 
-	
+	void UpdateTimer(sf::Text* tab_text, int* time)
+	{
+		std::string str = "\0";
+		tab_text->setPosition(WIDTH_MAP * 64 / 2 - 64, 0);
+		switch (showTab)
+		{
+		case true:
+		{
+
+			str = "Time(TAB)" + std::to_string(*time / 60) + ":" + std::to_string(*time - (*time / 60) * 60);
+			str += "	In seconds :" + std::to_string(*time);
+			
+			tab_text->setString(str);
+			break;
+		}
+		case false:
+		{
+			tab_text->setString("");
+			break;
+		}
+		}
+	}
 
 	void UpdateExceptions(sf::Text* exception_text, bool* show_exception, int* exceptions_time)
 	{
@@ -135,6 +163,51 @@ public:
 		}
 	}
 
+	void ArrowsPressdMenu(sf::Event event)
+	{
+		if (event.key.code == sf::Keyboard::Up)
+		{
+			menu +=1;
+		
+			if (menu>menu_size)
+			{
+				menu = 2;
+				select_pos.y = min_pos.y;
+			}
+			else
+			{
+				select_pos.y -= 120;
+			}
+			
+		}
+		if (event.key.code == sf::Keyboard::Down)
+		{
+			menu -= 1;
+			
+			if (menu < 1)
+			{
+				menu = 1;
+				select_pos.y = max_pos.y;
+			}
+			else
+			{
+				select_pos.y += 120;
+			}
+		
+			
+		}
+	}
+	void UpdateSelectMenu(sf::Sprite* select)
+	{
+		select->setPosition(select_pos.x, select_pos.y);
+	}
+
+	int GetMenuState()
+	{
+		return menu;
+	}
+
+
 	sf::Vector2i ArrowsPressd(TBattleground* bg,sf::Sprite* sprite, sf::Event event)
 	{
 		std::cout << "Arrow is pressed" << (char)event.key.code << std::endl;
@@ -167,7 +240,13 @@ public:
 				}
 			case true://чтобы вновь позволить игроку передвигать фокус
 				{
-					bg->ReleaseFocus();
+					if (EState==NOTHING)//если игрок не выбрал никакого действия то возвращаем фокус
+					{
+						bg->ReleaseFocus(); 
+						enter_pressed = false;
+						break;
+					}
+					
 					if (EState == MOVE)// и если пытаемся переместиться на место занятое другим юнитом
 					{
 						exceptions = ALREADY_TAKEN;
@@ -180,8 +259,8 @@ public:
 						focus_unit = bg->GetFocusUnit();//перемещаем фокус на атакованного юнита
 						memorized_unit = NULL;//забываем атаковавшего юнита
 						EState = NOTHING;//атака завершена и персонаж переходит в нейтральное состояние
-					}
-					enter_pressed = false;//отпускаем энтер
+						enter_pressed = false;//отпускаем энтер
+					}			
 					break;
 				}
 			default:
@@ -217,7 +296,7 @@ public:
 		if (enter_pressed==true)//если энтер нажат
 		{
 		
-			if (EState == MOVE)
+			if (EState == MOVE)//если нажимаем повторно, то отменяем действие
 			{
 				EState = NOTHING;
 				enter_pressed = false;
@@ -240,7 +319,7 @@ public:
 	{
 		if (enter_pressed==true)//если энтер нажат то можно выполнять атаку
 		{
-			if (EState == ATTACK)
+			if (EState == ATTACK)//если нажимаем повторно, то отменяем действие
 			{
 				EState = NOTHING;
 				enter_pressed = false;
@@ -258,37 +337,35 @@ public:
 	}
 
 
-	sf::String PressedTab(sf::Text* tab_text, sf::Text* unit_info_text, sf::String unit_info_str, int x, int y)
+	sf::String PressedTab(sf::Text* tab_text,int* time)
 	{
 		sf::String str;
 
-		if (EState == MOVE)
+		if( (EState == MOVE)||(EState == ATTACK))
 		{
 			showTab = false;
 		}
 		switch (showTab)
 		{
-		case true:
-		{
-			str = "info(TAB)";
+			case true:
+			{
 
-			tab_text->setPosition(x, y);
-			tab_text->setString(str);
+				str = "Time(TAB)"+std::to_string(*time/60)+":"+ std::to_string(*time - (*time / 60)*60);
+				str += "	In seconds :" + std::to_string(*time) ;
+				tab_text->setPosition(WIDTH_MAP*64/2-64,0);
+				tab_text->setString(str);
 
-			unit_info_text->setPosition(x - 32, y + 96);
-			unit_info_text->setString(unit_info_str);
 
-			showTab = false;
-			break;
-		}
-		case false:
-		{
-			str = "";
-			tab_text->setString(str);
-			unit_info_text->setString("");
-			showTab = true;
-			break;
-		}
+				showTab = false;
+				break;
+			}
+			case false:
+			{
+			
+				tab_text->setString("");
+				showTab = true;
+				break;
+			}
 		}
 
 		return str;

@@ -5,7 +5,7 @@
 class TSwordsman : public TUnit
 {
 public:
-	TSwordsman(int position_x=-1,int position_y=-1,std::string def_name = "\0")
+	TSwordsman(std::string def_name = "\0",int position_x=-1,int position_y=-1)
 	{
 		current_HP = 100;
 		max_HP = 100;
@@ -31,7 +31,7 @@ public:
 		pos_x = position_x;
 		pos_y = position_y;
 
-		type = "S";
+		type = "Swordsman";
 
 		PrintInfo();
 

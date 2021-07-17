@@ -13,6 +13,7 @@ protected:
 	std::string name = "\0";
 	float base_attack_damage = 1;
 	std::string type = "\0";
+	int side = 0;
 	bool is_on_battleground = false;//находится ли юнит на доске
 public:
 	//геттеры
@@ -25,6 +26,7 @@ public:
 	virtual int			GetX() const;//получить координату X
 	virtual int		    GetY() const;//получить координату Y
 	virtual int		    GetMaxMoveTiles() const;
+	virtual int			GetSide() const;
 	virtual bool		IsOnBattleground() const;//находится ли сейчас юнит на доске
 	virtual std::string GetName() const;//имя
 	virtual std::string GetType() const;
@@ -36,6 +38,7 @@ public:
 	virtual void SetBaseDamage(float new_base_damage);//базовый урон
 	virtual void SetMaxAttackRadius(float new_max_radius);//радиус атаки
 	virtual void SetMaxMoveTiles(int new_max_move_tiles);
+	virtual void SetSide(int sd);
 
 	virtual void PrintInfo() const =0 ;//вывести информацию о юните
 

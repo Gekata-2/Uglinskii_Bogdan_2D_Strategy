@@ -3,7 +3,7 @@
 class TArcher : public TUnit
 {
 public:
-	TArcher(int position_x=-1, int position_y=-1, std::string def_name = "\0")
+	TArcher(std::string def_name = "\0",int position_x=-1, int position_y=-1)
 	{
 		current_HP = 75;
 		max_HP = 75;
@@ -30,7 +30,7 @@ public:
 		pos_x = position_x;
 		pos_y = position_y;
 
-		type = "A";
+		type = "Archer";
 
 		PrintInfo();
 	}

@@ -166,7 +166,7 @@ void TBattleground::FillUnitsMap()
 sf::String TBattleground::GetInfoAboutTile(int x,int y) const
 {
 	sf::String str;
-	std::cout << "Focus tile : " << std::to_string(focus_tile.x) << " " << std::to_string(focus_tile.y)<<std::endl;
+	//std::cout << "Focus tile : " << std::to_string(focus_tile.x) << " " << std::to_string(focus_tile.y)<<std::endl;
 		if (tiles[focus_tile.x][focus_tile.y] != NULL)
 		{
 			str=tiles[focus_tile.x][focus_tile.y]->GetInfo();

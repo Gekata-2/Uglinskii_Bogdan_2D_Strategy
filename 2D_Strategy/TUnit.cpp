@@ -88,6 +88,11 @@ std::string TUnit::GetType() const
 	return type;
 }
 
+int TUnit::GetSide() const
+{
+	return side;
+}
+
 
 //-------Сеттеры----------//
 void TUnit::SetCurrentHP(float new_hp)
@@ -119,3 +124,9 @@ void TUnit::SetOnBattleground()
 {
 	is_on_battleground = true;
 }
+
+void TUnit::SetSide(int sd)
+{
+	side = sd;
+}
+

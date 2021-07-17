@@ -5,6 +5,7 @@
 #include "TArcher.h"
 #include "TSwordsman.h"
 #include "KeyPressEvent.h"
+#include "Player.h"
 #include <windows.h>
 //#include "TView.h"
 #include <SFML/Graphics.hpp>
@@ -27,6 +28,12 @@ int main()
 	TArcher ArB;
 
 
+
+	//TPlayer P1(1, "Bogdan");
+
+	//std::cout << "|||||||||||||||||||||||||||||||||||||||||||||\n";
+	//P1.PrintInfo();
+
 	bg.AddUnit(&ArA, 4, 4);
 	bg.PrintUnits();
 	bg.AddUnit(&ArB, 0, 0);
@@ -48,11 +55,26 @@ int main()
 	bg.PrintUnits();
 
 
-    RenderWindow window(sf::VideoMode(1000, 900), "Lesson 11. kychka-pc.ru");
+    RenderWindow window(sf::VideoMode(1920, 1080), "Swords and other stuff...");
 
 
 	TKeyPressEvent key_pressed;
 	
+
+	Image select_menu_image;
+	select_menu_image.loadFromFile("images/selc.png");
+	Texture select_menu_texture;
+	select_menu_texture.loadFromImage(select_menu_image);
+	Sprite s_select_menu;
+	s_select_menu.setTexture(select_menu_texture);
+	/////////Спрайт картинка/////////
+	Image menu_image;
+	menu_image.loadFromFile("images/menu.png");
+	Texture menu;
+	menu.loadFromImage(menu_image);
+	Sprite s_menu;
+	s_menu.setTexture(menu);
+
 	/////////Спрайт карты/////////
 	Image map_image;
 	map_image.loadFromFile("images/map.png");
@@ -87,8 +109,8 @@ int main()
 	Font font;
 	font.loadFromFile("MilknBalls-BlackDemo.ttf");//шрифт
 
-	Text tab_text("", font, 75);
-	tab_text.setFillColor(Color(72, 255, 213));//текст при табуляции
+	Text tab_text("", font, 20);
+	tab_text.setFillColor(Color(255, 10, 10));//текст при табуляции
 
 	Text text("", font, 35);
 	text.setFillColor(Color::Blue);//просто шаблон текста
@@ -114,118 +136,180 @@ int main()
 	bool show_exceptions=false;
 	int exceptions_time = 0;
 
-
-	while (window.isOpen())
+	int time_s=0;
+	enum { MENU, BATTLE, LOSE }EDislpay;
+	EDislpay = BATTLE;
+	while (window.isOpen())//3 цикла вложенных
 	{
-		if (show_exceptions==true)
-		{
-			exceptions_time+= exception_clock.getElapsedTime().asMicroseconds();
-			std::cout << "exceptions_time=" + std::to_string(exceptions_time)<<std::endl;
-		}
-		if (exceptions_time>=3000000)
-		{
-	
-			key_pressed.SetException(ALL_OK);
-			exceptions_time = 0;
-		}
-		float time = clock.getElapsedTime().asMicroseconds();
-	//	std::cout << "time =" << time << std::endl;
-
-		exception_clock.restart();
-		clock.restart();
-		
-		window.clear(Color(14, 42 ,71));
-
-		///////////////////////////////Обработка клавиш/////////////////////
-		if (Keyboard::isKeyPressed(Keyboard::Escape))
-		{
-			std::cout << "window is closed";
-			window.close();
-		}
-
 		sf::Event event;//переменная-событие
 
-		while (window.pollEvent(event))//если никакого события не произошло, то в цикл не попадаем
+		while (EDislpay==MENU)
 		{
-			if (event.type == sf::Event::Closed)//если мы  каким то способом сгенерировали  событие "закрытие" , то закрываем окно
+			window.clear(Color(14, 42, 71));
+
+			while (window.pollEvent(event)) 
 			{
-				std::cout << "window is closed";
-				window.close();
-			}
-			if (event.type == Event::KeyPressed)
-			{
-				if ((event.key.code == Keyboard::Tab))
-				{//если клавиша ТАБ
-					key_pressed.PressedTab(&tab_text, &unit_info_text,bg.GetInfoAboutTile(), 32, HEIGHT_MAP * 64 - 20);
+				if (event.type == sf::Event::Closed)//если мы  каким то способом сгенерировали  событие "закрытие" , то закрываем окно
+				{
+					std::cout << "window is closed";
+					window.close();
 				}
-				if ((event.key.code == Keyboard::Left) || (event.key.code == Keyboard::Right)|| (event.key.code == Keyboard::Up)|| (event.key.code == Keyboard::Down))
+				if (Keyboard::isKeyPressed(Keyboard::Escape))
+				{
+					std::cout << "window is closed";
+					window.close();
+				}
+				if ((event.key.code == Keyboard::Up) || (event.key.code == Keyboard::Down))
 				{//если нажаты стрелки
-					key_pressed.ArrowsPressd(&bg, &s_focus_tile, event);						
+					key_pressed.ArrowsPressdMenu(event);
 				}
 				if ((event.key.code == Keyboard::Enter))
 				{//если клавиша Enter
-					key_pressed.PressedEnter(&bg);
+					switch (key_pressed.GetMenuState())
+					{
+					case 2: 
+						{
+							EDislpay = BATTLE;
+							break;
+						}
+					case 1: 
+						{
+							window.close();
+							break; 
+						}
+		
+					default:
+						break;
+					}
 				}
-				if ((event.key.code == Keyboard::M))
-				{//если клавиша M
-					key_pressed.PressedM(&bg);
-				}		
-				if (event.key.code==Keyboard::A)
-				{//если клавиша A
-					key_pressed.PressedA(&bg); 
-				}
+
 			}
+
+			key_pressed.UpdateSelectMenu(&s_select_menu);
+			window.draw(s_menu);
+			window.draw(s_select_menu);
+			window.display();
 		}
 
-		///////////////////////////////Рисуем карту/////////////////////
-		for (int i = 0; i < HEIGHT_MAP; i++)
+		while (EDislpay == BATTLE)
 		{
-			for (int j = 0; j < WIDTH_MAP; j++)
+			///////////////////////////////Отображение исключений/////////////////////
+			if (show_exceptions == true)
 			{
-				if ((bg.TileBackgroundMap[i][j] == '0')) s_map.setTextureRect(IntRect(128, 0, 64, 64));
-				if ((bg.TileBackgroundMap[i][j] == ' ')) s_map.setTextureRect(IntRect(0, 0, 64, 64));
-				if ((bg.TileBackgroundMap[i][j] == 's')) s_map.setTextureRect(IntRect(64, 0, 64, 64));
-				
-				
-				s_map.setPosition(j * 64, i * 64);
-				window.draw(s_map);
+				exceptions_time += exception_clock.getElapsedTime().asMicroseconds();
+				//std::cout << "exceptions_time=" + std::to_string(exceptions_time)<<std::endl;
 			}
-		}
-		///////////////////////////////Рисуем юнитов/////////////////////
-		bg.FillUnitsMap();//заполняем карту юнитами
-		for (int i = 0; i < HEIGHT_MAP-2; i++)
-		{
-			for (int j = 0; j < WIDTH_MAP-2; j++)
-			{	
-			    if (bg.TileUnitsMap[i][j] == 'A')  s_unit_map.setTextureRect(IntRect(192, 0, 64, 64));
-				if (bg.TileUnitsMap[i][j] == 'S')  s_unit_map.setTextureRect(IntRect(256, 0, 64, 64));
+			if (exceptions_time >= 3000000)
+			{
 
-				if(bg.TileUnitsMap[i][j] == ' ')
+				key_pressed.SetException(ALL_OK);
+				exceptions_time = 0;
+			}
+
+			time_s = clock.getElapsedTime().asSeconds();
+			std::cout << "time =" << time_s << std::endl;
+
+			exception_clock.restart();
+			//	clock.restart();
+
+			window.clear(Color(14, 42, 71));
+
+			///////////////////////////////Обработка клавиш/////////////////////
+			if (Keyboard::isKeyPressed(Keyboard::Escape))
+			{
+				std::cout << "Return to menu";
+				EDislpay = MENU;
+				//window.close();
+			}
+
+			
+
+			while (window.pollEvent(event))//если никакого события не произошло, то в цикл не попадаем
+			{
+				if (event.type == sf::Event::Closed)//если мы  каким то способом сгенерировали  событие "закрытие" , то закрываем окно
 				{
-					continue;
+					std::cout << "window is closed";
+					window.close();
 				}
-				s_unit_map.setPosition((j * 64)+64, (i * 64)+64);
-				window.draw(s_unit_map);
+				if (event.type == Event::KeyPressed)
+				{
+					if ((event.key.code == Keyboard::Tab))
+					{//если клавиша ТАБ
+						key_pressed.PressedTab(&tab_text, &time_s);
+					}
+					if ((event.key.code == Keyboard::Left) || (event.key.code == Keyboard::Right) || (event.key.code == Keyboard::Up) || (event.key.code == Keyboard::Down))
+					{//если нажаты стрелки
+						key_pressed.ArrowsPressd(&bg, &s_focus_tile, event);
+					}
+					if ((event.key.code == Keyboard::Enter))
+					{//если клавиша Enter
+						key_pressed.PressedEnter(&bg);
+					}
+					if ((event.key.code == Keyboard::M))
+					{//если клавиша M
+						key_pressed.PressedM(&bg);
+					}
+					if (event.key.code == Keyboard::A)
+					{//если клавиша A
+						key_pressed.PressedA(&bg);
+					}
+				}
 			}
-				
-		}
-		///////////////////////////////Обновляем тексты/////////////////////
-		key_pressed.UpdateTilesText(&bg, &focus_tile_text, &tab_text, &unit_info_text, bg.GetInfoAboutTile());
-		key_pressed.UpdateUnitAbilitiesText(&unit_abilities);
-		key_pressed.UpdateExceptions(&exceptions, &show_exceptions, &exceptions_time);
-		
-		///Рисуем тексты ///
-		window.draw(tab_text);
-		window.draw(focus_tile_text);
-		window.draw(unit_info_text);
-		window.draw(unit_abilities);
-		///Рисуем выбраннуб клетку///
-		window.draw(s_focus_tile);
 
-		///Рисуем исключения///
-		window.draw(exceptions);
+			///////////////////////////////Рисуем карту/////////////////////
+			for (int i = 0; i < HEIGHT_MAP; i++)
+			{
+				for (int j = 0; j < WIDTH_MAP; j++)
+				{
+					if ((bg.TileBackgroundMap[i][j] == '0')) s_map.setTextureRect(IntRect(128, 0, 64, 64));
+					if ((bg.TileBackgroundMap[i][j] == ' ')) s_map.setTextureRect(IntRect(0, 0, 64, 64));
+					if ((bg.TileBackgroundMap[i][j] == 's')) s_map.setTextureRect(IntRect(64, 0, 64, 64));
+
+
+					s_map.setPosition(j * 64, i * 64);
+					window.draw(s_map);
+				}
+			}
+			///////////////////////////////Рисуем юнитов/////////////////////
+			bg.FillUnitsMap();//заполняем карту юнитами
+			for (int i = 0; i < HEIGHT_MAP - 2; i++)
+			{
+				for (int j = 0; j < WIDTH_MAP - 2; j++)
+				{
+					if (bg.TileUnitsMap[i][j] == 'A')  s_unit_map.setTextureRect(IntRect(192, 0, 64, 64));
+					if (bg.TileUnitsMap[i][j] == 'S')  s_unit_map.setTextureRect(IntRect(256, 0, 64, 64));
+
+					if (bg.TileUnitsMap[i][j] == ' ')
+					{
+						continue;
+					}
+					s_unit_map.setPosition((j * 64) + 64, (i * 64) + 64);
+					window.draw(s_unit_map);
+				}
+
+			}
+			///////////////////////////////Обновляем тексты/////////////////////
+			key_pressed.UpdateTilesText(&bg, &focus_tile_text, &tab_text, &unit_info_text, bg.GetInfoAboutTile());
+			key_pressed.UpdateUnitAbilitiesText(&unit_abilities);
+			key_pressed.UpdateExceptions(&exceptions, &show_exceptions, &exceptions_time);
+			key_pressed.UpdateTimer(&tab_text, &time_s);
+
+			///Рисуем тексты ///
+			window.draw(focus_tile_text);
+			window.draw(unit_info_text);
+			window.draw(unit_abilities);
+			window.draw(tab_text);
+			///Рисуем выбраннуб клетку///
+			window.draw(s_focus_tile);
+
+			///Рисуем исключения///
+			window.draw(exceptions);
+			window.display();
+
+		}
 		
-		window.display();
+
+		
 	}
 
 
