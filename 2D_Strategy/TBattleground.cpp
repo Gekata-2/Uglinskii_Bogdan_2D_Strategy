@@ -56,16 +56,12 @@ void TBattleground::Death(TUnit* unit)
 
 	for (size_t i = 0; i < number_of_players; i++)
 	{
-		
 		if (unit->GetSide()==p_vec[i]->GetID())
 		{
 			p_vec[i]->DeleteUnit(unit);
 		}
-		std::cout << "Number of units P2" << p_vec[i]->GetNumberOfUnits();
 	}
-
-
-	//unit->SetPos(-1, -1);//сделать через delete
+	
 	std::cout << "Unit "<<unit->GetName()<<" is dead *\n" << std::endl;
 }
 

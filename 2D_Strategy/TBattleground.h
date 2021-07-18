@@ -72,7 +72,9 @@ public:
 		}
 		focus_tile.x = 0;
 		focus_tile.y = 0;
+
 		p_focus_tile = tiles[0][0];
+
 		p_vec.resize(2);
 	}
 

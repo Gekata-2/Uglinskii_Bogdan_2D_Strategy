@@ -11,6 +11,8 @@
 #include <SFML/Graphics.hpp>
 using namespace sf;
 
+enum { MENU, INITIALISATION, BATTLE, WIN, CLOSE }EDislpay;
+
 void GenerateUnit(TUnit** unit, std::string type, int side,std::string name="\0")
 {
 	if (type == "Archer")
@@ -59,7 +61,7 @@ int main()
 
 	TPlayer P1(1, "Bogdan");
 	TPlayer P2(2, "ZXC");
-	int player_size = 5;
+	int player_size = 2;
 
 	bg.AddPlayer(&P1);
 	bg.AddPlayer(&P2);
@@ -85,7 +87,7 @@ int main()
 		bg.AddUnit(unit_vec2[i], i, 7);
 
 	}
-
+	std::string winner = "\0";
 
 	std::cout << "|||||||||||||||||||||||||||||||||||||||||||||\n";
 	P1.PrintInfo();
@@ -194,9 +196,12 @@ int main()
 	Text unit_abilities("", font, 25);
 	unit_abilities.setFillColor(Color::White);//информация о возможностях юнита
 
-
 	Text exceptions("", font, 25);
 	exceptions.setFillColor(Color::Red);//информацию об ошибках
+
+
+	Text text_winner("", font, 25);
+	text_winner.setFillColor(Color::Red);//информацию об ошибках
 
 	Clock clock;
 	
@@ -207,7 +212,7 @@ int main()
 	int exceptions_time = 0;
 
 	int time_s=0;
-	enum { MENU,INITIALISATION, BATTLE, LOSE ,CLOSE}EDislpay;
+
 	EDislpay = MENU;
 
 	bool show_exit=false;
@@ -352,10 +357,6 @@ int main()
 			window.clear(Color(14, 42, 71));
 
 			///////////////////////////////Обработка клавиш/////////////////////
-			
-
-			
-
 			while (window.pollEvent(event))//если никакого события не произошло, то в цикл не попадаем
 			{
 				if (event.type == sf::Event::Closed)//если мы  каким то способом сгенерировали  событие "закрытие" , то закрываем окно
@@ -427,6 +428,20 @@ int main()
 
 			}
 
+			///////////////////////////////Проверка на победу/////////////////////
+			if ( (P2.GetNumberOfUnits()==0)||(P1.GetNumberOfUnits()==0) )
+			{
+				if (P2.GetNumberOfUnits() == 0)
+				{
+					winner = P2.GetName();
+				}
+				else if (P1.GetNumberOfUnits() == 0)
+				{
+					winner = P1.GetName();
+				}
+				EDislpay = WIN;
+			}
+
 			std::cout << "Number of units P2: " << P2.GetNumberOfUnits() << "\n";
 			///////////////////////////////Обновляем тексты/////////////////////
 			key_pressed.UpdateTilesText(&bg, &focus_tile_text, &tab_text, &unit_info_text, bg.GetInfoAboutTile());
@@ -457,20 +472,26 @@ int main()
 			}
 
 		}
+
+		while (EDislpay == WIN)
+		{
+			window.clear(Color(14, 42, 71));
+			while (window.pollEvent(event))
+			{
+				if (event.key.code == Keyboard::Escape)
+				{
+					std::cout << "Return to menu";
+					EDislpay = MENU;
+				}
+			}
+
+			text_winner.setPosition(900, 500);
+			text_winner.setString(winner);
+
+			window.draw(text_winner);
+			window.display();
+		}
 	}
-
-
-   /* bg.Attack(&SwA, &ArA);
-    bg.Attack(&SwB, &ArA);
-    bg.Attack(&ArA, &SwA);
-    bg.Attack(&SwB, &ArA);
-    bg.Attack(&SwB, &ArA);
-
-    SwA.PrintInfo();
-    SwB.PrintInfo();
-    ArA.PrintInfo();
-    bg.PrintUnits();*/
-
   
     std::cout << "Hello World!\n";
 }

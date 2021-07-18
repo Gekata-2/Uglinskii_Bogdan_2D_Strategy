@@ -35,10 +35,17 @@ public:
 	{
 		return id;
 	}
+
+	std::string GetName()
+	{
+		return name;
+	}
+
 	int GetNumberOfUnits()
 	{
 		return number_of_units;
 	}
+
 	void AddUnit(TUnit* unit)//добавляем юнита в конец
 	{
 		units.push_back(unit);
