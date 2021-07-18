@@ -5,9 +5,6 @@
 
 int TBattleground::Attack(TUnit* attack_unit, TUnit* attacked_unit)
 {
-	int tmp_x, tmp_y;
-	int units_distance_x, units_distance_y;
-
 	if (!attack_unit->IsOnBattleground())
 	{
 		std::cout << "Attack is failed/Unit <"<< attack_unit->GetName() <<"> is not on the battleground"<< std::endl;
@@ -18,9 +15,13 @@ int TBattleground::Attack(TUnit* attack_unit, TUnit* attacked_unit)
 		std::cout << "Attack is failed/Unit <" << attacked_unit->GetName() << "> is not on the battleground" << std::endl;
 		return NOT_ON_BATTLEGROUND;
 	}
+	
+	int tmp_x, tmp_y;
+	int units_distance_x, units_distance_y;
 
 	tmp_x = attack_unit->GetX() - attacked_unit->GetX();
 	tmp_y = attack_unit->GetY() - attacked_unit->GetY();
+
 	units_distance_x = abs(tmp_x);
 	units_distance_y = abs(tmp_y);
 
@@ -30,17 +31,22 @@ int TBattleground::Attack(TUnit* attack_unit, TUnit* attacked_unit)
 		std::cout << "Distance between units is more than maximum range of attack unit";
 		return TOO_FAR_TO_ATTACK;
 	}
+	else if (attack_unit->GetSide()!=attacked_unit->GetSide())
+	{
+		{
+			std::cout << "Attack" << std::endl;
+			attacked_unit->SetCurrentHP(attacked_unit->GetCurrentHP() - attack_unit->GetBaseDamage());
+			if (attacked_unit->GetCurrentHP() <= 0)
+			{
+				Death(attacked_unit);
+			}
+			return ALL_OK;
+		}
+	}
 	else
 	{
-		std::cout << "Attack" << std::endl;
-		attacked_unit->SetCurrentHP(attacked_unit->GetCurrentHP() - attack_unit->GetBaseDamage());
-		if (attacked_unit->GetCurrentHP()<=0)
-		{
-			Death(attacked_unit);
-		}
-		return ALL_OK;
+		return FRIENDLY_UNIT;
 	}
-
 }
 
 

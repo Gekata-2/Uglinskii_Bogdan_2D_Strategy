@@ -10,19 +10,7 @@
 #include "TSwordsman.h"
 
 
-void GenerateUnit(TUnit* unit,std::string type,int side)
-{
-	if (type == "Archer")
-	{
-		unit = new TArcher;
-		unit->SetSide(side);
-	}
-	if (type == "Swordsman")
-	{
-		unit = new TSwordsman;
-		unit->SetSide(side);
-	}
-}
+
 
 
 class TPlayer
@@ -52,42 +40,7 @@ public:
 		std::cout << (*it)->GetInfo();
 	}
 
-	//void CreateUnit(std::string type,std::string name="\0")
-	//{
-	//	if (type=="Archer")
-	//	{
-	//		TArcher* ar;
-	//		ar->SetSide(id);
-	//		AddUnit(ar);
-	//	
-	//	}
-	//	if (type == "Swordsman")
-	//	{
-	//		TSwordsman* sw;
-	//		sw->SetSide(id);
-	//		AddUnit(sw);
-	//	}
-	//	
-	//}
-
-	//void GenerateUnits(size_t size)
-	//{
-	//	int tp;
-	//	for (size_t i = 0; i < size; i++)
-	//	{
-	//		std::cout << "i=" << i << "\n";
-	//		tp = rand() % 2;
-	//		if (tp==0)
-	//		{
-	//			CreateUnit("Swordsman",std::to_string(i));
-	//		}
-	//		if (tp == 1)
-	//		{
-	//			CreateUnit("Archer", std::to_string(i));
-	//		}
-	//	}
-	//}
-
+	
 	void DeleteUnit(TUnit* unit)//ищем юнита и убираем
 	{
 		std::list<TUnit*>::iterator it = units.begin();

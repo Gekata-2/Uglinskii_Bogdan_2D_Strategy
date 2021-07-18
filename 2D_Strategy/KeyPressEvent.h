@@ -160,6 +160,12 @@ public:
 			*show_exception = true;
 			break;
 		}
+		case FRIENDLY_UNIT:
+			{
+			exception_text->setString("You can't attack friendly unit");
+			*show_exception = true;
+			break;
+			}
 		default:
 			break;
 		}
@@ -268,8 +274,14 @@ public:
 					if ((EState==ATTACK)&&(memorized_unit!=focus_unit))//если мы атакуем юнита и при этом только вражеского
 					{
 						exceptions=bg->Attack(memorized_unit, focus_unit);
+						
+						if (exceptions==FRIENDLY_UNIT)
+						{
+							break;
+						}
 
 						focus_unit = bg->GetFocusUnit();//перемещаем фокус на атакованного юнита
+
 						memorized_unit = NULL;//забываем атаковавшего юнита
 						EState = NOTHING;//атака завершена и персонаж переходит в нейтральное состояние
 						enter_pressed = false;//отпускаем энтер

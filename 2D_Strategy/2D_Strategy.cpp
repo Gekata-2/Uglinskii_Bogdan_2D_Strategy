@@ -11,7 +11,37 @@
 #include <SFML/Graphics.hpp>
 using namespace sf;
 
+void GenerateUnit(TUnit** unit, std::string type, int side,std::string name="\0")
+{
+	if (type == "Archer")
+	{
+		*unit = new TArcher(name);
+		(*unit)->SetSide(side);
+	}
+	if (type == "Swordsman")
+	{
+		*unit = new TSwordsman(name);
+		(*unit)->SetSide(side);
+	}
+}
 
+void CreateSetOfUnits(std::vector<TUnit*>* vec,int side)
+{
+		int tp;
+		for (size_t i = 0; i < vec->size(); i++)
+		{
+				std::cout << "i=" << i << "\n";
+				tp = rand() % 2;
+				if (tp==0)
+				{
+					GenerateUnit(&(*vec)[i],"Archer",side);
+				}
+				if (tp == 1)
+				{
+					GenerateUnit(&(*vec)[i], "Swordsman", side);
+				}
+		}
+}
 
 /**
 72 255 213 зелёный
@@ -28,17 +58,41 @@ int main()
 	TArcher ArB;
 
 	TPlayer P1(1, "Bogdan");
+	TPlayer P2(2, "ZXC");
+	int player_size = 5;
 
-	TUnit* unit;
-	GenerateUnit(unit,"Swordsman",1);
-
-	P1.AddUnit(unit);
+	std::vector<TUnit*> unit_vec1;
+	unit_vec1.resize(player_size);
+	CreateSetOfUnits(&unit_vec1, 1);
 	
+	for (size_t i = 0; i < player_size; i++)
+	{
+		P1.AddUnit(unit_vec1[i]);
+		bg.AddUnit(unit_vec1[i], i, 0);
+		
+	}
+
+	std::vector<TUnit*> unit_vec2;
+	unit_vec2.resize(player_size);
+	CreateSetOfUnits(&unit_vec2, 2);
+
+	for (size_t i = 0; i < player_size; i++)
+	{
+		P2.AddUnit(unit_vec2[i]);
+		bg.AddUnit(unit_vec2[i], i, 7);
+
+	}
+
 
 	std::cout << "|||||||||||||||||||||||||||||||||||||||||||||\n";
 	P1.PrintInfo();
+	std::cout << "|||||||||||||||||||||||||||||||||||||||||||||\n";
+	P2.PrintInfo();
 
-	bg.AddUnit(&ArA, 4, 4);
+	//TUnit* unit;
+	//GenerateUnit(&unit_vec1[0], "Swordsman", 1);
+
+	/*bg.AddUnit(&ArA, 4, 4);
 	bg.PrintUnits();
 	bg.AddUnit(&ArB, 0, 0);
 	bg.PrintUnits();
@@ -56,7 +110,7 @@ int main()
 	bg.PrintUnits();
 	bg.AddUnit(&SwA, 4, 3);
 	bg.AddUnit(&SwB, 5, 7);
-	bg.PrintUnits();
+	bg.PrintUnits();*/
 
 
     RenderWindow window(sf::VideoMode(1920, 1080), "Swords and other stuff...");
@@ -148,7 +202,7 @@ int main()
 	int exceptions_time = 0;
 
 	int time_s=0;
-	enum { MENU, BATTLE, LOSE ,CLOSE}EDislpay;
+	enum { MENU,INITIALISATION, BATTLE, LOSE ,CLOSE}EDislpay;
 	EDislpay = MENU;
 
 	bool show_exit=false;
@@ -386,7 +440,16 @@ int main()
 			window.display();
 
 		}
-	
+		while (EDislpay == INITIALISATION)
+		{
+			window.clear(Color(14, 42, 71));
+
+			while (window.pollEvent(event))
+			{
+
+			}
+
+		}
 	}
 
 

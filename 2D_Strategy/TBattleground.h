@@ -15,6 +15,7 @@ const int WIDTH_MAP = 10;//размер карты ширина
 #define NOT_A_UNIT 5
 #define NOT_ON_BATTLEGROUND 6
 #define TOO_FAR_TO_ATTACK 7
+#define FRIENDLY_UNIT 8
 
 class TBattleground
 {
