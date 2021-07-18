@@ -11,6 +11,8 @@
 #include <SFML/Graphics.hpp>
 using namespace sf;
 
+
+
 enum { MENU, INITIALISATION, BATTLE, WIN, CLOSE }EDislpay;
 
 void GenerateUnit(TUnit** unit, std::string type, int side,std::string name="\0")
@@ -59,13 +61,21 @@ int main()
 	TArcher ArA;
 	TArcher ArB;
 
-	TPlayer P1(1, "Bogdan");
-	TPlayer P2(2, "ZXC");
-	int player_size = 2;
 
+	TPlayer P1(58, "Bogdan");
+	TPlayer P2(69, "ZXC");
+
+	
+
+	int players_id[MAX_NUMBER_OF_PLAYERS] = {P1.GetID(),P2.GetID()};//массив с id игроков
+
+	int player_size = 1;//количество персонажей у игрока
+
+	//добавляем на поле игроков
 	bg.AddPlayer(&P1);
 	bg.AddPlayer(&P2);
 
+	//генерируем юнитов для 1-го игрока
 	std::vector<TUnit*> unit_vec1;
 	unit_vec1.resize(player_size);
 	CreateSetOfUnits(&unit_vec1, P1.GetID());
@@ -77,6 +87,7 @@ int main()
 		
 	}
 
+	//генерируем юнитов для 2-го игрока
 	std::vector<TUnit*> unit_vec2;
 	unit_vec2.resize(player_size);
 	CreateSetOfUnits(&unit_vec2, P2.GetID());
@@ -87,43 +98,19 @@ int main()
 		bg.AddUnit(unit_vec2[i], i, 7);
 
 	}
-	std::string winner = "\0";
+	std::string winner = "\0";//имя победителя
 
 	std::cout << "|||||||||||||||||||||||||||||||||||||||||||||\n";
 	P1.PrintInfo();
 	std::cout << "|||||||||||||||||||||||||||||||||||||||||||||\n";
 	P2.PrintInfo();
 
-//	P2.DeleteUnit(unit_vec2[2]);
-
-	//TUnit* unit;
-	//GenerateUnit(&unit_vec1[0], "Swordsman", 1);
-
-	/*bg.AddUnit(&ArA, 4, 4);
-	bg.PrintUnits();
-	bg.AddUnit(&ArB, 0, 0);
-	bg.PrintUnits();
-	bg.GetInfoAboutTile(1, 0);
-	bg.PrintUnits();
-	bg.Move(&ArA, 5, 5);
-	bg.PrintUnits();
-	bg.Move(&ArA, 6, 6);
-	bg.PrintUnits();
-	bg.Move(&ArA, 7, 7);
-	bg.PrintUnits();
-	bg.Move(&ArA, 0, 7);
-	bg.PrintUnits();
-	bg.Move(&ArA, 4, 6);
-	bg.PrintUnits();
-	bg.AddUnit(&SwA, 4, 3);
-	bg.AddUnit(&SwB, 5, 7);
-	bg.PrintUnits();*/
-
 
     RenderWindow window(sf::VideoMode(1920, 1080), "Swords and other stuff...");
 
 
 	TKeyPressEvent key_pressed;
+	key_pressed.Initialization(players_id);
 
 	/////////Спрайт подтверждения выхода/////////
 	Image menu_exit_confirm_image;
@@ -168,7 +155,6 @@ int main()
 
 	key_pressed.SetFocusUnit(bg.GetFocusUnit());//по умолчанию выбранная клетка - 0,0
 
-
 	/////////Спрайт юнитов/////////
 	Texture unit_map;
 	unit_map.loadFromImage(map_image);
@@ -202,6 +188,9 @@ int main()
 
 	Text text_winner("", font, 25);
 	text_winner.setFillColor(Color::Red);//информацию об ошибках
+
+	Text t_turn("", font, 25);
+	t_turn.setFillColor(Color::Red);//информацию об ошибках
 
 	Clock clock;
 	
@@ -361,8 +350,7 @@ int main()
 			{
 				if (event.type == sf::Event::Closed)//если мы  каким то способом сгенерировали  событие "закрытие" , то закрываем окно
 				{
-					std::cout << "window is closed";
-					window.close();
+					EDislpay = CLOSE;
 				}
 				if (event.type == Event::KeyPressed)
 				{
@@ -433,11 +421,11 @@ int main()
 			{
 				if (P2.GetNumberOfUnits() == 0)
 				{
-					winner = P2.GetName();
+					winner = P1.GetName();
 				}
 				else if (P1.GetNumberOfUnits() == 0)
 				{
-					winner = P1.GetName();
+					winner = P2.GetName();
 				}
 				EDislpay = WIN;
 			}
@@ -449,11 +437,15 @@ int main()
 			key_pressed.UpdateExceptions(&exceptions, &show_exceptions, &exceptions_time);
 			key_pressed.UpdateTimer(&tab_text, &time_s);
 
+			t_turn.setPosition(100, 20);
+			t_turn.setString(std::to_string(key_pressed.GetTurn()));
+
 			///Рисуем тексты ///
 			window.draw(focus_tile_text);
 			window.draw(unit_info_text);
 			window.draw(unit_abilities);
 			window.draw(tab_text);
+			window.draw(t_turn);
 			///Рисуем выбраннуб клетку///
 			window.draw(s_focus_tile);
 
@@ -483,10 +475,14 @@ int main()
 					std::cout << "Return to menu";
 					EDislpay = MENU;
 				}
+				if (event.type == sf::Event::Closed)//если мы  каким то способом сгенерировали  событие "закрытие" , то закрываем окно
+				{
+					EDislpay = CLOSE;
+				}
 			}
 
 			text_winner.setPosition(900, 500);
-			text_winner.setString(winner);
+			text_winner.setString("The winner is: "+winner);
 
 			window.draw(text_winner);
 			window.display();

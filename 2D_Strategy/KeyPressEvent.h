@@ -6,13 +6,20 @@
 
 
 
+#define MAX_NUMBER_OF_PLAYERS 2
 using namespace sf;
 
 class TKeyPressEvent
 {
+	
+
 	bool showTab = true;
 	bool enter_pressed = false;
 	bool move = false;
+
+	int turn;
+	int ids[MAX_NUMBER_OF_PLAYERS];
+	int i_id = 0;
 
 	enum{NOTHING,MOVE,ATTACK} EState;
 	enum{PLAY=0,EXIT} EMenu;
@@ -31,6 +38,21 @@ class TKeyPressEvent
 	int exceptions=0;
 public:
 
+	void Initialization(int* players_id)//говорим какие игроки есть
+	{
+		for (size_t i = 0; i < MAX_NUMBER_OF_PLAYERS; i++)
+		{
+			ids[i] = players_id[i];
+		}
+		turn = ids[0];
+	}
+
+	void NextTurn()//следующий ход(циклично)
+	{
+		i_id = (i_id + 1) % MAX_NUMBER_OF_PLAYERS;
+		turn = ids[i_id];
+	}
+	
 	void SetException(int i)
 	{
 		exceptions = i;
@@ -39,6 +61,16 @@ public:
 	void SetFocusUnit(TUnit* f_u)
 	{
 		focus_unit = f_u;
+	}
+
+	void SetTurn(int tn)
+	{
+		turn = tn;
+	}
+
+	int GetTurn()
+	{
+		return turn;
 	}
 
 
@@ -166,6 +198,12 @@ public:
 			*show_exception = true;
 			break;
 			}
+			case ENEMY_UNIT:
+			{
+				exception_text->setString("Enemy Unit");
+				*show_exception = true;
+				break;
+			}	
 		default:
 			break;
 		}
@@ -245,9 +283,13 @@ public:
 
 	void PressedEnter(TBattleground* bg)
 	{		
-	
-		if (focus_unit!=NULL)//навели на юнита
+		if(focus_unit!=NULL) //навели на юнита
 		{
+			if((focus_unit->GetSide() != turn)&&(EState!=ATTACK))//если навели на вражеского юнита
+			{
+				exceptions = ENEMY_UNIT;
+				return;
+			}
 			//std::cout << "ENTER:" << focus_unit->GetInfo() << std::endl;
 			switch (enter_pressed)
 			{
@@ -285,6 +327,7 @@ public:
 						memorized_unit = NULL;//забываем атаковавшего юнита
 						EState = NOTHING;//атака завершена и персонаж переходит в нейтральное состояние
 						enter_pressed = false;//отпускаем энтер
+						NextTurn();
 					}			
 					break;
 				}
@@ -308,6 +351,7 @@ public:
 
 				EState = NOTHING;
 				enter_pressed = false;//отпускаем энтер
+				NextTurn();
 			}
 			if (EState==ATTACK)
 			{
