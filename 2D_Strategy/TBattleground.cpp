@@ -53,7 +53,19 @@ int TBattleground::Attack(TUnit* attack_unit, TUnit* attacked_unit)
 void TBattleground::Death(TUnit* unit)
 {
 	tiles[unit->GetX()][unit->GetY()] = NULL;
-	unit->SetPos(-1, -1);//сделать через delete
+
+	for (size_t i = 0; i < number_of_players; i++)
+	{
+		
+		if (unit->GetSide()==p_vec[i]->GetID())
+		{
+			p_vec[i]->DeleteUnit(unit);
+		}
+		std::cout << "Number of units P2" << p_vec[i]->GetNumberOfUnits();
+	}
+
+
+	//unit->SetPos(-1, -1);//сделать через delete
 	std::cout << "Unit "<<unit->GetName()<<" is dead *\n" << std::endl;
 }
 
@@ -176,7 +188,7 @@ sf::String TBattleground::GetInfoAboutTile(int x,int y) const
 		if (tiles[focus_tile.x][focus_tile.y] != NULL)
 		{
 			str=tiles[focus_tile.x][focus_tile.y]->GetInfo();
-			tiles[focus_tile.x][focus_tile.y]->PrintInfo();
+		//	tiles[focus_tile.x][focus_tile.y]->PrintInfo();
 		}
 		else
 		{

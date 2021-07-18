@@ -248,7 +248,7 @@ public:
 	
 		if (focus_unit!=NULL)//навели на юнита
 		{
-			std::cout << "ENTER:" << focus_unit->GetInfo() << std::endl;
+			//std::cout << "ENTER:" << focus_unit->GetInfo() << std::endl;
 			switch (enter_pressed)
 			{
 			case false://если до этого энтер не был нажат

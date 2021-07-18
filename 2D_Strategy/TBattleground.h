@@ -3,6 +3,7 @@
 //#include "TSwordsman.h"
 #include "TUnit.h"
 #include "math.h"
+#include "Player.h"
 #include <SFML\Graphics.hpp>
 const int HEIGHT_MAP = 10;//размер карты высота
 const int WIDTH_MAP = 10;//размер карты ширина 
@@ -22,6 +23,8 @@ class TBattleground
 	size_t bg_size = 8;
 	TUnit*** tiles = new TUnit** [bg_size];
 	bool focus_stoped = false;
+	std::vector<TPlayer*> p_vec;
+	int number_of_players = 0;
 
 public:	 std::string TileBackgroundMap[HEIGHT_MAP] =
     {
@@ -50,8 +53,6 @@ public:	 std::string TileBackgroundMap[HEIGHT_MAP] =
 		"        ",
 	  };
 	
-	//TUnit* tiles[8][8] = {0};
-	
 public:
 	TBattleground()
 	{
@@ -72,7 +73,13 @@ public:
 		focus_tile.x = 0;
 		focus_tile.y = 0;
 		p_focus_tile = tiles[0][0];
-		
+		p_vec.resize(2);
+	}
+
+	void AddPlayer(TPlayer* pl)
+	{
+		p_vec[number_of_players] = pl;
+		number_of_players++;
 	}
 	
 	void StopFocus()

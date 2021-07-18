@@ -22,14 +22,23 @@ private:
 	std::string name;
 	int id;
 
+
 public:
 
-	TPlayer(int i,std::string nm)
+	TPlayer(int i, std::string nm)
 	{
 		id = i;
 		name = nm;
 	}
 
+	int GetID()
+	{
+		return id;
+	}
+	int GetNumberOfUnits()
+	{
+		return number_of_units;
+	}
 	void AddUnit(TUnit* unit)//добавляем юнита в конец
 	{
 		units.push_back(unit);
@@ -59,7 +68,6 @@ public:
 
 	void PrintInfo()
 	{
-
 		std::list<TUnit*>::iterator it = units.begin();
 
 		for (it = units.begin(); it != units.end(); it++)

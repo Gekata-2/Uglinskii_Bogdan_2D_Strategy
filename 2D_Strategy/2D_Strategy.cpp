@@ -61,9 +61,12 @@ int main()
 	TPlayer P2(2, "ZXC");
 	int player_size = 5;
 
+	bg.AddPlayer(&P1);
+	bg.AddPlayer(&P2);
+
 	std::vector<TUnit*> unit_vec1;
 	unit_vec1.resize(player_size);
-	CreateSetOfUnits(&unit_vec1, 1);
+	CreateSetOfUnits(&unit_vec1, P1.GetID());
 	
 	for (size_t i = 0; i < player_size; i++)
 	{
@@ -74,7 +77,7 @@ int main()
 
 	std::vector<TUnit*> unit_vec2;
 	unit_vec2.resize(player_size);
-	CreateSetOfUnits(&unit_vec2, 2);
+	CreateSetOfUnits(&unit_vec2, P2.GetID());
 
 	for (size_t i = 0; i < player_size; i++)
 	{
@@ -88,6 +91,8 @@ int main()
 	P1.PrintInfo();
 	std::cout << "|||||||||||||||||||||||||||||||||||||||||||||\n";
 	P2.PrintInfo();
+
+//	P2.DeleteUnit(unit_vec2[2]);
 
 	//TUnit* unit;
 	//GenerateUnit(&unit_vec1[0], "Swordsman", 1);
@@ -339,7 +344,7 @@ int main()
 			}
 
 			time_s = clock.getElapsedTime().asSeconds();
-			std::cout << "time =" << time_s << std::endl;
+		//	std::cout << "time =" << time_s << std::endl;
 
 			exception_clock.restart();
 			//	clock.restart();
@@ -421,6 +426,8 @@ int main()
 				}
 
 			}
+
+			std::cout << "Number of units P2: " << P2.GetNumberOfUnits() << "\n";
 			///////////////////////////////Обновляем тексты/////////////////////
 			key_pressed.UpdateTilesText(&bg, &focus_tile_text, &tab_text, &unit_info_text, bg.GetInfoAboutTile());
 			key_pressed.UpdateUnitAbilitiesText(&unit_abilities);
