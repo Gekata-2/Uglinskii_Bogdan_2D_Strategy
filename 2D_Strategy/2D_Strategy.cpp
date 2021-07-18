@@ -27,12 +27,16 @@ int main()
 	TArcher ArA;
 	TArcher ArB;
 
+	TPlayer P1(1, "Bogdan");
 
+	TUnit* unit;
+	GenerateUnit(unit,"Swordsman",1);
 
-	//TPlayer P1(1, "Bogdan");
+	P1.AddUnit(unit);
+	
 
-	//std::cout << "|||||||||||||||||||||||||||||||||||||||||||||\n";
-	//P1.PrintInfo();
+	std::cout << "|||||||||||||||||||||||||||||||||||||||||||||\n";
+	P1.PrintInfo();
 
 	bg.AddUnit(&ArA, 4, 4);
 	bg.PrintUnits();
@@ -59,15 +63,22 @@ int main()
 
 
 	TKeyPressEvent key_pressed;
-	
 
+	/////////Спрайт подтверждения выхода/////////
+	Image menu_exit_confirm_image;
+	menu_exit_confirm_image.loadFromFile("images/confirm_exit.png");
+	Texture menu_exit_confirm_texture;
+	menu_exit_confirm_texture.loadFromImage(menu_exit_confirm_image);
+	Sprite s_confrim_exit;
+	s_confrim_exit.setTexture(menu_exit_confirm_texture);
+	/////////Спрайт селектора меню/////////
 	Image select_menu_image;
 	select_menu_image.loadFromFile("images/selc.png");
 	Texture select_menu_texture;
 	select_menu_texture.loadFromImage(select_menu_image);
 	Sprite s_select_menu;
 	s_select_menu.setTexture(select_menu_texture);
-	/////////Спрайт картинка/////////
+	/////////Спрайт меню/////////
 	Image menu_image;
 	menu_image.loadFromFile("images/menu.png");
 	Texture menu;
@@ -137,12 +148,19 @@ int main()
 	int exceptions_time = 0;
 
 	int time_s=0;
-	enum { MENU, BATTLE, LOSE }EDislpay;
-	EDislpay = BATTLE;
+	enum { MENU, BATTLE, LOSE ,CLOSE}EDislpay;
+	EDislpay = MENU;
+
+	bool show_exit=false;
+
 	while (window.isOpen())//3 цикла вложенных
 	{
 		sf::Event event;//переменная-событие
-
+		std::cout << "window : " << window.isOpen() << "\n";
+		if (EDislpay == CLOSE)
+		{
+			window.close();
+		}
 		while (EDislpay==MENU)
 		{
 			window.clear(Color(14, 42, 71));
@@ -154,40 +172,100 @@ int main()
 					std::cout << "window is closed";
 					window.close();
 				}
-				if (Keyboard::isKeyPressed(Keyboard::Escape))
+				if (event.type == Event::KeyPressed)
 				{
-					std::cout << "window is closed";
-					window.close();
-				}
-				if ((event.key.code == Keyboard::Up) || (event.key.code == Keyboard::Down))
-				{//если нажаты стрелки
-					key_pressed.ArrowsPressdMenu(event);
-				}
-				if ((event.key.code == Keyboard::Enter))
-				{//если клавиша Enter
-					switch (key_pressed.GetMenuState())
+					if (event.key.code==Keyboard::Escape)
 					{
-					case 2: 
+						switch (show_exit)
 						{
-							EDislpay = BATTLE;
+						case true://если уже показываем подтверждение выхода то выходим из этого меню				
+						{
+							show_exit = false;
 							break;
 						}
-					case 1: 
+						case false://если не показываем меную выхода,то начинаем его показывать
 						{
-							window.close();
-							break; 
+							show_exit = true;
+							break;
 						}
-		
-					default:
-						break;
+						default:
+							break;
+						}
+
+					}
+					if ((event.key.code == Keyboard::Up) || (event.key.code == Keyboard::Down))
+					{//если нажаты стрелки
+						if (show_exit==false)
+						{
+							key_pressed.ArrowsPressdMenu(event);
+						}
+					}
+					if ((event.key.code == Keyboard::Left) || (event.key.code == Keyboard::Right))
+					{//если нажаты стрелки
+						if (show_exit==true)
+						{
+							key_pressed.ArrowsPressedExit(event);
+						}		
+					}
+					if(event.key.code == Keyboard::Enter)
+					{//если клавиша Enter
+
+						switch (show_exit)
+						{
+								case true://если уже показываем подтверждение выхода то выходим из этого меню				
+								{
+									switch (key_pressed.GetExit())
+									{
+									case true://если подтверждаем то выходим
+									{
+										EDislpay = CLOSE;
+										break;
+									}
+									case false://иначе выходим из подтверждения выхода
+									{
+										show_exit = false;
+										break;
+									}
+									default:
+										break;
+									}
+									break;
+								}
+
+								case false://если не показываем меную выхода,то начинаем его показывать
+								{
+									switch (key_pressed.GetMenuState())
+									{
+									case 2:
+									{
+										EDislpay = BATTLE;
+										break;
+									}
+									case 1:
+									{
+										show_exit = true;
+										break;
+									}
+									default:
+										break;
+									}
+								}
+							default:
+								break;
+							}
 					}
 				}
 
 			}
-
+		std::cout << "Menu:" << key_pressed.GetMenuState();
+		std::cout << "	Exit:" << show_exit << "\n";
 			key_pressed.UpdateSelectMenu(&s_select_menu);
 			window.draw(s_menu);
 			window.draw(s_select_menu);
+			if (show_exit==true)
+			{
+				window.draw(s_confrim_exit);
+			}
 			window.display();
 		}
 
@@ -215,12 +293,7 @@ int main()
 			window.clear(Color(14, 42, 71));
 
 			///////////////////////////////Обработка клавиш/////////////////////
-			if (Keyboard::isKeyPressed(Keyboard::Escape))
-			{
-				std::cout << "Return to menu";
-				EDislpay = MENU;
-				//window.close();
-			}
+			
 
 			
 
@@ -233,6 +306,12 @@ int main()
 				}
 				if (event.type == Event::KeyPressed)
 				{
+					if (event.key.code == Keyboard::Escape)
+					{
+						std::cout << "Return to menu";
+						EDislpay = MENU;
+						//window.close();
+					}
 					if ((event.key.code == Keyboard::Tab))
 					{//если клавиша ТАБ
 						key_pressed.PressedTab(&tab_text, &time_s);
@@ -307,9 +386,7 @@ int main()
 			window.display();
 
 		}
-		
-
-		
+	
 	}
 
 

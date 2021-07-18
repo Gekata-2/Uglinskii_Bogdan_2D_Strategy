@@ -18,8 +18,10 @@ class TKeyPressEvent
 	enum{PLAY=0,EXIT} EMenu;
 
 	int menu=2;
+	bool exit = false;
 	const int menu_size = 2;
 	sf::Vector2i select_pos = { 733,300 };
+	sf::Vector2i exit_pos = { 733,300 };
 	const sf::Vector2i max_pos = { 700,520 };
 	const sf::Vector2i min_pos = { 733,300 };
 
@@ -167,36 +169,44 @@ public:
 	{
 		if (event.key.code == sf::Keyboard::Up)
 		{
-			menu +=1;
-		
-			if (menu>menu_size)
+			if (menu< menu_size)
 			{
-				menu = 2;
-				select_pos.y = min_pos.y;
+				menu += 1;
+				select_pos.y -= 180;
 			}
-			else
-			{
-				select_pos.y -= 120;
-			}
-			
+					
 		}
 		if (event.key.code == sf::Keyboard::Down)
 		{
-			menu -= 1;
-			
-			if (menu < 1)
+			if (menu>1)
 			{
-				menu = 1;
-				select_pos.y = max_pos.y;
+				menu -= 1;
+				select_pos.y += 180;
 			}
-			else
-			{
-				select_pos.y += 120;
-			}
-		
-			
+				
 		}
 	}
+	void ArrowsPressedExit(sf::Event event)
+	{
+		if (event.key.code == sf::Keyboard::Left)
+		{
+			exit = true;
+
+			exit_pos = { 733,300 };
+
+		}
+		if (event.key.code == sf::Keyboard::Right)
+		{
+			exit = false;
+			exit_pos = { 933,300 };
+		}
+	}
+
+	void UpdateSelectExit(sf::Sprite* select)
+	{
+		select->setPosition(exit_pos.x, exit_pos.y);
+	}
+
 	void UpdateSelectMenu(sf::Sprite* select)
 	{
 		select->setPosition(select_pos.x, select_pos.y);
@@ -206,7 +216,10 @@ public:
 	{
 		return menu;
 	}
-
+	int GetExit()
+	{
+		return exit;
+	}
 
 	sf::Vector2i ArrowsPressd(TBattleground* bg,sf::Sprite* sprite, sf::Event event)
 	{
