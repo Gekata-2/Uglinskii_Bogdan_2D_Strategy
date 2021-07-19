@@ -4,7 +4,8 @@
 #include <Windows.h>
 #include "TBattleground.h"
 
-
+#define BATTLE_WIDTH_OFFSET 545
+#define BATTLE_HEIGHT_OFFSET 50
 
 #define MAX_NUMBER_OF_PLAYERS 2
 using namespace sf;
@@ -19,6 +20,8 @@ class TKeyPressEvent
 
 	int turn;
 	int ids[MAX_NUMBER_OF_PLAYERS];
+	std::string name="\0";
+	std::string names[MAX_NUMBER_OF_PLAYERS];
 	int i_id = 0;
 
 	enum{NOTHING,MOVE,ATTACK} EState;
@@ -38,19 +41,22 @@ class TKeyPressEvent
 	int exceptions=0;
 public:
 
-	void Initialization(int* players_id)//говорим какие игроки есть
+	void Initialization(int* players_id,std::string* nmes)//говорим какие игроки есть
 	{
 		for (size_t i = 0; i < MAX_NUMBER_OF_PLAYERS; i++)
 		{
 			ids[i] = players_id[i];
+			names[i] = nmes[i];
 		}
 		turn = ids[0];
+		name = names[0];
 	}
 
 	void NextTurn()//следующий ход(циклично)
 	{
 		i_id = (i_id + 1) % MAX_NUMBER_OF_PLAYERS;
 		turn = ids[i_id];
+		name = names[i_id];
 	}
 	
 	void SetException(int i)
@@ -72,6 +78,10 @@ public:
 	{
 		return turn;
 	}
+	std::string GetName()
+	{
+		return name;
+	}
 
 	
 
@@ -86,7 +96,6 @@ public:
 
 	void UpdateSelectMenu(sf::Text* txt_play, sf::Text* txt_exit)
 	{
-
 		switch (menu)
 		{
 
@@ -104,8 +113,6 @@ public:
 		
 				break;
 			}
-		
-
 		default:
 			break;
 		}
@@ -137,12 +144,20 @@ public:
 	}
 
 
-	void UpdateTilesText(TBattleground* bg,sf::Text* focus_tile_txt, sf::Text* tab_text, sf::Text* unit_info_text, sf::String unit_info_str)
+	void UpdateTilesText(TBattleground* bg,sf::Text* focus_tile_txt, sf::Text* tab_text, sf::String unit_info_str)
 	{
 		////////////////Инфа о текущей клетке
 		Vector2i v_f = bg->GetFocusTile();
-		String tmp_s = "Focus tile :" + std::to_string(v_f.x) + "  " + std::to_string(v_f.y) + "\n Focus unit:\n" + bg->GetInfoAboutTile();
-
+		String tmp_s = "Selected tile :" + std::to_string(v_f.x) + "  " + std::to_string(v_f.y)+"\n" ;
+		
+		if (bg->GetInfoAboutTile()=="NULL")
+		{
+			tmp_s += "Empty tile";
+		}
+		else
+		{
+			tmp_s += bg->GetInfoAboutTile();
+		}
 		std::string focus_unit_pos = "";
 
 		if (EState==MOVE)// и если нажата M 
@@ -151,14 +166,14 @@ public:
 				"] to [" + std::to_string(bg->GetFocusTile().x) + "][" + std::to_string(bg->GetFocusTile().y) + "]";
 			tmp_s = "Focus tile :" + std::to_string(v_f.x) + "  " + std::to_string(v_f.y);
 		}
-		focus_tile_txt->setPosition(10, HEIGHT_MAP * 64 + 10);
+		focus_tile_txt->setPosition(1440, 50);
 		focus_tile_txt->setString(tmp_s + focus_unit_pos);
 	}
 
 	void UpdateUnitAbilitiesText(sf::Text* unit_abilities)
 	{
 		std::string all_abilities = "\0";
-		unit_abilities->setPosition(WIDTH_MAP * 64 + 10, 10);
+	
 
 		if (focus_unit != NULL)
 		{
@@ -168,7 +183,7 @@ public:
 			}
 			if (enter_pressed == false)
 			{
-				all_abilities = "asdas";
+				all_abilities = "";
 			}
 		}
 		if (EState==MOVE)
@@ -187,7 +202,6 @@ public:
 	void UpdateTimer(sf::Text* tab_text, int* time)
 	{
 		std::string str = "\0";
-		tab_text->setPosition(WIDTH_MAP * 64 / 2 - 64, 0);
 		switch (showTab)
 		{
 		case true:
@@ -209,7 +223,7 @@ public:
 
 	void UpdateExceptions(sf::Text* exception_text, bool* show_exception, int* exceptions_time)
 	{
-		exception_text->setPosition(10, HEIGHT_MAP * 64 + 200);
+		
 
 		switch (exceptions)
 		{
@@ -318,7 +332,7 @@ public:
 		Vector2i v_f = bg->GetFocusTile();
 
 		sprite->setTextureRect(sf::IntRect(0, 0, 64, 64));
-		sprite->setPosition((v_f.y +1)* 64, (v_f.x +1)* 64);
+		sprite->setPosition((v_f.y +1)* 83+ BATTLE_WIDTH_OFFSET, (v_f.x +1)* 83+ BATTLE_HEIGHT_OFFSET);
 
 		return v_f;
 	}
@@ -387,13 +401,17 @@ public:
 			{
 				exceptions = bg->Move(memorized_unit, bg->GetFocusTile().x, bg->GetFocusTile().y);//перемещаем юнита в новое место
 				
-				focus_unit = bg->GetFocusUnit();//т.к. юнит переместился, то нужно перевести указатель на "новое место" юнита
-				
-				memorized_unit = NULL;
+				if (exceptions==ALL_OK)
+				{
+					NextTurn();
+					focus_unit = bg->GetFocusUnit();//т.к. юнит переместился, то нужно перевести указатель на "новое место" юнита
 
-				EState = NOTHING;
-				enter_pressed = false;//отпускаем энтер
-				NextTurn();
+					memorized_unit = NULL;
+
+					EState = NOTHING;
+					enter_pressed = false;//отпускаем энтер
+				}
+
 			}
 			if (EState==ATTACK)
 			{

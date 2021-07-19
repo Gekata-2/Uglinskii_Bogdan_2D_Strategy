@@ -10,9 +10,9 @@ void TArcher::PrintInfo() const
 std::string TArcher::GetInfo() const
 {
 	std::string str;
-	str = "Type:" + type + "	;	Name : " + name + "		;	Side : "+ std::to_string(side)+
+	str = "Type:" + type + "\nName : " + name + "\nSide : "+ std::to_string(side)+
 		"\nHP : " + std::to_string(current_HP) + "/" + std::to_string(max_HP) +
-		"	;	mana = " + std::to_string(mana) + 
+		"\nmana = " + std::to_string(mana) + 
 		"\nBase attack damage = " + std::to_string(base_attack_damage)
 		+ "\nMax attack radius = " + std::to_string(max_attack_radius) + 
 		"\nPosition : ["

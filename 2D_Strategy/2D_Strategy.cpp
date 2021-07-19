@@ -13,6 +13,7 @@ using namespace sf;
 
 
 
+
 enum { MENU, INITIALISATION, BATTLE, WIN, CLOSE }EDislpay;
 
 void GenerateUnit(TUnit** unit, std::string type, int side,std::string name="\0")
@@ -68,6 +69,7 @@ int main()
 	
 
 	int players_id[MAX_NUMBER_OF_PLAYERS] = {P1.GetID(),P2.GetID()};//массив с id игроков
+	std::string players_names[MAX_NUMBER_OF_PLAYERS] = { P1.GetName(), P2.GetName() };
 
 	int player_size = 1;//количество персонажей у игрока
 
@@ -98,7 +100,7 @@ int main()
 		bg.AddUnit(unit_vec2[i], i, 7);
 
 	}
-	std::string winner = "\0";//имя победителя
+	std::string winner = "test";//имя победителя
 
 	std::cout << "|||||||||||||||||||||||||||||||||||||||||||||\n";
 	P1.PrintInfo();
@@ -110,7 +112,7 @@ int main()
 
 
 	TKeyPressEvent key_pressed;
-	key_pressed.Initialization(players_id);
+	key_pressed.Initialization(players_id, players_names);
 
 	/////////Спрайт карты/////////
 	Image map_image;
@@ -129,7 +131,7 @@ int main()
 	s_focus_tile.setTexture(focus_tile_texture);
 
 	s_focus_tile.setTextureRect(sf::IntRect(0, 0, 64, 64));
-	s_focus_tile.setPosition(64, 64);
+	s_focus_tile.setPosition(83+ BATTLE_WIDTH_OFFSET, 83+ BATTLE_HEIGHT_OFFSET);
 
 	key_pressed.SetFocusUnit(bg.GetFocusUnit());//по умолчанию выбранная клетка - 0,0
 
@@ -141,7 +143,7 @@ int main()
 	s_unit_map.setTexture(unit_map);
 
 	
-	///////////Шрифт и тексты/////////////
+	///////////Шрифт/////////////
 	Font font_SalsaRegular;
 	font_SalsaRegular.loadFromFile("Salsa-Regular.ttf");
 
@@ -252,34 +254,111 @@ int main()
 	text_no.setFillColor(Color::Red);
 	text_no.setPosition(1040, 472);
 
-	///////////////
-	Font font;
-	font.loadFromFile("MilknBalls-BlackDemo.ttf");//шрифт
+	//------------------Battle---------------------//
+		/***Фигуры****/
 
-	Text tab_text("", font, 20);
+	//История
+	sf::RectangleShape rectangle_history(sf::Vector2f(400.f, 830.f));
+	rectangle_history.setFillColor(Color(255, 255, 255, 150));
+	rectangle_history.setPosition(80, 50);
+
+	//Информация о герое
+	sf::RectangleShape rectangle_unit_info(sf::Vector2f(400.f, 280.f));
+	rectangle_unit_info.setFillColor(Color(255, 255, 255, 150));
+	rectangle_unit_info.setPosition(1440, 50);
+
+	sf::RectangleShape rectangle_unit_abilities(sf::Vector2f(850.f, 100.f));
+	rectangle_unit_abilities.setFillColor(Color(255, 255, 255, 150));
+	rectangle_unit_abilities.setPosition(545, 950);
+
+		/***Текст****/
+	
+	//время по нажатию TAB
+	Text tab_text("", font_SalsaRegular, 20);
 	tab_text.setFillColor(Color(255, 10, 10));//текст при табуляции
+	tab_text.setPosition(868, 10);
 
-	Text text("", font, 35);
-	text.setFillColor(Color::Blue);//просто шаблон текста
-
-	Text unit_info_text("", font, 20);
-	unit_info_text.setFillColor(Color(72, 255, 213));//информация о юните
-
-	Text focus_tile_text("", font, 22);
+	//информация о выбранной клетке
+	Text focus_tile_text("", font_SalsaRegular, 25);
 	focus_tile_text.setFillColor(Color::White);//информация о текущей выбранной клетки
 
-	Text unit_abilities("", font, 25);
-	unit_abilities.setFillColor(Color::White);//информация о возможностях юнита
+	
 
-	Text exceptions("", font, 25);
+	//загаловок история 
+	 Text history_header_text("", font_IMFellEnglishSCRegular, 36);
+	 history_header_text.setFillColor(Color::White);//информация о возможностях юнита
+	 history_header_text.setString("Actions history:");
+	 history_header_text.setPosition(80, 10);
+
+	 //загаловок "информация о юните"
+	 Text unit_info_header_text("", font_IMFellEnglishSCRegular, 36);
+	 unit_info_header_text.setFillColor(Color::White);//информация о возможностях юнита
+	 unit_info_header_text.setString("Unit Informanation:");
+	 unit_info_header_text.setPosition(1442, 10);
+
+	//загаловок "Действия"
+	Text unit_actions_header_text("", font_IMFellEnglishSCRegular, 48);
+	unit_actions_header_text.setFillColor(Color::White);//информация о возможностях юнита
+	unit_actions_header_text.setString("Actions:");
+	unit_actions_header_text.setPosition(550, 890);
+	//сами действия
+	Text unit_actions("", font_SalsaRegular, 25);
+	unit_actions.setFillColor(Color::White);//информация о возможностях юнита
+	unit_actions.setPosition(550, 950);
+
+	//исключения
+	Text exceptions("", font_SalsaRegular, 22);
 	exceptions.setFillColor(Color::Red);//информацию об ошибках
+	exceptions.setPosition(550, 830);
 
-
-	Text text_winner("", font, 25);
-	text_winner.setFillColor(Color::Red);//информацию об ошибках
-
-	Text t_turn("", font, 25);
+	//чья очеред ходить
+	Text t_turn("", font_SalsaRegular, 25);
 	t_turn.setFillColor(Color::Red);//информацию об ошибках
+
+	//------------------WIN---------------------//
+ 
+		/***Фигуры****/
+
+	//История
+	sf::RectangleShape rectangle_statistics(sf::Vector2f(540.f, 652.f));
+	rectangle_statistics.setFillColor(Color(255, 255, 255, 150));
+	rectangle_statistics.setPosition(102, 280);
+	
+	
+		/***Текст****/
+	
+	Text text_winner("", font_IMFellEnglishSCRegular, 144);
+	text_winner.setFillColor(Color::Red);//информацию об ошибках
+	text_winner.setPosition(370, 20);
+
+	Text statistic_header_text("", font_IMFellEnglishSCRegular, 64);
+	statistic_header_text.setString("Statistic:");
+	statistic_header_text.setFillColor(Color::Red);//информацию об ошибках
+	statistic_header_text.setPosition(110, 210);
+
+	Text statistic_text("", font_SalsaRegular, 40);
+	statistic_text.setFillColor(Color::Red);//информацию об ошибках
+	statistic_text.setPosition(116, 292);
+
+	std::string statistic = "test";
+	statistic_text.setString(statistic);
+
+	Text exit_to_main_menu_text("", font_SalsaRegular, 36);
+	exit_to_main_menu_text.setString("Press Esc to exit in main menu");
+	exit_to_main_menu_text.setFillColor(Color::Red);//информацию об ошибках
+	exit_to_main_menu_text.setPosition(711, 963);
+
+
+
+		/***Красивая картинка***/
+	Image win_image;
+	win_image.loadFromFile("images/win_texture.png");
+	Texture win_texture;
+	win_texture.loadFromImage(win_image);
+	Sprite s_win;
+	s_win.setTexture(win_texture);
+	s_win.setTextureRect(sf::IntRect(0, 0, 1160, 652));
+	s_win.setPosition(687,280);
 
 	Clock clock;
 	
@@ -290,8 +369,11 @@ int main()
 	int exceptions_time = 0;
 
 	int time_s=0;
+	int game_time = 0;
 
-	EDislpay = MENU;
+	
+
+	EDislpay = WIN;
 
 	bool show_exit=false;
 
@@ -499,12 +581,12 @@ int main()
 			{
 				for (int j = 0; j < WIDTH_MAP; j++)
 				{
-					if ((bg.TileBackgroundMap[i][j] == '0')) s_map.setTextureRect(IntRect(128, 0, 64, 64));
-					if ((bg.TileBackgroundMap[i][j] == ' ')) s_map.setTextureRect(IntRect(0, 0, 64, 64));
-					if ((bg.TileBackgroundMap[i][j] == 's')) s_map.setTextureRect(IntRect(64, 0, 64, 64));
+					if ((bg.TileBackgroundMap[i][j] == '0')) s_map.setTextureRect(IntRect(166, 0, 83, 83));
+					if ((bg.TileBackgroundMap[i][j] == ' ')) s_map.setTextureRect(IntRect(0, 0, 83, 83));
+					if ((bg.TileBackgroundMap[i][j] == 's')) s_map.setTextureRect(IntRect(83, 0, 83, 83));
 
 
-					s_map.setPosition(j * 64, i * 64);
+					s_map.setPosition(j * 83 + BATTLE_WIDTH_OFFSET, i * 83 + BATTLE_HEIGHT_OFFSET);
 					window.draw(s_map);
 				}
 			}
@@ -514,14 +596,14 @@ int main()
 			{
 				for (int j = 0; j < WIDTH_MAP - 2; j++)
 				{
-					if (bg.TileUnitsMap[i][j] == 'A')  s_unit_map.setTextureRect(IntRect(192, 0, 64, 64));
-					if (bg.TileUnitsMap[i][j] == 'S')  s_unit_map.setTextureRect(IntRect(256, 0, 64, 64));
+					if (bg.TileUnitsMap[i][j] == 'A')  s_unit_map.setTextureRect(IntRect(249, 0, 83, 83));
+					if (bg.TileUnitsMap[i][j] == 'S')  s_unit_map.setTextureRect(IntRect(332, 0, 83, 83));
 
 					if (bg.TileUnitsMap[i][j] == ' ')
 					{
 						continue;
 					}
-					s_unit_map.setPosition((j * 64) + 64, (i * 64) + 64);
+					s_unit_map.setPosition((j * 83) + 83+ BATTLE_WIDTH_OFFSET, (i * 83) + 83 + BATTLE_HEIGHT_OFFSET);
 					window.draw(s_unit_map);
 				}
 
@@ -533,30 +615,50 @@ int main()
 				if (P2.GetNumberOfUnits() == 0)
 				{
 					winner = P1.GetName();
+					
 				}
 				else if (P1.GetNumberOfUnits() == 0)
 				{
 					winner = P2.GetName();
 				}
+				
+				statistic = "Total time played:  " + std::to_string(time_s / 60) + ":" + std::to_string(time_s - (time_s / 60) * 60) +
+					"\nPlayer "+ P1.GetName() + " killed " +
+					std::to_string(player_size-P2.GetNumberOfUnits())+" units\n" + "Player " + P2.GetName() + " killed " +
+					std::to_string(player_size - P1.GetNumberOfUnits()) + " units\n";
+				statistic_text.setString(statistic);
 				EDislpay = WIN;
 			}
 
 			std::cout << "Number of units P2: " << P2.GetNumberOfUnits() << "\n";
 			///////////////////////////////Обновляем тексты/////////////////////
-			key_pressed.UpdateTilesText(&bg, &focus_tile_text, &tab_text, &unit_info_text, bg.GetInfoAboutTile());
-			key_pressed.UpdateUnitAbilitiesText(&unit_abilities);
+			key_pressed.UpdateTilesText(&bg, &focus_tile_text, &tab_text, bg.GetInfoAboutTile());
+			key_pressed.UpdateUnitAbilitiesText(&unit_actions);
 			key_pressed.UpdateExceptions(&exceptions, &show_exceptions, &exceptions_time);
 			key_pressed.UpdateTimer(&tab_text, &time_s);
 
-			t_turn.setPosition(100, 20);
-			t_turn.setString(std::to_string(key_pressed.GetTurn()));
+			t_turn.setPosition(560, 60);
+			t_turn.setString("Turn: "+ key_pressed.GetName());
+
+
+			///Рисуем прямоугольники///
+			window.draw(rectangle_history);
+			window.draw(rectangle_unit_info);
+			window.draw(rectangle_unit_abilities);
+			
+
 
 			///Рисуем тексты ///
 			window.draw(focus_tile_text);
-			window.draw(unit_info_text);
-			window.draw(unit_abilities);
+			window.draw(unit_actions_header_text);	
+			window.draw(unit_actions);
 			window.draw(tab_text);
 			window.draw(t_turn);
+		//	window.draw();
+
+			window.draw(history_header_text);
+			window.draw(unit_info_header_text);
+				
 			///Рисуем выбраннуб клетку///
 			window.draw(s_focus_tile);
 
@@ -592,10 +694,22 @@ int main()
 				}
 			}
 
-			text_winner.setPosition(900, 500);
+			window.draw(rectangle_statistics);
+			
+
+		
 			text_winner.setString("The winner is: "+winner);
 
 			window.draw(text_winner);
+			window.draw(statistic_header_text);
+			window.draw(statistic_text);
+			
+			window.draw(exit_to_main_menu_text);
+			
+
+			window.draw(s_win);
+			
+			
 			window.display();
 		}
 	}
