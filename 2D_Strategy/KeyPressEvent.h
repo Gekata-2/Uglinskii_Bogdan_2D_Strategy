@@ -110,6 +110,14 @@ public:
 		return temp_string;
 	}
 
+	void ClearHistory()
+	{
+		for (size_t i = 0; i < number_of_history_notes; i++)
+		{
+		  history[i]="\0";
+		}
+	}
+
 	void RepackHistory(std::string str_to_ins)
 	{
 		std::string temp_string = "\0";
@@ -358,8 +366,7 @@ public:
 		
 		Vector2i v_f = bg->GetFocusTile();
 
-		sprite->setTextureRect(sf::IntRect(0, 0, 64, 64));
-		sprite->setPosition((v_f.y +1)* 83+ BATTLE_WIDTH_OFFSET, (v_f.x +1)* 83+ BATTLE_HEIGHT_OFFSET);
+		sprite->setPosition((v_f.y +1)* 83+ BATTLE_WIDTH_OFFSET-3, (v_f.x +1)* 83+ BATTLE_HEIGHT_OFFSET-3);
 
 		return v_f;
 	}

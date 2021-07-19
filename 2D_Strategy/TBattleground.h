@@ -115,6 +115,22 @@ public:
 
 	int Attack(TUnit* attack_unit, TUnit* attacked_unit);
 	void Death(TUnit* unit);
+
+	void ClearAllUnits()
+	{
+		for (size_t i = 0; i < bg_size; i++)
+		{
+			for (size_t j = 0; j < bg_size; j++)
+			{
+
+				if (tiles[i][j] != NULL)
+				{
+					Death(tiles[i][j]);
+				}
+			}
+
+		}
+	}
 	
 	~TBattleground()
 	{

@@ -14,7 +14,7 @@ public:
 	
 		if (def_name == "\0")//генерац€ имени
 		{
-			for (size_t i = 0; i < 10; i++)
+			for (size_t i = 0; i < 5; i++)
 			{
 				char c = 97 + rand() % 26;
 				name = name + c;

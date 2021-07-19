@@ -71,7 +71,7 @@ int main()
 	int players_id[MAX_NUMBER_OF_PLAYERS] = {P1.GetID(),P2.GetID()};//массив с id игроков
 	std::string players_names[MAX_NUMBER_OF_PLAYERS] = { P1.GetName(), P2.GetName() };
 
-	int player_size = 2;//количество персонажей у игрока
+	int player_size = 1;//количество персонажей у игрока
 
 	//добавляем на поле игроков
 	bg.AddPlayer(&P1);
@@ -98,7 +98,6 @@ int main()
 	{
 		P2.AddUnit(unit_vec2[i]);
 		bg.AddUnit(unit_vec2[i], i, 7);
-
 	}
 	std::string winner = "test";//имя победителя
 
@@ -108,7 +107,7 @@ int main()
 	P2.PrintInfo();
 
 
-    RenderWindow window(sf::VideoMode(1920, 1080), "Swords and other stuff...");
+    RenderWindow window(sf::VideoMode(1920, 1080), "Swords and frogs...");
 
 
 	TKeyPressEvent key_pressed;
@@ -130,8 +129,8 @@ int main()
 	Sprite s_focus_tile;
 	s_focus_tile.setTexture(focus_tile_texture);
 
-	s_focus_tile.setTextureRect(sf::IntRect(0, 0, 64, 64));
-	s_focus_tile.setPosition(83+ BATTLE_WIDTH_OFFSET, 83+ BATTLE_HEIGHT_OFFSET);
+	s_focus_tile.setTextureRect(sf::IntRect(0, 0, 90, 90));
+	s_focus_tile.setPosition(83+ BATTLE_WIDTH_OFFSET-3, 83+ BATTLE_HEIGHT_OFFSET-3);
 
 	key_pressed.SetFocusUnit(bg.GetFocusUnit());//по умолчанию выбранная клетка - 0,0
 
@@ -160,22 +159,22 @@ int main()
 
 	//Прямоугольник changelog
 	sf::RectangleShape rectangle_changelog(sf::Vector2f(432.f, 568.f));
-	rectangle_changelog.setFillColor(Color(255,255,255,150));
+	rectangle_changelog.setFillColor(Color(124, 181, 24, 85));
 	rectangle_changelog.setPosition(97, 305);
 
 	//Прямоугольник play
 	sf::RectangleShape rectangle_play(sf::Vector2f(781.f, 268.f));
-	rectangle_play.setFillColor(Color(255, 255, 255, 150));
+	rectangle_play.setFillColor(Color(255, 255, 255, 100));
 	rectangle_play.setPosition(570, 305);
 
 	//Прямоугольник exit
 	sf::RectangleShape rectangle_exit(sf::Vector2f(781.f, 268.f));
-	rectangle_exit.setFillColor(Color(255, 255, 255, 150));
+	rectangle_exit.setFillColor(Color(255, 255, 255, 100));
 	rectangle_exit.setPosition(570, 605);
 
 	//Прямоугольник feedback
 	sf::RectangleShape rectangle_feedback(sf::Vector2f(432.f, 568.f));
-	rectangle_feedback.setFillColor(Color(255, 255, 255, 150));
+	rectangle_feedback.setFillColor(Color(124, 181, 24, 85));
 	rectangle_feedback.setPosition(1391, 305);
 
 		/***Текст****/
@@ -192,66 +191,83 @@ int main()
 	text_exit.setPosition(672, 535);
 	//название игры
 	Text text_name("", font_IMFellEnglishSCRegular, 96);
-	text_name.setString("Swords and other stuff...");
-	text_name.setFillColor(Color::Red);//просто шаблон текста
-	text_name.setPosition(465, 50);
+	text_name.setString("Swords and frogs...");
+	text_name.setFillColor(Color(251, 97, 7));//просто шаблон текста
+	text_name.setPosition(600, 50);
 	//feedback
 	Text text_feedback("", font_IMFellEnglishSCRegular, 60);
 	text_feedback.setString("FEEDBACK");
-	text_feedback.setFillColor(Color::Black);//просто шаблон текста
+	text_feedback.setFillColor(Color(243, 222, 44));//просто шаблон текста
 	text_feedback.setPosition(1425, 230);
 	//feedback text
 	Text text_feedback_text("", font_SalsaRegular, 36);
 	text_feedback_text.setString("Do you have any bugs,\ncool ideas or general\nfeedback?\nSend me a massage \non my mail:\nsosorii2002@gmail.ru");
-	text_feedback_text.setFillColor(Color::Red);//просто шаблон текста
+	text_feedback_text.setFillColor(Color::White);//просто шаблон текста
 	text_feedback_text.setPosition(1400, 305);
 	//changelog
 	Text text_changelog("", font_IMFellEnglishSCRegular, 60);
 	text_changelog.setString("CHANGELOG");
-	text_changelog.setFillColor(Color::Black);//просто шаблон текста
+	text_changelog.setFillColor(Color(243, 222, 44));//просто шаблон текста
 	text_changelog.setPosition(100, 230);
 	//changelog text
-	Text text_changelog_text("", font_SalsaRegular, 36);
-	text_changelog_text.setString("v 0.1.\n -added TUnit class.\n");
-	text_changelog_text.setFillColor(Color::Red);//просто шаблон текста
+	Text text_changelog_text("", font_SalsaRegular, 24);
+	std::string changelog_str = "v 0.1.1\n -added TUnit, TSwordsman and \n TBattleGround classes.\n";
+	changelog_str += "v 0.2.1\n -added SFML, battleground display\n and units on it.\n";
+	changelog_str += "v 0.2.2\n - added selected tile,\n info about selected unit\n";
+	changelog_str += "v 0.4.1 \n - added main menu\n";
+	changelog_str += "v 0.5.1 \n - added win screen, turn mechanic\n";
+	changelog_str += "v 0.7.1 \n -added exit confrim display\n";
+	changelog_str += "v 0.8.1 \n -added after battle statistic\n";
+	changelog_str += "v 0.9.1 \n -added statistic and history";
+	text_changelog_text.setString(changelog_str);
+	text_changelog_text.setFillColor(Color::White);//просто шаблон текста
 	text_changelog_text.setPosition(105, 305);
 
+		//***Картинки***//
+	Image menu_image;
+	menu_image.loadFromFile("images/menu.png");
+	Texture meny_texture;
+	meny_texture.loadFromImage(menu_image);
+	Sprite s_menu;
+	s_menu.setTexture(meny_texture);
 	//------------------Exit Menu---------------------//
 
 		/***Фигуры****/
 
 	//большой прямоугольнки
 	sf::RectangleShape rectangle_exit_confirm(sf::Vector2f(736.f, 187.f));
-	rectangle_exit_confirm.setFillColor(Color(255, 255, 255, 250));
+	rectangle_exit_confirm.setFillColor(Color(105,133,75, 250));
+	rectangle_exit_confirm.setOutlineColor(Color(92, 128, 1, 250));
+	rectangle_exit_confirm.setOutlineThickness(5);
 	rectangle_exit_confirm.setPosition(590, 445);
 
 	//прямоугольник да
 	sf::RectangleShape rectangle_yes(sf::Vector2f(250.f, 130.f));
-	rectangle_yes.setFillColor(Color(255, 150, 255, 150));
+	rectangle_yes.setFillColor(Color(124, 181, 24, 85));
 	rectangle_yes.setPosition(640, 472);
 
 	//прямоугольник нет
 	sf::RectangleShape rectangle_no(sf::Vector2f(250.f, 130.f));
-	rectangle_no.setFillColor(Color(255, 150, 255, 150));
+	rectangle_no.setFillColor(Color(124, 181, 24, 85));
 	rectangle_no.setPosition(1005, 472);
 
 		/***Текст****/
 	//подтверждение выхода
 	Text text_exit_confirm("", font_IMFellEnglishSCRegular, 48);
 	text_exit_confirm.setString("Are you sure that you want to exit?");
-	text_exit_confirm.setFillColor(Color::Red);
+	text_exit_confirm.setFillColor(Color(251, 97, 7));
 	text_exit_confirm.setPosition(590, 390);
 
 	//да
 	Text text_yes("", font_IMFellEnglishSCRegular, 80);
 	text_yes.setString("Yes");
-	text_yes.setFillColor(Color::Red);
+	text_yes.setFillColor(Color(255,255,255));
 	text_yes.setPosition(675, 472);
 
 	//нет
 	Text text_no("", font_IMFellEnglishSCRegular, 80);
 	text_no.setString("No");
-	text_no.setFillColor(Color::Red);
+	text_no.setFillColor(Color(255, 255,255));
 	text_no.setPosition(1040, 472);
 
 	//------------------Battle---------------------//
@@ -259,23 +275,23 @@ int main()
 
 	//История
 	sf::RectangleShape rectangle_history(sf::Vector2f(400.f, 830.f));
-	rectangle_history.setFillColor(Color(255, 255, 255, 150));
+	rectangle_history.setFillColor(Color(124, 181, 24, 110));
 	rectangle_history.setPosition(80, 50);
 
 	//Информация о герое
 	sf::RectangleShape rectangle_unit_info(sf::Vector2f(400.f, 280.f));
-	rectangle_unit_info.setFillColor(Color(255, 255, 255, 150));
+	rectangle_unit_info.setFillColor(Color(124, 181, 24, 110));
 	rectangle_unit_info.setPosition(1440, 50);
 
 	sf::RectangleShape rectangle_unit_abilities(sf::Vector2f(850.f, 100.f));
-	rectangle_unit_abilities.setFillColor(Color(255, 255, 255, 150));
+	rectangle_unit_abilities.setFillColor(Color(124, 181, 24, 110));
 	rectangle_unit_abilities.setPosition(545, 950);
 
 		/***Текст****/
 	
 	//время по нажатию TAB
 	Text tab_text("", font_SalsaRegular, 20);
-	tab_text.setFillColor(Color(255, 10, 10));//текст при табуляции
+	tab_text.setFillColor(Color(251, 97, 7));//текст при табуляции
 	tab_text.setPosition(875, 10);
 
 	//информация о выбранной клетке
@@ -297,7 +313,7 @@ int main()
 	 //загаловок "информация о юните"
 	 Text unit_info_header_text("", font_IMFellEnglishSCRegular, 36);
 	 unit_info_header_text.setFillColor(Color::White);//информация о возможностях юнита
-	 unit_info_header_text.setString("Unit Informanation:");
+	 unit_info_header_text.setString("Unit Information:");
 	 unit_info_header_text.setPosition(1442, 10);
 
 	//загаловок "Действия"
@@ -312,36 +328,44 @@ int main()
 
 	//исключения
 	Text exceptions("", font_SalsaRegular, 22);
-	exceptions.setFillColor(Color::Red);//информацию об ошибках
+	exceptions.setFillColor(Color(251, 97, 7));//информацию об ошибках
 	exceptions.setPosition(550, 830);
 
 	//чья очеред ходить
 	Text t_turn("", font_SalsaRegular, 25);
-	t_turn.setFillColor(Color::Red);//информацию об ошибках
+	t_turn.setFillColor(Color(251, 97, 7));//информацию об ошибках
+
+		/***Картинки***/
+		Image swamp_image;
+		swamp_image.loadFromFile("images/swamp.png");
+		Texture swamp_texture;
+		swamp_texture.loadFromImage(swamp_image);
+		Sprite s_swamp;
+		s_swamp.setTexture(swamp_texture);
 
 	//------------------WIN---------------------//
  
 		/***Фигуры****/
 
-	//История
+	//Статистика
 	sf::RectangleShape rectangle_statistics(sf::Vector2f(540.f, 652.f));
-	rectangle_statistics.setFillColor(Color(255, 255, 255, 150));
+	rectangle_statistics.setFillColor(Color(124, 181, 24, 85));
 	rectangle_statistics.setPosition(102, 280);
 	
 	
 		/***Текст****/
 	
 	Text text_winner("", font_IMFellEnglishSCRegular, 144);
-	text_winner.setFillColor(Color::Red);//информацию об ошибках
+	text_winner.setFillColor(Color(251, 97, 7));//информацию об ошибках
 	text_winner.setPosition(370, 20);
 
 	Text statistic_header_text("", font_IMFellEnglishSCRegular, 64);
 	statistic_header_text.setString("Statistic:");
-	statistic_header_text.setFillColor(Color::Red);//информацию об ошибках
+	statistic_header_text.setFillColor(Color::White);//информацию об ошибках
 	statistic_header_text.setPosition(110, 210);
 
 	Text statistic_text("", font_SalsaRegular, 40);
-	statistic_text.setFillColor(Color::Red);//информацию об ошибках
+	statistic_text.setFillColor(Color::White);//информацию об ошибках
 	statistic_text.setPosition(116, 292);
 
 	std::string statistic = "test";
@@ -349,7 +373,7 @@ int main()
 
 	Text exit_to_main_menu_text("", font_SalsaRegular, 36);
 	exit_to_main_menu_text.setString("Press Esc to exit in main menu");
-	exit_to_main_menu_text.setFillColor(Color::Red);//информацию об ошибках
+	exit_to_main_menu_text.setFillColor(Color::White);//информацию об ошибках
 	exit_to_main_menu_text.setPosition(711, 963);
 
 
@@ -363,6 +387,14 @@ int main()
 	s_win.setTexture(win_texture);
 	s_win.setTextureRect(sf::IntRect(0, 0, 1160, 652));
 	s_win.setPosition(687,280);
+
+
+	Image win_sky_image;
+	win_sky_image.loadFromFile("images/win_sky.png");
+	Texture win_sky_texture;
+	win_sky_texture.loadFromImage(win_sky_image);
+	Sprite s_win_sky;
+	s_win_sky.setTexture(win_sky_texture);
 
 	Clock clock;
 	
@@ -489,12 +521,16 @@ int main()
 		std::cout << "	Exit:" << show_exit << "\n";
 			key_pressed.UpdateSelectMenu(&text_play, &text_exit);
 			
-			
+			///Рисуем задний фон///
+			window.draw(s_menu);
+
+			///Рисуем прямоугольнки///
 			window.draw(rectangle_changelog);
 			window.draw(rectangle_feedback);
 			window.draw(rectangle_play); 
 			window.draw(rectangle_exit);
 
+			///Рисуем текст///
 			window.draw(text_play);
 			window.draw(text_exit);
 			window.draw(text_name);
@@ -503,13 +539,17 @@ int main()
 			window.draw(text_feedback);
 			window.draw(text_feedback_text);
 
+			///Рисуем выход///
 			if (show_exit == true)
 			{
 				key_pressed.UpdateExitConfirm(&text_yes, &text_no);
 
+				///прямоугольники///
 				window.draw(rectangle_exit_confirm);
 				window.draw(rectangle_yes);
 				window.draw(rectangle_no);
+
+				///текст///
 				window.draw(text_exit_confirm);
 				window.draw(text_yes);
 				window.draw(text_no);	
@@ -581,6 +621,9 @@ int main()
 			}
 
 			///////////////////////////////Рисуем карту/////////////////////
+
+			window.draw(s_swamp);//рисуем задник
+
 			for (int i = 0; i < HEIGHT_MAP; i++)
 			{
 				for (int j = 0; j < WIDTH_MAP; j++)
@@ -634,7 +677,7 @@ int main()
 				EDislpay = WIN;
 			}
 
-			std::cout << "Number of units P2: " << P2.GetNumberOfUnits() << "\n";
+			//std::cout << "Number of units P2: " << P2.GetNumberOfUnits() << "\n";
 			///////////////////////////////Обновляем тексты/////////////////////
 			key_pressed.UpdateTilesText(&bg, &focus_tile_text, &tab_text, bg.GetInfoAboutTile());
 			key_pressed.UpdateUnitAbilitiesText(&unit_actions);
@@ -645,14 +688,12 @@ int main()
 			t_turn.setPosition(560, 60);
 			t_turn.setString("Turn: "+ key_pressed.GetName());
 
-
+		
 			///Рисуем прямоугольники///
 			window.draw(rectangle_history);
 			window.draw(rectangle_unit_info);
 			window.draw(rectangle_unit_abilities);
 			
-
-
 			///Рисуем тексты ///
 			window.draw(focus_tile_text);
 			window.draw(unit_actions_header_text);	
@@ -694,6 +735,30 @@ int main()
 				if (event.key.code == Keyboard::Escape)
 				{
 					std::cout << "Return to menu";
+
+					CreateSetOfUnits(&unit_vec1, P1.GetID());
+					CreateSetOfUnits(&unit_vec2, P2.GetID());
+
+					if((P1.GetNumberOfUnits()==0)||(P2.GetNumberOfUnits() == 0))
+					{
+						bg.ClearAllUnits();
+						key_pressed.ClearHistory();
+
+						for (size_t i = 0; i < player_size; i++)
+						{
+							P1.AddUnit(unit_vec1[i]);
+							bg.AddUnit(unit_vec1[i], i, 0);
+
+						}
+
+						for (size_t i = 0; i < player_size; i++)
+						{
+							P2.AddUnit(unit_vec2[i]);
+							bg.AddUnit(unit_vec2[i], i, 7);
+						}
+					}
+					
+
 					EDislpay = MENU;
 				}
 				if (event.type == sf::Event::Closed)//если мы  каким то способом сгенерировали  событие "закрытие" , то закрываем окно
@@ -702,6 +767,8 @@ int main()
 				}
 			}
 
+			window.draw(s_swamp);
+			
 			window.draw(rectangle_statistics);
 			
 
