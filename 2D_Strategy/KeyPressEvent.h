@@ -73,7 +73,49 @@ public:
 		return turn;
 	}
 
+	
 
+	int GetMenuState()
+	{
+		return menu;
+	}
+	int GetExit()
+	{
+		return exit;
+	}
+
+	void UpdateSelectMenu(sf::Text* txt_play, sf::Text* txt_exit)
+	{
+
+		switch (menu)
+		{
+
+		case 2:
+			{
+				txt_play->setScale(1.1, 1.1);
+				txt_exit->setScale(1.0, 1.0);
+
+				break;
+			}
+		case 1:
+			{
+				txt_exit->setScale(1.1, 1.1); 
+				txt_play->setScale(1.0, 1.0);
+		
+				break;
+			}
+		
+
+		default:
+			break;
+		}
+
+	}
+
+	/*void UpdateSelectMenu(sf::Sprite* select)
+	{
+		select->setPosition(select_pos.x, select_pos.y);
+	}*/
 	void UpdateTilesText(TBattleground* bg,sf::Text* focus_tile_txt, sf::Text* tab_text, sf::Text* unit_info_text, sf::String unit_info_str)
 	{
 		////////////////Инфа о текущей клетке
@@ -246,24 +288,6 @@ public:
 		}
 	}
 
-	void UpdateSelectExit(sf::Sprite* select)
-	{
-		select->setPosition(exit_pos.x, exit_pos.y);
-	}
-
-	void UpdateSelectMenu(sf::Sprite* select)
-	{
-		select->setPosition(select_pos.x, select_pos.y);
-	}
-
-	int GetMenuState()
-	{
-		return menu;
-	}
-	int GetExit()
-	{
-		return exit;
-	}
 
 	sf::Vector2i ArrowsPressd(TBattleground* bg,sf::Sprite* sprite, sf::Event event)
 	{

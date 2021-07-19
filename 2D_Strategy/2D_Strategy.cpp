@@ -164,6 +164,79 @@ int main()
 
 	
 	///////////Шрифт и тексты/////////////
+	Font font_SalsaRegular;
+	font_SalsaRegular.loadFromFile("Salsa-Regular.ttf");
+
+	Font font_IMFellEnglishSCRegular;
+	font_IMFellEnglishSCRegular.loadFromFile("IMFellEnglishSC-Regular.ttf");
+	/*
+	Text text("", font, 35);
+	text.setFillColor(Color::Blue);//просто шаблон текста
+	*/
+
+	//------------------Menu---------------------//
+	
+	    /***Фигуры****/
+
+	//Прямоугольник changelog
+	sf::RectangleShape rectangle_changelog(sf::Vector2f(432.f, 568.f));
+	rectangle_changelog.setFillColor(Color(255,255,255,150));
+	rectangle_changelog.setPosition(97, 305);
+
+	//Прямоугольник play
+	sf::RectangleShape rectangle_play(sf::Vector2f(781.f, 268.f));
+	rectangle_play.setFillColor(Color(255, 255, 255, 150));
+	rectangle_play.setPosition(570, 305);
+
+	//Прямоугольник exit
+	sf::RectangleShape rectangle_exit(sf::Vector2f(781.f, 268.f));
+	rectangle_exit.setFillColor(Color(255, 255, 255, 150));
+	rectangle_exit.setPosition(570, 605);
+
+	//Прямоугольник feedback
+	sf::RectangleShape rectangle_feedback(sf::Vector2f(432.f, 568.f));
+	rectangle_feedback.setFillColor(Color(255, 255, 255, 150));
+	rectangle_feedback.setPosition(1391, 305);
+
+		/***Текст****/
+
+	//кнопка играть
+	Text text_play("", font_IMFellEnglishSCRegular, 288);
+	text_play.setString("Play");
+	text_play.setFillColor(Color::Red);//просто шаблон текста
+	text_play.setPosition(687, 225);
+	//копка выхода
+	Text text_exit("", font_IMFellEnglishSCRegular, 288);
+	text_exit.setString("Exit");
+	text_exit.setFillColor(Color::Red);//просто шаблон текста
+	text_exit.setPosition(672, 535);
+	//название игры
+	Text text_name("", font_IMFellEnglishSCRegular, 96);
+	text_name.setString("Swords and other stuff...");
+	text_name.setFillColor(Color::Red);//просто шаблон текста
+	text_name.setPosition(465, 50);
+	//feedback
+	Text text_feedback("", font_IMFellEnglishSCRegular, 60);
+	text_feedback.setString("FEEDBACK");
+	text_feedback.setFillColor(Color::Black);//просто шаблон текста
+	text_feedback.setPosition(1425, 230);
+	//feedback text
+	Text text_feedback_text("", font_SalsaRegular, 36);
+	text_feedback_text.setString("Do you have any bugs,\ncool ideas or general\nfeedback?\nSend me a massage \non my mail:\nsosorii2002@gmail.ru");
+	text_feedback_text.setFillColor(Color::Red);//просто шаблон текста
+	text_feedback_text.setPosition(1400, 305);
+	//changelog
+	Text text_changelog("", font_IMFellEnglishSCRegular, 60);
+	text_changelog.setString("CHANGELOG");
+	text_changelog.setFillColor(Color::Black);//просто шаблон текста
+	text_changelog.setPosition(100, 230);
+	//changelog text
+	Text text_changelog_text("", font_SalsaRegular, 36);
+	text_changelog_text.setString("v 0.1.\n -added TUnit class.\n");
+	text_changelog_text.setFillColor(Color::Red);//просто шаблон текста
+	text_changelog_text.setPosition(105, 305);
+
+	///////////////
 	Font font;
 	font.loadFromFile("MilknBalls-BlackDemo.ttf");//шрифт
 
@@ -312,14 +385,31 @@ int main()
 			}
 		std::cout << "Menu:" << key_pressed.GetMenuState();
 		std::cout << "	Exit:" << show_exit << "\n";
-			key_pressed.UpdateSelectMenu(&s_select_menu);
-			window.draw(s_menu);
+			//key_pressed.UpdateSelectMenu(&s_select_menu);
+			key_pressed.UpdateSelectMenu(&text_play, &text_exit);
+			
+			//window.draw(s_menu);
 			window.draw(s_select_menu);
 			if (show_exit==true)
 			{
 				window.draw(s_confrim_exit);
 			}
-			window.display();
+			
+			window.draw(rectangle_changelog);
+			window.draw(rectangle_feedback);
+			window.draw(rectangle_play); 
+			window.draw(rectangle_exit);
+
+			window.draw(text_play);
+			window.draw(text_exit);
+			window.draw(text_name);
+			window.draw(text_changelog_text);
+			window.draw(text_changelog);
+			window.draw(text_feedback);
+			window.draw(text_feedback_text);
+			
+			
+			window.display(); 
 		}
 
 		while (EDislpay == BATTLE)
