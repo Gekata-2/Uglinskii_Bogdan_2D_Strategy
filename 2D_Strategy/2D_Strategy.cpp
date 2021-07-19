@@ -7,14 +7,9 @@
 #include "KeyPressEvent.h"
 #include "Player.h"
 #include <windows.h>
-//#include "TView.h"
 #include <SFML/Graphics.hpp>
-using namespace sf;
 
 
-
-
-enum { MENU, INITIALISATION, BATTLE, WIN, CLOSE }EDislpay;
 
 void GenerateUnit(TUnit** unit, std::string type, int side,std::string name="\0")
 {
@@ -48,12 +43,11 @@ void CreateSetOfUnits(std::vector<TUnit*>* vec,int side)
 		}
 }
 
-/**
-72 255 213 зелёный
-14 42 71 синий
-*/
+
+
 int main()
 {
+	
     TBattleground bg;
 
 	TSwordsman SwA;
@@ -107,26 +101,26 @@ int main()
 	P2.PrintInfo();
 
 
-    RenderWindow window(sf::VideoMode(1920, 1080), "Swords and frogs...");
+    sf::RenderWindow window(sf::VideoMode(1920, 1080), "Swords and frogs...");
 
 
 	TKeyPressEvent key_pressed;
 	key_pressed.Initialization(players_id, players_names);
 
 	/////////Спрайт карты/////////
-	Image map_image;
+	sf::Image map_image;
 	map_image.loadFromFile("images/map.png");
-	Texture map;
+	sf::Texture map;
 	map.loadFromImage(map_image);
-	Sprite s_map;
+	sf::Sprite s_map;
 	s_map.setTexture(map);
 
 	/////////Спрат выбранной клетки/////////
-	Image focus_tile_image;
+	sf::Image focus_tile_image;
 	focus_tile_image.loadFromFile("images/focus_tile_tr.png");
-	Texture focus_tile_texture;
+	sf::Texture focus_tile_texture;
 	focus_tile_texture.loadFromImage(focus_tile_image);
-	Sprite s_focus_tile;
+	sf::Sprite s_focus_tile;
 	s_focus_tile.setTexture(focus_tile_texture);
 
 	s_focus_tile.setTextureRect(sf::IntRect(0, 0, 90, 90));
@@ -135,18 +129,17 @@ int main()
 	key_pressed.SetFocusUnit(bg.GetFocusUnit());//по умолчанию выбранная клетка - 0,0
 
 	/////////Спрайт юнитов/////////
-	Texture unit_map;
+	sf::Texture unit_map;
 	unit_map.loadFromImage(map_image);
-
-	Sprite s_unit_map;
+	sf::Sprite s_unit_map;
 	s_unit_map.setTexture(unit_map);
 
 	
 	///////////Шрифт/////////////
-	Font font_SalsaRegular;
+	sf::Font font_SalsaRegular;
 	font_SalsaRegular.loadFromFile("Salsa-Regular.ttf");
 
-	Font font_IMFellEnglishSCRegular;
+	sf::Font font_IMFellEnglishSCRegular;
 	font_IMFellEnglishSCRegular.loadFromFile("IMFellEnglishSC-Regular.ttf");
 	/*
 	Text text("", font, 35);
@@ -159,58 +152,58 @@ int main()
 
 	//Прямоугольник changelog
 	sf::RectangleShape rectangle_changelog(sf::Vector2f(432.f, 568.f));
-	rectangle_changelog.setFillColor(Color(124, 181, 24, 85));
+	rectangle_changelog.setFillColor(sf::Color(124, 181, 24, 85));
 	rectangle_changelog.setPosition(97, 305);
 
 	//Прямоугольник play
 	sf::RectangleShape rectangle_play(sf::Vector2f(781.f, 268.f));
-	rectangle_play.setFillColor(Color(255, 255, 255, 100));
+	rectangle_play.setFillColor(sf::Color(255, 255, 255, 100));
 	rectangle_play.setPosition(570, 305);
 
 	//Прямоугольник exit
 	sf::RectangleShape rectangle_exit(sf::Vector2f(781.f, 268.f));
-	rectangle_exit.setFillColor(Color(255, 255, 255, 100));
+	rectangle_exit.setFillColor(sf::Color(255, 255, 255, 100));
 	rectangle_exit.setPosition(570, 605);
 
 	//Прямоугольник feedback
 	sf::RectangleShape rectangle_feedback(sf::Vector2f(432.f, 568.f));
-	rectangle_feedback.setFillColor(Color(124, 181, 24, 85));
+	rectangle_feedback.setFillColor(sf::Color(124, 181, 24, 85));
 	rectangle_feedback.setPosition(1391, 305);
 
 		/***Текст****/
 
 	//кнопка играть
-	Text text_play("", font_IMFellEnglishSCRegular, 288);
+	sf::Text text_play("", font_IMFellEnglishSCRegular, 288);
 	text_play.setString("Play");
-	text_play.setFillColor(Color::Black);//просто шаблон текста
+	text_play.setFillColor(sf::Color::Black);//просто шаблон текста
 	text_play.setPosition(687, 225);
 	//копка выхода
-	Text text_exit("", font_IMFellEnglishSCRegular, 288);
+	sf::Text text_exit("", font_IMFellEnglishSCRegular, 288);
 	text_exit.setString("Exit");
-	text_exit.setFillColor(Color::Black);//просто шаблон текста
+	text_exit.setFillColor(sf::Color::Black);//просто шаблон текста
 	text_exit.setPosition(672, 535);
 	//название игры
-	Text text_name("", font_IMFellEnglishSCRegular, 96);
+	sf::Text text_name("", font_IMFellEnglishSCRegular, 96);
 	text_name.setString("Swords and frogs...");
-	text_name.setFillColor(Color(251, 97, 7));//просто шаблон текста
+	text_name.setFillColor(sf::Color(251, 97, 7));//просто шаблон текста
 	text_name.setPosition(600, 50);
 	//feedback
-	Text text_feedback("", font_IMFellEnglishSCRegular, 60);
+	sf::Text text_feedback("", font_IMFellEnglishSCRegular, 60);
 	text_feedback.setString("FEEDBACK");
-	text_feedback.setFillColor(Color(243, 222, 44));//просто шаблон текста
+	text_feedback.setFillColor(sf::Color(243, 222, 44));//просто шаблон текста
 	text_feedback.setPosition(1425, 230);
 	//feedback text
-	Text text_feedback_text("", font_SalsaRegular, 36);
+	sf::Text text_feedback_text("", font_SalsaRegular, 36);
 	text_feedback_text.setString("Do you have any bugs,\ncool ideas or general\nfeedback?\nSend me a massage \non my mail:\nsosorii2002@gmail.ru");
-	text_feedback_text.setFillColor(Color::White);//просто шаблон текста
+	text_feedback_text.setFillColor(sf::Color::White);//просто шаблон текста
 	text_feedback_text.setPosition(1400, 305);
 	//changelog
-	Text text_changelog("", font_IMFellEnglishSCRegular, 60);
+	sf::Text text_changelog("", font_IMFellEnglishSCRegular, 60);
 	text_changelog.setString("CHANGELOG");
-	text_changelog.setFillColor(Color(243, 222, 44));//просто шаблон текста
+	text_changelog.setFillColor(sf::Color(243, 222, 44));//просто шаблон текста
 	text_changelog.setPosition(100, 230);
 	//changelog text
-	Text text_changelog_text("", font_SalsaRegular, 24);
+	sf::Text text_changelog_text("", font_SalsaRegular, 24);
 	std::string changelog_str = "v 0.1.1\n -added TUnit, TSwordsman and \n TBattleGround classes.\n";
 	changelog_str += "v 0.2.1\n -added SFML, battleground display\n and units on it.\n";
 	changelog_str += "v 0.2.2\n - added selected tile,\n info about selected unit\n";
@@ -220,15 +213,15 @@ int main()
 	changelog_str += "v 0.8.1 \n -added after battle statistic\n";
 	changelog_str += "v 0.9.1 \n -added statistic and history";
 	text_changelog_text.setString(changelog_str);
-	text_changelog_text.setFillColor(Color::White);//просто шаблон текста
+	text_changelog_text.setFillColor(sf::Color::White);//просто шаблон текста
 	text_changelog_text.setPosition(105, 305);
 
 		//***Картинки***//
-	Image menu_image;
+	sf::Image menu_image;
 	menu_image.loadFromFile("images/menu.png");
-	Texture meny_texture;
+	sf::Texture meny_texture;
 	meny_texture.loadFromImage(menu_image);
-	Sprite s_menu;
+	sf::Sprite s_menu;
 	s_menu.setTexture(meny_texture);
 	//------------------Exit Menu---------------------//
 
@@ -236,38 +229,38 @@ int main()
 
 	//большой прямоугольнки
 	sf::RectangleShape rectangle_exit_confirm(sf::Vector2f(736.f, 187.f));
-	rectangle_exit_confirm.setFillColor(Color(105,133,75, 250));
-	rectangle_exit_confirm.setOutlineColor(Color(92, 128, 1, 250));
+	rectangle_exit_confirm.setFillColor(sf::Color(105,133,75, 250));
+	rectangle_exit_confirm.setOutlineColor(sf::Color(92, 128, 1, 250));
 	rectangle_exit_confirm.setOutlineThickness(5);
 	rectangle_exit_confirm.setPosition(590, 445);
 
 	//прямоугольник да
 	sf::RectangleShape rectangle_yes(sf::Vector2f(250.f, 130.f));
-	rectangle_yes.setFillColor(Color(124, 181, 24, 85));
+	rectangle_yes.setFillColor(sf::Color(124, 181, 24, 85));
 	rectangle_yes.setPosition(640, 472);
 
 	//прямоугольник нет
 	sf::RectangleShape rectangle_no(sf::Vector2f(250.f, 130.f));
-	rectangle_no.setFillColor(Color(124, 181, 24, 85));
+	rectangle_no.setFillColor(sf::Color(124, 181, 24, 85));
 	rectangle_no.setPosition(1005, 472);
 
 		/***Текст****/
 	//подтверждение выхода
-	Text text_exit_confirm("", font_IMFellEnglishSCRegular, 48);
+	sf::Text text_exit_confirm("", font_IMFellEnglishSCRegular, 48);
 	text_exit_confirm.setString("Are you sure that you want to exit?");
-	text_exit_confirm.setFillColor(Color(251, 97, 7));
+	text_exit_confirm.setFillColor(sf::Color(251, 97, 7));
 	text_exit_confirm.setPosition(590, 390);
 
 	//да
-	Text text_yes("", font_IMFellEnglishSCRegular, 80);
+	sf::Text text_yes("", font_IMFellEnglishSCRegular, 80);
 	text_yes.setString("Yes");
-	text_yes.setFillColor(Color(255,255,255));
+	text_yes.setFillColor(sf::Color(255,255,255));
 	text_yes.setPosition(675, 472);
 
 	//нет
-	Text text_no("", font_IMFellEnglishSCRegular, 80);
+	sf::Text text_no("", font_IMFellEnglishSCRegular, 80);
 	text_no.setString("No");
-	text_no.setFillColor(Color(255, 255,255));
+	text_no.setFillColor(sf::Color(255, 255,255));
 	text_no.setPosition(1040, 472);
 
 	//------------------Battle---------------------//
@@ -275,73 +268,73 @@ int main()
 
 	//История
 	sf::RectangleShape rectangle_history(sf::Vector2f(400.f, 830.f));
-	rectangle_history.setFillColor(Color(124, 181, 24, 110));
+	rectangle_history.setFillColor(sf::Color(124, 181, 24, 110));
 	rectangle_history.setPosition(80, 50);
 
 	//Информация о герое
 	sf::RectangleShape rectangle_unit_info(sf::Vector2f(400.f, 280.f));
-	rectangle_unit_info.setFillColor(Color(124, 181, 24, 110));
+	rectangle_unit_info.setFillColor(sf::Color(124, 181, 24, 110));
 	rectangle_unit_info.setPosition(1440, 50);
 
 	sf::RectangleShape rectangle_unit_abilities(sf::Vector2f(850.f, 100.f));
-	rectangle_unit_abilities.setFillColor(Color(124, 181, 24, 110));
+	rectangle_unit_abilities.setFillColor(sf::Color(124, 181, 24, 110));
 	rectangle_unit_abilities.setPosition(545, 950);
 
 		/***Текст****/
 	
 	//время по нажатию TAB
-	Text tab_text("", font_SalsaRegular, 20);
-	tab_text.setFillColor(Color(251, 97, 7));//текст при табуляции
+	sf::Text tab_text("", font_SalsaRegular, 20);
+	tab_text.setFillColor(sf::Color(251, 97, 7));//текст при табуляции
 	tab_text.setPosition(875, 10);
 
 	//информация о выбранной клетке
-	Text focus_tile_text("", font_SalsaRegular, 25);
-	focus_tile_text.setFillColor(Color::White);//информация о текущей выбранной клетки
+	sf::Text focus_tile_text("", font_SalsaRegular, 25);
+	focus_tile_text.setFillColor(sf::Color::White);//информация о текущей выбранной клетки
 	focus_tile_text.setPosition(1445, 50);
 	//загаловок история 
-	 Text history_header_text("", font_IMFellEnglishSCRegular, 36);
-	 history_header_text.setFillColor(Color::White);//информация о возможностях юнита
+	sf::Text history_header_text("", font_IMFellEnglishSCRegular, 36);
+	 history_header_text.setFillColor(sf::Color::White);//информация о возможностях юнита
 	 history_header_text.setString("Actions history:");
 	 history_header_text.setPosition(80, 10);
 
 	 //сама истори 
-	 Text history_text("", font_SalsaRegular, 36);
+	 sf::Text history_text("", font_SalsaRegular, 36);
 	 history_text.setString("test");
-	 history_text.setFillColor(Color::White);//информация о возможностях юнита
+	 history_text.setFillColor(sf::Color::White);//информация о возможностях юнита
 	 history_text.setPosition(85, 48);
 
 	 //загаловок "информация о юните"
-	 Text unit_info_header_text("", font_IMFellEnglishSCRegular, 36);
-	 unit_info_header_text.setFillColor(Color::White);//информация о возможностях юнита
+	 sf::Text unit_info_header_text("", font_IMFellEnglishSCRegular, 36);
+	 unit_info_header_text.setFillColor(sf::Color::White);//информация о возможностях юнита
 	 unit_info_header_text.setString("Unit Information:");
 	 unit_info_header_text.setPosition(1442, 10);
 
 	//загаловок "Действия"
-	Text unit_actions_header_text("", font_IMFellEnglishSCRegular, 48);
-	unit_actions_header_text.setFillColor(Color::White);//информация о возможностях юнита
+	 sf::Text unit_actions_header_text("", font_IMFellEnglishSCRegular, 48);
+	unit_actions_header_text.setFillColor(sf::Color::White);//информация о возможностях юнита
 	unit_actions_header_text.setString("Actions:");
 	unit_actions_header_text.setPosition(550, 890);
 	//сами действия
-	Text unit_actions("", font_SalsaRegular, 25);
-	unit_actions.setFillColor(Color::White);//информация о возможностях юнита
+	sf::Text unit_actions("", font_SalsaRegular, 25);
+	unit_actions.setFillColor(sf::Color::White);//информация о возможностях юнита
 	unit_actions.setPosition(550, 950);
 
 	//исключения
-	Text exceptions("", font_SalsaRegular, 22);
-	exceptions.setFillColor(Color(251, 97, 7));//информацию об ошибках
+	sf::Text exceptions("", font_SalsaRegular, 22);
+	exceptions.setFillColor(sf::Color(251, 97, 7));//информацию об ошибках
 	exceptions.setPosition(550, 830);
 
 	//чья очеред ходить
-	Text t_turn("", font_SalsaRegular, 25);
-	t_turn.setFillColor(Color(251, 97, 7));//информацию об ошибках
+	sf::Text t_turn("", font_SalsaRegular, 25);
+	t_turn.setFillColor(sf::Color(251, 97, 7));//информацию об ошибках
 
 		/***Картинки***/
-		Image swamp_image;
-		swamp_image.loadFromFile("images/swamp.png");
-		Texture swamp_texture;
-		swamp_texture.loadFromImage(swamp_image);
-		Sprite s_swamp;
-		s_swamp.setTexture(swamp_texture);
+	sf::Image swamp_image;
+	swamp_image.loadFromFile("images/swamp.png");
+	sf::Texture swamp_texture;
+	swamp_texture.loadFromImage(swamp_image);
+	sf::Sprite s_swamp;
+	s_swamp.setTexture(swamp_texture);
 
 	//------------------WIN---------------------//
  
@@ -349,57 +342,57 @@ int main()
 
 	//Статистика
 	sf::RectangleShape rectangle_statistics(sf::Vector2f(540.f, 652.f));
-	rectangle_statistics.setFillColor(Color(124, 181, 24, 85));
+	rectangle_statistics.setFillColor(sf::Color(124, 181, 24, 85));
 	rectangle_statistics.setPosition(102, 280);
 	
 	
 		/***Текст****/
 	
-	Text text_winner("", font_IMFellEnglishSCRegular, 144);
-	text_winner.setFillColor(Color(251, 97, 7));//информацию об ошибках
+	sf::Text text_winner("", font_IMFellEnglishSCRegular, 144);
+	text_winner.setFillColor(sf::Color(251, 97, 7));//информацию об ошибках
 	text_winner.setPosition(370, 20);
 
-	Text statistic_header_text("", font_IMFellEnglishSCRegular, 64);
+	sf::Text statistic_header_text("", font_IMFellEnglishSCRegular, 64);
 	statistic_header_text.setString("Statistic:");
-	statistic_header_text.setFillColor(Color::White);//информацию об ошибках
+	statistic_header_text.setFillColor(sf::Color::White);//информацию об ошибках
 	statistic_header_text.setPosition(110, 210);
 
-	Text statistic_text("", font_SalsaRegular, 40);
-	statistic_text.setFillColor(Color::White);//информацию об ошибках
+	sf::Text statistic_text("", font_SalsaRegular, 40);
+	statistic_text.setFillColor(sf::Color::White);//информацию об ошибках
 	statistic_text.setPosition(116, 292);
 
 	std::string statistic = "test";
 	statistic_text.setString(statistic);
 
-	Text exit_to_main_menu_text("", font_SalsaRegular, 36);
+	sf::Text exit_to_main_menu_text("", font_SalsaRegular, 36);
 	exit_to_main_menu_text.setString("Press Esc to exit in main menu");
-	exit_to_main_menu_text.setFillColor(Color::White);//информацию об ошибках
+	exit_to_main_menu_text.setFillColor(sf::Color::White);//информацию об ошибках
 	exit_to_main_menu_text.setPosition(711, 963);
 
 
 
 		/***Красивая картинка***/
-	Image win_image;
+	sf::Image win_image;
 	win_image.loadFromFile("images/win_texture.png");
-	Texture win_texture;
+	sf::Texture win_texture;
 	win_texture.loadFromImage(win_image);
-	Sprite s_win;
+	sf::Sprite s_win;
 	s_win.setTexture(win_texture);
 	s_win.setTextureRect(sf::IntRect(0, 0, 1160, 652));
 	s_win.setPosition(687,280);
 
 
-	Image win_sky_image;
+	sf::Image win_sky_image;
 	win_sky_image.loadFromFile("images/win_sky.png");
-	Texture win_sky_texture;
+	sf::Texture win_sky_texture;
 	win_sky_texture.loadFromImage(win_sky_image);
-	Sprite s_win_sky;
+	sf::Sprite s_win_sky;
 	s_win_sky.setTexture(win_sky_texture);
 
-	Clock clock;
+	sf::Clock clock;
 	
 	///обаботка ошибок
-	Clock exception_clock;
+	sf::Clock exception_clock;
 
 	bool show_exceptions=false;
 	int exceptions_time = 0;
@@ -407,7 +400,7 @@ int main()
 	int time_s=0;
 	int game_time = 0;
 
-	
+	enum { MENU, BATTLE, WIN, CLOSE }EDislpay;
 
 	EDislpay = WIN;
 
@@ -423,7 +416,7 @@ int main()
 		}
 		while (EDislpay==MENU)
 		{
-			window.clear(Color(14, 42, 71));
+			window.clear(sf::Color(14, 42, 71));
 
 			while (window.pollEvent(event)) 
 			{
@@ -432,9 +425,9 @@ int main()
 					std::cout << "window is closed";
 					window.close();
 				}
-				if (event.type == Event::KeyPressed)
+				if (event.type == sf::Event::KeyPressed)
 				{
-					if (event.key.code==Keyboard::Escape)
+					if (event.key.code== sf::Keyboard::Escape)
 					{
 						switch (show_exit)
 						{
@@ -453,21 +446,21 @@ int main()
 						}
 
 					}
-					if ((event.key.code == Keyboard::Up) || (event.key.code == Keyboard::Down))
+					if ((event.key.code == sf::Keyboard::Up) || (event.key.code == sf::Keyboard::Down))
 					{//если нажаты стрелки
 						if (show_exit==false)
 						{
 							key_pressed.ArrowsPressdMenu(event);
 						}
 					}
-					if ((event.key.code == Keyboard::Left) || (event.key.code == Keyboard::Right))
+					if ((event.key.code == sf::Keyboard::Left) || (event.key.code == sf::Keyboard::Right))
 					{//если нажаты стрелки
 						if (show_exit==true)
 						{
 							key_pressed.ArrowsPressedExit(event);
 						}		
 					}
-					if(event.key.code == Keyboard::Enter)
+					if(event.key.code == sf::Keyboard::Enter)
 					{//если клавиша Enter
 
 						switch (show_exit)
@@ -580,7 +573,7 @@ int main()
 			exception_clock.restart();
 			//	clock.restart();
 
-			window.clear(Color(14, 42, 71));
+			window.clear(sf::Color(14, 42, 71));
 
 			///////////////////////////////Обработка клавиш/////////////////////
 			while (window.pollEvent(event))//если никакого события не произошло, то в цикл не попадаем
@@ -589,31 +582,32 @@ int main()
 				{
 					EDislpay = CLOSE;
 				}
-				if (event.type == Event::KeyPressed)
+				if (event.type == sf::Event::KeyPressed)
 				{
-					if (event.key.code == Keyboard::Escape)
+					if (event.key.code == sf::Keyboard::Escape)
 					{
 						std::cout << "Return to menu";
 						EDislpay = MENU;
 						//window.close();
 					}
-					if ((event.key.code == Keyboard::Tab))
+					if ((event.key.code == sf::Keyboard::Tab))
 					{//если клавиша ТАБ
 						key_pressed.PressedTab(&tab_text, &time_s);
 					}
-					if ((event.key.code == Keyboard::Left) || (event.key.code == Keyboard::Right) || (event.key.code == Keyboard::Up) || (event.key.code == Keyboard::Down))
+					if ((event.key.code == sf::Keyboard::Left) || (event.key.code == sf::Keyboard::Right) 
+						|| (event.key.code == sf::Keyboard::Up) || (event.key.code == sf::Keyboard::Down))
 					{//если нажаты стрелки
 						key_pressed.ArrowsPressd(&bg, &s_focus_tile, event);
 					}
-					if ((event.key.code == Keyboard::Enter))
+					if ((event.key.code == sf::Keyboard::Enter))
 					{//если клавиша Enter
 						key_pressed.PressedEnter(&bg);
 					}
-					if ((event.key.code == Keyboard::M))
+					if ((event.key.code == sf::Keyboard::M))
 					{//если клавиша M
 						key_pressed.PressedM(&bg);
 					}
-					if (event.key.code == Keyboard::A)
+					if (event.key.code == sf::Keyboard::A)
 					{//если клавиша A
 						key_pressed.PressedA(&bg);
 					}
@@ -628,9 +622,9 @@ int main()
 			{
 				for (int j = 0; j < WIDTH_MAP; j++)
 				{
-					if ((bg.TileBackgroundMap[i][j] == '0')) s_map.setTextureRect(IntRect(166, 0, 83, 83));
-					if ((bg.TileBackgroundMap[i][j] == ' ')) s_map.setTextureRect(IntRect(0, 0, 83, 83));
-					if ((bg.TileBackgroundMap[i][j] == 's')) s_map.setTextureRect(IntRect(83, 0, 83, 83));
+					if ((bg.TileBackgroundMap[i][j] == '0')) s_map.setTextureRect(sf::IntRect(166, 0, 83, 83));
+					if ((bg.TileBackgroundMap[i][j] == ' ')) s_map.setTextureRect(sf::IntRect(0, 0, 83, 83));
+					if ((bg.TileBackgroundMap[i][j] == 's')) s_map.setTextureRect(sf::IntRect(83, 0, 83, 83));
 
 
 					s_map.setPosition(j * 83 + BATTLE_WIDTH_OFFSET, i * 83 + BATTLE_HEIGHT_OFFSET);
@@ -643,8 +637,8 @@ int main()
 			{
 				for (int j = 0; j < WIDTH_MAP - 2; j++)
 				{
-					if (bg.TileUnitsMap[i][j] == 'A')  s_unit_map.setTextureRect(IntRect(249, 0, 83, 83));
-					if (bg.TileUnitsMap[i][j] == 'S')  s_unit_map.setTextureRect(IntRect(332, 0, 83, 83));
+					if (bg.TileUnitsMap[i][j] == 'A')  s_unit_map.setTextureRect(sf::IntRect(249, 0, 83, 83));
+					if (bg.TileUnitsMap[i][j] == 'S')  s_unit_map.setTextureRect(sf::IntRect(332, 0, 83, 83));
 
 					if (bg.TileUnitsMap[i][j] == ' ')
 					{
@@ -716,23 +710,13 @@ int main()
 			window.display();
 
 		}
-		while (EDislpay == INITIALISATION)
-		{
-			window.clear(Color(14, 42, 71));
-
-			while (window.pollEvent(event))
-			{
-
-			}
-
-		}
-
+		
 		while (EDislpay == WIN)
 		{
-			window.clear(Color(14, 42, 71));
+			window.clear(sf::Color(14, 42, 71));
 			while (window.pollEvent(event))
 			{
-				if (event.key.code == Keyboard::Escape)
+				if (event.key.code == sf::Keyboard::Escape)
 				{
 					std::cout << "Return to menu";
 

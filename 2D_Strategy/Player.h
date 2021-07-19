@@ -11,8 +11,6 @@
 
 
 
-
-
 class TPlayer
 {
 private:
@@ -31,57 +29,15 @@ public:
 		name = nm;
 	}
 
-	int GetID()
-	{
-		return id;
-	}
-
-	std::string GetName()
-	{
-		return name;
-	}
-
-	int GetNumberOfUnits()
-	{
-		return number_of_units;
-	}
-
-	void AddUnit(TUnit* unit)//добавляем юнита в конец
-	{
-		units.push_back(unit);
-		number_of_units++;
-
-		std::list<TUnit*>::iterator it = units.end();
-		it--;
-		std::cout << (*it)->GetInfo();
-	}
-
+	int GetID();
+	std::string GetName();
 	
-	void DeleteUnit(TUnit* unit)//ищем юнита и убираем
-	{
-		std::list<TUnit*>::iterator it = units.begin();
-
-		for (it = units.begin(); it!=units.end(); it++)
-		{
-			if ((*it)==unit)
-			{
-				it = units.erase(it);
-				number_of_units--;
-				break;		
-			}
-		}
-	}
-
-
-	void PrintInfo()
-	{
-		std::list<TUnit*>::iterator it = units.begin();
-
-		for (it = units.begin(); it != units.end(); it++)
-		{
-			(*it)->PrintInfo();
-		}
-	}
+	int GetNumberOfUnits();
+	
+	void AddUnit(TUnit* unit);//добавляем юнита в конец	
+	void DeleteUnit(TUnit* unit);//ищем юнита и убираем
+	
+	void PrintInfo();
 
 
 };

@@ -1,8 +1,6 @@
 #include "TBattleground.h"
 
 
-
-
 int TBattleground::Attack(TUnit* attack_unit, TUnit* attacked_unit)
 {
 	if (!attack_unit->IsOnBattleground())
@@ -97,10 +95,6 @@ int TBattleground::Move(TUnit* unit, int x, int y)
 		//перемещаем юнита
 		tiles[x][y] = unit;
 		TileUnitsMap[x][y] = unit->GetType()[0];
-
-		//перемещаем фокус
-	/*	focus_tile.x = x;
-		focus_tile.y = y;*/
 
 		std::cout << "Unit <" << unit->GetName() << "> is moved : [" << unit->GetX() << "][" << unit->GetY();
 		unit->SetPos(x, y);
