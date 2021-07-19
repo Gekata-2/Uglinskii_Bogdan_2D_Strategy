@@ -112,28 +112,6 @@ int main()
 	TKeyPressEvent key_pressed;
 	key_pressed.Initialization(players_id);
 
-	/////////Спрайт подтверждения выхода/////////
-	Image menu_exit_confirm_image;
-	menu_exit_confirm_image.loadFromFile("images/confirm_exit.png");
-	Texture menu_exit_confirm_texture;
-	menu_exit_confirm_texture.loadFromImage(menu_exit_confirm_image);
-	Sprite s_confrim_exit;
-	s_confrim_exit.setTexture(menu_exit_confirm_texture);
-	/////////Спрайт селектора меню/////////
-	Image select_menu_image;
-	select_menu_image.loadFromFile("images/selc.png");
-	Texture select_menu_texture;
-	select_menu_texture.loadFromImage(select_menu_image);
-	Sprite s_select_menu;
-	s_select_menu.setTexture(select_menu_texture);
-	/////////Спрайт меню/////////
-	Image menu_image;
-	menu_image.loadFromFile("images/menu.png");
-	Texture menu;
-	menu.loadFromImage(menu_image);
-	Sprite s_menu;
-	s_menu.setTexture(menu);
-
 	/////////Спрайт карты/////////
 	Image map_image;
 	map_image.loadFromFile("images/map.png");
@@ -174,7 +152,7 @@ int main()
 	text.setFillColor(Color::Blue);//просто шаблон текста
 	*/
 
-	//------------------Menu---------------------//
+	//------------------Main Menu---------------------//
 	
 	    /***Фигуры****/
 
@@ -203,12 +181,12 @@ int main()
 	//кнопка играть
 	Text text_play("", font_IMFellEnglishSCRegular, 288);
 	text_play.setString("Play");
-	text_play.setFillColor(Color::Red);//просто шаблон текста
+	text_play.setFillColor(Color::Black);//просто шаблон текста
 	text_play.setPosition(687, 225);
 	//копка выхода
 	Text text_exit("", font_IMFellEnglishSCRegular, 288);
 	text_exit.setString("Exit");
-	text_exit.setFillColor(Color::Red);//просто шаблон текста
+	text_exit.setFillColor(Color::Black);//просто шаблон текста
 	text_exit.setPosition(672, 535);
 	//название игры
 	Text text_name("", font_IMFellEnglishSCRegular, 96);
@@ -235,6 +213,44 @@ int main()
 	text_changelog_text.setString("v 0.1.\n -added TUnit class.\n");
 	text_changelog_text.setFillColor(Color::Red);//просто шаблон текста
 	text_changelog_text.setPosition(105, 305);
+
+	//------------------Exit Menu---------------------//
+
+		/***Фигуры****/
+
+	//большой прямоугольнки
+	sf::RectangleShape rectangle_exit_confirm(sf::Vector2f(736.f, 187.f));
+	rectangle_exit_confirm.setFillColor(Color(255, 255, 255, 250));
+	rectangle_exit_confirm.setPosition(590, 445);
+
+	//прямоугольник да
+	sf::RectangleShape rectangle_yes(sf::Vector2f(250.f, 130.f));
+	rectangle_yes.setFillColor(Color(255, 150, 255, 150));
+	rectangle_yes.setPosition(640, 472);
+
+	//прямоугольник нет
+	sf::RectangleShape rectangle_no(sf::Vector2f(250.f, 130.f));
+	rectangle_no.setFillColor(Color(255, 150, 255, 150));
+	rectangle_no.setPosition(1005, 472);
+
+		/***Текст****/
+	//подтверждение выхода
+	Text text_exit_confirm("", font_IMFellEnglishSCRegular, 48);
+	text_exit_confirm.setString("Are you sure that you want to exit?");
+	text_exit_confirm.setFillColor(Color::Red);
+	text_exit_confirm.setPosition(590, 390);
+
+	//да
+	Text text_yes("", font_IMFellEnglishSCRegular, 80);
+	text_yes.setString("Yes");
+	text_yes.setFillColor(Color::Red);
+	text_yes.setPosition(675, 472);
+
+	//нет
+	Text text_no("", font_IMFellEnglishSCRegular, 80);
+	text_no.setString("No");
+	text_no.setFillColor(Color::Red);
+	text_no.setPosition(1040, 472);
 
 	///////////////
 	Font font;
@@ -385,15 +401,8 @@ int main()
 			}
 		std::cout << "Menu:" << key_pressed.GetMenuState();
 		std::cout << "	Exit:" << show_exit << "\n";
-			//key_pressed.UpdateSelectMenu(&s_select_menu);
 			key_pressed.UpdateSelectMenu(&text_play, &text_exit);
 			
-			//window.draw(s_menu);
-			window.draw(s_select_menu);
-			if (show_exit==true)
-			{
-				window.draw(s_confrim_exit);
-			}
 			
 			window.draw(rectangle_changelog);
 			window.draw(rectangle_feedback);
@@ -407,7 +416,19 @@ int main()
 			window.draw(text_changelog);
 			window.draw(text_feedback);
 			window.draw(text_feedback_text);
-			
+
+			if (show_exit == true)
+			{
+				key_pressed.UpdateExitConfirm(&text_yes, &text_no);
+
+				window.draw(rectangle_exit_confirm);
+				window.draw(rectangle_yes);
+				window.draw(rectangle_no);
+				window.draw(text_exit_confirm);
+				window.draw(text_yes);
+				window.draw(text_no);	
+
+			}
 			
 			window.display(); 
 		}

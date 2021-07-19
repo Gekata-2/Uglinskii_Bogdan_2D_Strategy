@@ -92,14 +92,14 @@ public:
 
 		case 2:
 			{
-				txt_play->setScale(1.1, 1.1);
+				txt_play->setScale(1.15, 1.15);
 				txt_exit->setScale(1.0, 1.0);
 
 				break;
 			}
 		case 1:
 			{
-				txt_exit->setScale(1.1, 1.1); 
+				txt_exit->setScale(1.15, 1.15); 
 				txt_play->setScale(1.0, 1.0);
 		
 				break;
@@ -112,10 +112,31 @@ public:
 
 	}
 
-	/*void UpdateSelectMenu(sf::Sprite* select)
+	void UpdateExitConfirm(sf::Text* txt_yes, sf::Text* txt_no)
 	{
-		select->setPosition(select_pos.x, select_pos.y);
-	}*/
+
+		switch (exit)
+		{
+
+			case true:
+			{
+				txt_yes->setScale(1.2, 1.2);
+				txt_no->setScale(1.0, 1.0);
+				break;
+			}
+			case false:
+			{
+				txt_no->setScale(1.2, 1.2);
+				txt_yes->setScale(1.0, 1.0);
+				break;
+			}
+			default:
+			break;
+		}
+
+	}
+
+
 	void UpdateTilesText(TBattleground* bg,sf::Text* focus_tile_txt, sf::Text* tab_text, sf::Text* unit_info_text, sf::String unit_info_str)
 	{
 		////////////////Инфа о текущей клетке
@@ -277,14 +298,11 @@ public:
 		if (event.key.code == sf::Keyboard::Left)
 		{
 			exit = true;
-
-			exit_pos = { 733,300 };
-
+			
 		}
 		if (event.key.code == sf::Keyboard::Right)
 		{
-			exit = false;
-			exit_pos = { 933,300 };
+			exit = false;		
 		}
 	}
 
