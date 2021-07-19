@@ -1,6 +1,9 @@
 #pragma once
 #include <iostream>
 #include <string>
+
+#include <SFML\Graphics.hpp>
+
 class TUnit
 {
 protected:
@@ -22,12 +25,12 @@ public:
 	virtual float		GetBaseDamage() const;//базовый урон
 	virtual float		GetMaxAttackRadius() const;//максимальный радиус атаки
 
-	virtual int*	    GetPos() const;//получить текущую позицию на доске в виде массива
-	virtual int			GetX() const;//получить координату X
-	virtual int		    GetY() const;//получить координату Y
-	virtual int		    GetMaxMoveTiles() const;
-	virtual int			GetSide() const;
-	virtual bool		IsOnBattleground() const;//находится ли сейчас юнит на доске
+	virtual sf::Vector2i GetPos() const;//получить текущую позицию на доске в виде массива
+	virtual int			 GetX() const;//получить координату X
+	virtual int		     GetY() const;//получить координату Y
+	virtual int		     GetMaxMoveTiles() const;
+	virtual int			 GetSide() const;
+	virtual bool		 IsOnBattleground() const;//находится ли сейчас юнит на доске
 	virtual std::string GetName() const;//имя
 	virtual std::string GetType() const;
 	virtual std::string GetInfo() const = 0;

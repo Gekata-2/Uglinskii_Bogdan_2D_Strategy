@@ -34,9 +34,10 @@ float TUnit::GetMaxAttackRadius() const
 /**
 Позиция на доске
 */
-int* TUnit::GetPos() const
+sf::Vector2i TUnit::GetPos() const
 {
-	int tmp[2] = { pos_x ,pos_y };
+
+	sf::Vector2i tmp = { pos_x ,pos_y };
 	return tmp;
 }
 

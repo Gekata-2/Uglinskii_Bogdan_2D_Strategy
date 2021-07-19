@@ -71,7 +71,7 @@ int main()
 	int players_id[MAX_NUMBER_OF_PLAYERS] = {P1.GetID(),P2.GetID()};//массив с id игроков
 	std::string players_names[MAX_NUMBER_OF_PLAYERS] = { P1.GetName(), P2.GetName() };
 
-	int player_size = 1;//количество персонажей у игрока
+	int player_size = 2;//количество персонажей у игрока
 
 	//добавл€ем на поле игроков
 	bg.AddPlayer(&P1);
@@ -276,19 +276,23 @@ int main()
 	//врем€ по нажатию TAB
 	Text tab_text("", font_SalsaRegular, 20);
 	tab_text.setFillColor(Color(255, 10, 10));//текст при табул€ции
-	tab_text.setPosition(868, 10);
+	tab_text.setPosition(875, 10);
 
 	//информаци€ о выбранной клетке
 	Text focus_tile_text("", font_SalsaRegular, 25);
 	focus_tile_text.setFillColor(Color::White);//информаци€ о текущей выбранной клетки
-
-	
-
+	focus_tile_text.setPosition(1445, 50);
 	//загаловок истори€ 
 	 Text history_header_text("", font_IMFellEnglishSCRegular, 36);
 	 history_header_text.setFillColor(Color::White);//информаци€ о возможност€х юнита
 	 history_header_text.setString("Actions history:");
 	 history_header_text.setPosition(80, 10);
+
+	 //сама истори 
+	 Text history_text("", font_SalsaRegular, 36);
+	 history_text.setString("test");
+	 history_text.setFillColor(Color::White);//информаци€ о возможност€х юнита
+	 history_text.setPosition(85, 48);
 
 	 //загаловок "информаци€ о юните"
 	 Text unit_info_header_text("", font_IMFellEnglishSCRegular, 36);
@@ -636,6 +640,7 @@ int main()
 			key_pressed.UpdateUnitAbilitiesText(&unit_actions);
 			key_pressed.UpdateExceptions(&exceptions, &show_exceptions, &exceptions_time);
 			key_pressed.UpdateTimer(&tab_text, &time_s);
+			history_text.setString(key_pressed.GetHistory());
 
 			t_turn.setPosition(560, 60);
 			t_turn.setString("Turn: "+ key_pressed.GetName());
@@ -654,9 +659,12 @@ int main()
 			window.draw(unit_actions);
 			window.draw(tab_text);
 			window.draw(t_turn);
+		
 		//	window.draw();
 
 			window.draw(history_header_text);
+			window.draw(history_text);
+			
 			window.draw(unit_info_header_text);
 				
 			///–исуем выбраннуб клетку///

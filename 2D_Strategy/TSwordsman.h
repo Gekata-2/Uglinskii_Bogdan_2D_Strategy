@@ -16,7 +16,6 @@ public:
 
 		if (def_name =="\0")
 		{
-			name = "Swordsman ";
 			for (size_t i = 0; i < 3; i++)
 			{
 				char c = 65 + rand() % 26;

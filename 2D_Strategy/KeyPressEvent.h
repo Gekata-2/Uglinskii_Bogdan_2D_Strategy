@@ -6,6 +6,7 @@
 
 #define BATTLE_WIDTH_OFFSET 545
 #define BATTLE_HEIGHT_OFFSET 50
+#define HISTORY_SIZE 9
 
 #define MAX_NUMBER_OF_PLAYERS 2
 using namespace sf;
@@ -34,6 +35,10 @@ class TKeyPressEvent
 	sf::Vector2i exit_pos = { 733,300 };
 	const sf::Vector2i max_pos = { 700,520 };
 	const sf::Vector2i min_pos = { 733,300 };
+
+	std::string history[HISTORY_SIZE] = {"\0"};
+	int number_of_history_notes = 0;
+	
 
 	TUnit* focus_unit=NULL;
 	TUnit* memorized_unit=NULL;
@@ -92,6 +97,28 @@ public:
 	int GetExit()
 	{
 		return exit;
+	}
+
+	std::string GetHistory()
+	{
+		std::string temp_string = "\0";
+
+		for (size_t i = 0; i < number_of_history_notes; i++)
+		{
+			temp_string += history[i];
+		}
+		return temp_string;
+	}
+
+	void RepackHistory(std::string str_to_ins)
+	{
+		std::string temp_string = "\0";
+		
+		for(size_t i = number_of_history_notes-1; i>0; i--)//передвинули все элементы на 1
+		{
+			history[i] = history[i - 1];
+		}
+		history[0] = str_to_ins;
 	}
 
 	void UpdateSelectMenu(sf::Text* txt_play, sf::Text* txt_exit)
@@ -166,7 +193,7 @@ public:
 				"] to [" + std::to_string(bg->GetFocusTile().x) + "][" + std::to_string(bg->GetFocusTile().y) + "]";
 			tmp_s = "Focus tile :" + std::to_string(v_f.x) + "  " + std::to_string(v_f.y);
 		}
-		focus_tile_txt->setPosition(1440, 50);
+		
 		focus_tile_txt->setString(tmp_s + focus_unit_pos);
 	}
 
@@ -208,7 +235,7 @@ public:
 		{
 
 			str = "Time(TAB)" + std::to_string(*time / 60) + ":" + std::to_string(*time - (*time / 60) * 60);
-			str += "	In seconds :" + std::to_string(*time);
+			//str += "	In seconds :" + std::to_string(*time);
 			
 			tab_text->setString(str);
 			break;
@@ -371,19 +398,36 @@ public:
 					}
 					if ((EState==ATTACK)&&(memorized_unit!=focus_unit))//если мы атакуем юнита и при этом только вражеского
 					{
+						float damage = focus_unit->GetCurrentHP();
 						exceptions=bg->Attack(memorized_unit, focus_unit);
 						
+						damage = damage - focus_unit->GetCurrentHP();
+
 						if (exceptions==FRIENDLY_UNIT)
 						{
 							break;
 						}
 
+						if (number_of_history_notes== HISTORY_SIZE)
+						{
+							std::string tmp_h_str = "attack:  " + memorized_unit->GetName() + "-->" + focus_unit->GetName() + "\ndamage:" + std::to_string(damage) + ";\n";
+							RepackHistory(tmp_h_str);
+						}
+						else 
+						{
+							history[number_of_history_notes] += "attack:  " + memorized_unit->GetName() + "-->" + focus_unit->GetName() + "\ndamage:" + std::to_string(damage) + ";\n";
+							number_of_history_notes++;
+						}
+						
+
 						focus_unit = bg->GetFocusUnit();//перемещаем фокус на атакованного юнита
+						
 
 						memorized_unit = NULL;//забываем атаковавшего юнита
 						EState = NOTHING;//атака завершена и персонаж переходит в нейтральное состояние
 						enter_pressed = false;//отпускаем энтер
 						NextTurn();
+
 					}			
 					break;
 				}
@@ -399,12 +443,30 @@ public:
 			}
 			if (EState==MOVE)// и если нажата M 
 			{
+				sf::Vector2i history_move = memorized_unit->GetPos();
+
 				exceptions = bg->Move(memorized_unit, bg->GetFocusTile().x, bg->GetFocusTile().y);//перемещаем юнита в новое место
+				
 				
 				if (exceptions==ALL_OK)
 				{
+					if (number_of_history_notes == HISTORY_SIZE)
+					{
+						std::string tmp_h_str = "move:" + memorized_unit->GetName() + "\n[" + std::to_string(history_move.x) + "][" + std::to_string(history_move.y)
+							+ "] -> [" + std::to_string(memorized_unit->GetPos().x) + "][" + std::to_string(memorized_unit->GetPos().y) + "];\n";
+						RepackHistory(tmp_h_str);
+					}
+					else 
+					{
+						history[number_of_history_notes] = "move:" + memorized_unit->GetName() + "\n[" + std::to_string(history_move.x) + "][" + std::to_string(history_move.y)
+							+ "] -> [" + std::to_string(memorized_unit->GetPos().x) + "][" + std::to_string(memorized_unit->GetPos().y) + "];\n";
+						number_of_history_notes++;
+					}
+					
+					
 					NextTurn();
 					focus_unit = bg->GetFocusUnit();//т.к. юнит переместился, то нужно перевести указатель на "новое место" юнита
+
 
 					memorized_unit = NULL;
 
@@ -481,17 +543,15 @@ public:
 
 				str = "Time(TAB)"+std::to_string(*time/60)+":"+ std::to_string(*time - (*time / 60)*60);
 				str += "	In seconds :" + std::to_string(*time) ;
-				tab_text->setPosition(WIDTH_MAP*64/2-64,0);
 				tab_text->setString(str);
-
 
 				showTab = false;
 				break;
 			}
 			case false:
 			{
-			
 				tab_text->setString("");
+
 				showTab = true;
 				break;
 			}
