@@ -1,4 +1,4 @@
-#include "TArcher.h"
+#include "Archer.h"
 
 
 void TArcher::PrintInfo() const

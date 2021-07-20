@@ -2,7 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <Windows.h>
-#include "TBattleground.h"
+#include "Battleground.h"
 
 #define BATTLE_WIDTH_OFFSET 545
 #define BATTLE_HEIGHT_OFFSET 50

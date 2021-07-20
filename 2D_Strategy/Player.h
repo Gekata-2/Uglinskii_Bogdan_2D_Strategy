@@ -5,9 +5,9 @@
 
 #include <SFML\Graphics.hpp>
 
-#include "TUnit.h"
-#include "TArcher.h"
-#include "TSwordsman.h"
+#include "Unit.h"
+#include "Archer.h"
+#include "Swordsman.h"
 
 
 

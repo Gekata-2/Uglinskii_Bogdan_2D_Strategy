@@ -1,9 +1,9 @@
 #include <iostream>
 #include <vector>
 #include <sstream>
-#include "TBattleground.h"
-#include "TArcher.h"
-#include "TSwordsman.h"
+#include "Battleground.h"
+#include "Archer.h"
+#include "Swordsman.h"
 #include "KeyPressEvent.h"
 #include "Player.h"
 #include <windows.h>
@@ -152,22 +152,30 @@ int main()
 
 	//Прямоугольник changelog
 	sf::RectangleShape rectangle_changelog(sf::Vector2f(432.f, 568.f));
-	rectangle_changelog.setFillColor(sf::Color(124, 181, 24, 85));
+	rectangle_changelog.setFillColor(sf::Color(30, 65, 14, 107));
+	rectangle_changelog.setOutlineColor(sf::Color(92, 128, 1));
+	rectangle_changelog.setOutlineThickness(5);
 	rectangle_changelog.setPosition(97, 305);
 
 	//Прямоугольник play
 	sf::RectangleShape rectangle_play(sf::Vector2f(781.f, 268.f));
-	rectangle_play.setFillColor(sf::Color(255, 255, 255, 100));
+	rectangle_play.setFillColor(sf::Color(255, 255, 255, 250));
+	rectangle_play.setOutlineColor(sf::Color(92, 128, 1));
+	rectangle_play.setOutlineThickness(5);
 	rectangle_play.setPosition(570, 305);
 
 	//Прямоугольник exit
 	sf::RectangleShape rectangle_exit(sf::Vector2f(781.f, 268.f));
-	rectangle_exit.setFillColor(sf::Color(255, 255, 255, 100));
+	rectangle_exit.setFillColor(sf::Color(255, 255, 255, 250));
+	rectangle_exit.setOutlineColor(sf::Color(92, 128, 1));
+	rectangle_exit.setOutlineThickness(5);
 	rectangle_exit.setPosition(570, 605);
 
 	//Прямоугольник feedback
 	sf::RectangleShape rectangle_feedback(sf::Vector2f(432.f, 568.f));
-	rectangle_feedback.setFillColor(sf::Color(124, 181, 24, 85));
+	rectangle_feedback.setFillColor(sf::Color(30, 65, 14, 107));
+	rectangle_feedback.setOutlineColor(sf::Color(92, 128, 1));
+	rectangle_feedback.setOutlineThickness(5);
 	rectangle_feedback.setPosition(1391, 305);
 
 		/***Текст****/
@@ -190,7 +198,7 @@ int main()
 	//feedback
 	sf::Text text_feedback("", font_IMFellEnglishSCRegular, 60);
 	text_feedback.setString("FEEDBACK");
-	text_feedback.setFillColor(sf::Color(243, 222, 44));//просто шаблон текста
+	text_feedback.setFillColor(sf::Color(227, 145, 21));//просто шаблон текста
 	text_feedback.setPosition(1425, 230);
 	//feedback text
 	sf::Text text_feedback_text("", font_SalsaRegular, 36);
@@ -200,18 +208,18 @@ int main()
 	//changelog
 	sf::Text text_changelog("", font_IMFellEnglishSCRegular, 60);
 	text_changelog.setString("CHANGELOG");
-	text_changelog.setFillColor(sf::Color(243, 222, 44));//просто шаблон текста
+	text_changelog.setFillColor(sf::Color(227, 145, 21));//просто шаблон текста
 	text_changelog.setPosition(100, 230);
 	//changelog text
 	sf::Text text_changelog_text("", font_SalsaRegular, 24);
-	std::string changelog_str = "v 0.1.1\n -added TUnit, TSwordsman and \n TBattleGround classes.\n";
-	changelog_str += "v 0.2.1\n -added SFML, battleground display\n and units on it.\n";
-	changelog_str += "v 0.2.2\n - added selected tile,\n info about selected unit\n";
-	changelog_str += "v 0.4.1 \n - added main menu\n";
-	changelog_str += "v 0.5.1 \n - added win screen, turn mechanic\n";
+	std::string changelog_str = "v 0.1.1\n -added TUnit, TSwordsman and \n   TBattleGround classes.\n";
+	changelog_str += "v 0.2.1\n -added SFML, battleground display\n   and units on it.\n";
+	changelog_str += "v 0.2.2\n -added selected tile,\n   info about selected unit\n";
+	changelog_str += "v 0.4.1 \n -added main menu\n";
+	changelog_str += "v 0.5.1 \n -added win screen, turn mechanic\n";
 	changelog_str += "v 0.7.1 \n -added exit confrim display\n";
 	changelog_str += "v 0.8.1 \n -added after battle statistic\n";
-	changelog_str += "v 0.9.1 \n -added statistic and history";
+	changelog_str += "v 0.9.1 \n -added history";
 	text_changelog_text.setString(changelog_str);
 	text_changelog_text.setFillColor(sf::Color::White);//просто шаблон текста
 	text_changelog_text.setPosition(105, 305);
@@ -229,38 +237,38 @@ int main()
 
 	//большой прямоугольнки
 	sf::RectangleShape rectangle_exit_confirm(sf::Vector2f(736.f, 187.f));
-	rectangle_exit_confirm.setFillColor(sf::Color(105,133,75, 250));
+	rectangle_exit_confirm.setFillColor(sf::Color(255,255,255));
 	rectangle_exit_confirm.setOutlineColor(sf::Color(92, 128, 1, 250));
 	rectangle_exit_confirm.setOutlineThickness(5);
 	rectangle_exit_confirm.setPosition(590, 445);
 
 	//прямоугольник да
 	sf::RectangleShape rectangle_yes(sf::Vector2f(250.f, 130.f));
-	rectangle_yes.setFillColor(sf::Color(124, 181, 24, 85));
+	rectangle_yes.setFillColor(sf::Color(30, 65, 14, 20));
 	rectangle_yes.setPosition(640, 472);
 
 	//прямоугольник нет
 	sf::RectangleShape rectangle_no(sf::Vector2f(250.f, 130.f));
-	rectangle_no.setFillColor(sf::Color(124, 181, 24, 85));
+	rectangle_no.setFillColor(sf::Color(30, 65, 14, 20));
 	rectangle_no.setPosition(1005, 472);
 
 		/***Текст****/
 	//подтверждение выхода
-	sf::Text text_exit_confirm("", font_IMFellEnglishSCRegular, 48);
-	text_exit_confirm.setString("Are you sure that you want to exit?");
+	sf::Text text_exit_confirm("", font_IMFellEnglishSCRegular, 64);
+	text_exit_confirm.setString("Are you sure you want to exit?");
 	text_exit_confirm.setFillColor(sf::Color(251, 97, 7));
-	text_exit_confirm.setPosition(590, 390);
+	text_exit_confirm.setPosition(550, 350);
 
 	//да
 	sf::Text text_yes("", font_IMFellEnglishSCRegular, 80);
 	text_yes.setString("Yes");
-	text_yes.setFillColor(sf::Color(255,255,255));
+	text_yes.setFillColor(sf::Color(0,0,0));
 	text_yes.setPosition(675, 472);
 
 	//нет
 	sf::Text text_no("", font_IMFellEnglishSCRegular, 80);
 	text_no.setString("No");
-	text_no.setFillColor(sf::Color(255, 255,255));
+	text_no.setFillColor(sf::Color(0, 0,0));
 	text_no.setPosition(1040, 472);
 
 	//------------------Battle---------------------//
@@ -268,15 +276,21 @@ int main()
 
 	//История
 	sf::RectangleShape rectangle_history(sf::Vector2f(400.f, 830.f));
+	rectangle_history.setOutlineColor(sf::Color(92, 128, 1));
+	rectangle_history.setOutlineThickness(5);
 	rectangle_history.setFillColor(sf::Color(124, 181, 24, 110));
 	rectangle_history.setPosition(80, 50);
 
 	//Информация о герое
 	sf::RectangleShape rectangle_unit_info(sf::Vector2f(400.f, 280.f));
+	rectangle_unit_info.setOutlineColor(sf::Color(92, 128, 1));
+	rectangle_unit_info.setOutlineThickness(5);
 	rectangle_unit_info.setFillColor(sf::Color(124, 181, 24, 110));
 	rectangle_unit_info.setPosition(1440, 50);
 
 	sf::RectangleShape rectangle_unit_abilities(sf::Vector2f(850.f, 100.f));
+	rectangle_unit_abilities.setOutlineColor(sf::Color(92, 128, 1));
+	rectangle_unit_abilities.setOutlineThickness(5);
 	rectangle_unit_abilities.setFillColor(sf::Color(124, 181, 24, 110));
 	rectangle_unit_abilities.setPosition(545, 950);
 
@@ -293,9 +307,9 @@ int main()
 	focus_tile_text.setPosition(1445, 50);
 	//загаловок история 
 	sf::Text history_header_text("", font_IMFellEnglishSCRegular, 36);
-	 history_header_text.setFillColor(sf::Color::White);//информация о возможностях юнита
+	 history_header_text.setFillColor(sf::Color(227, 145, 21));//информация о возможностях юнита
 	 history_header_text.setString("Actions history:");
-	 history_header_text.setPosition(80, 10);
+	 history_header_text.setPosition(80, 7);
 
 	 //сама истори 
 	 sf::Text history_text("", font_SalsaRegular, 36);
@@ -305,13 +319,13 @@ int main()
 
 	 //загаловок "информация о юните"
 	 sf::Text unit_info_header_text("", font_IMFellEnglishSCRegular, 36);
-	 unit_info_header_text.setFillColor(sf::Color::White);//информация о возможностях юнита
+	 unit_info_header_text.setFillColor(sf::Color(227, 145, 21));//информация о возможностях юнита
 	 unit_info_header_text.setString("Unit Information:");
-	 unit_info_header_text.setPosition(1442, 10);
+	 unit_info_header_text.setPosition(1442, 7);
 
 	//загаловок "Действия"
 	 sf::Text unit_actions_header_text("", font_IMFellEnglishSCRegular, 48);
-	unit_actions_header_text.setFillColor(sf::Color::White);//информация о возможностях юнита
+	unit_actions_header_text.setFillColor(sf::Color(227, 145, 21));//информация о возможностях юнита
 	unit_actions_header_text.setString("Actions:");
 	unit_actions_header_text.setPosition(550, 890);
 	//сами действия
@@ -322,19 +336,19 @@ int main()
 	//исключения
 	sf::Text exceptions("", font_SalsaRegular, 22);
 	exceptions.setFillColor(sf::Color(251, 97, 7));//информацию об ошибках
-	exceptions.setPosition(550, 830);
+	exceptions.setPosition(1440, 530);
 
 	//чья очеред ходить
 	sf::Text t_turn("", font_SalsaRegular, 25);
 	t_turn.setFillColor(sf::Color(251, 97, 7));//информацию об ошибках
-
+	t_turn.setPosition(1440, 500);
 		/***Картинки***/
-	sf::Image swamp_image;
-	swamp_image.loadFromFile("images/swamp.png");
-	sf::Texture swamp_texture;
-	swamp_texture.loadFromImage(swamp_image);
-	sf::Sprite s_swamp;
-	s_swamp.setTexture(swamp_texture);
+	sf::Image battle_image;
+	battle_image.loadFromFile("images/battle.png");
+	sf::Texture battle_texture;
+	battle_texture.loadFromImage(battle_image);
+	sf::Sprite s_battle;
+	s_battle.setTexture(battle_texture);
 
 	//------------------WIN---------------------//
  
@@ -342,9 +356,11 @@ int main()
 
 	//Статистика
 	sf::RectangleShape rectangle_statistics(sf::Vector2f(540.f, 652.f));
+	rectangle_statistics.setOutlineColor(sf::Color(92, 128, 1));
+	rectangle_statistics.setOutlineThickness(5);
 	rectangle_statistics.setFillColor(sf::Color(124, 181, 24, 85));
 	rectangle_statistics.setPosition(102, 280);
-	
+
 	
 		/***Текст****/
 	
@@ -354,8 +370,8 @@ int main()
 
 	sf::Text statistic_header_text("", font_IMFellEnglishSCRegular, 64);
 	statistic_header_text.setString("Statistic:");
-	statistic_header_text.setFillColor(sf::Color::White);//информацию об ошибках
-	statistic_header_text.setPosition(110, 210);
+	statistic_header_text.setFillColor(sf::Color(227, 145, 21));//информацию об ошибках
+	statistic_header_text.setPosition(110, 200);
 
 	sf::Text statistic_text("", font_SalsaRegular, 40);
 	statistic_text.setFillColor(sf::Color::White);//информацию об ошибках
@@ -365,8 +381,8 @@ int main()
 	statistic_text.setString(statistic);
 
 	sf::Text exit_to_main_menu_text("", font_SalsaRegular, 36);
-	exit_to_main_menu_text.setString("Press Esc to exit in main menu");
-	exit_to_main_menu_text.setFillColor(sf::Color::White);//информацию об ошибках
+	exit_to_main_menu_text.setString("Press Esc to exit to the main menu");
+	exit_to_main_menu_text.setFillColor(sf::Color::Black);//информацию об ошибках
 	exit_to_main_menu_text.setPosition(711, 963);
 
 
@@ -382,12 +398,12 @@ int main()
 	s_win.setPosition(687,280);
 
 
-	sf::Image win_sky_image;
-	win_sky_image.loadFromFile("images/win_sky.png");
-	sf::Texture win_sky_texture;
-	win_sky_texture.loadFromImage(win_sky_image);
-	sf::Sprite s_win_sky;
-	s_win_sky.setTexture(win_sky_texture);
+	sf::Image win_b_image;
+	win_b_image.loadFromFile("images/win.png");
+	sf::Texture win_b_texture;
+	win_b_texture.loadFromImage(win_b_image);
+	sf::Sprite s_win_b;
+	s_win_b.setTexture(win_b_texture);
 
 	sf::Clock clock;
 	
@@ -423,7 +439,7 @@ int main()
 				if (event.type == sf::Event::Closed)//если мы  каким то способом сгенерировали  событие "закрытие" , то закрываем окно
 				{
 					std::cout << "window is closed";
-					window.close();
+					EDislpay = CLOSE;
 				}
 				if (event.type == sf::Event::KeyPressed)
 				{
@@ -573,7 +589,7 @@ int main()
 			exception_clock.restart();
 			//	clock.restart();
 
-			window.clear(sf::Color(14, 42, 71));
+			window.clear(sf::Color(255,255,255));
 
 			///////////////////////////////Обработка клавиш/////////////////////
 			while (window.pollEvent(event))//если никакого события не произошло, то в цикл не попадаем
@@ -616,7 +632,7 @@ int main()
 
 			///////////////////////////////Рисуем карту/////////////////////
 
-			window.draw(s_swamp);//рисуем задник
+			window.draw(s_battle);//рисуем задник
 
 			for (int i = 0; i < HEIGHT_MAP; i++)
 			{
@@ -679,7 +695,7 @@ int main()
 			key_pressed.UpdateTimer(&tab_text, &time_s);
 			history_text.setString(key_pressed.GetHistory());
 
-			t_turn.setPosition(560, 60);
+		
 			t_turn.setString("Turn: "+ key_pressed.GetName());
 
 		
@@ -713,7 +729,7 @@ int main()
 		
 		while (EDislpay == WIN)
 		{
-			window.clear(sf::Color(14, 42, 71));
+			window.clear(sf::Color(255, 255, 255));
 			while (window.pollEvent(event))
 			{
 				if (event.key.code == sf::Keyboard::Escape)
@@ -751,7 +767,7 @@ int main()
 				}
 			}
 
-			window.draw(s_swamp);
+			window.draw(s_win_b);
 			
 			window.draw(rectangle_statistics);
 			
@@ -767,6 +783,7 @@ int main()
 			
 
 			window.draw(s_win);
+
 			
 			
 			window.display();

@@ -1,4 +1,4 @@
-#include "TSwordsman.h"
+#include "Swordsman.h"
 
 void TSwordsman::PrintInfo() const
 {
