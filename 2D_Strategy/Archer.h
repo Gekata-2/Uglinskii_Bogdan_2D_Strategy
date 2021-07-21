@@ -12,7 +12,7 @@ public:
 		max_attack_radius = 3;
 		max_move_tiles = 7;
 	
-		if (def_name == "\0")//генерация имени
+		if (def_name == "\0")//РіРµРЅРµСЂР°С†РёСЏ РёРјРµРЅРё
 		{
 			for (size_t i = 0; i < 5; i++)
 			{

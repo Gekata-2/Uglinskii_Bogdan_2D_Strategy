@@ -5,8 +5,8 @@
 #include "math.h"
 #include "Player.h"
 #include <SFML\Graphics.hpp>
-const int HEIGHT_MAP = 10;//размер карты высота
-const int WIDTH_MAP = 10;//размер карты ширина 
+const int HEIGHT_MAP = 10;//СЂР°Р·РјРµСЂ РєР°СЂС‚С‹ РІС‹СЃРѕС‚Р°
+const int WIDTH_MAP = 10;//СЂР°Р·РјРµСЂ РєР°СЂС‚С‹ С€РёСЂРёРЅР° 
 
 #define ALL_OK 0
 #define TOO_FAR 1

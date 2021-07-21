@@ -88,11 +88,11 @@ int TBattleground::Move(TUnit* unit, int x, int y)
 	}
 	else
 	{
-		//î÷èùàåì ìåñòî â êîòîðîì þíèò íàõîäèëñÿ äî ïåðåìåùåíèÿ
+		//Ð¾Ñ‡Ð¸Ñ‰Ð°ÐµÐ¼ Ð¼ÐµÑÑ‚Ð¾ Ð² ÐºÐ¾Ñ‚Ð¾Ñ€Ð¾Ð¼ ÑŽÐ½Ð¸Ñ‚ Ð½Ð°Ñ…Ð¾Ð´Ð¸Ð»ÑÑ Ð´Ð¾ Ð¿ÐµÑ€ÐµÐ¼ÐµÑ‰ÐµÐ½Ð¸Ñ
 		tiles[unit->GetX()][unit->GetY()] = NULL;
 		TileUnitsMap[unit->GetX()][unit->GetY()] = ' ';
 
-		//ïåðåìåùàåì þíèòà
+		//Ð¿ÐµÑ€ÐµÐ¼ÐµÑ‰Ð°ÐµÐ¼ ÑŽÐ½Ð¸Ñ‚Ð°
 		tiles[x][y] = unit;
 		TileUnitsMap[x][y] = unit->GetType()[0];
 

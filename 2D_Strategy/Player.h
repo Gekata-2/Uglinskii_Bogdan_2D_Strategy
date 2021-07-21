@@ -33,8 +33,8 @@ public:
 	
 	int GetNumberOfUnits();
 	
-	void AddUnit(TUnit* unit);//добавляем юнита в конец	
-	void DeleteUnit(TUnit* unit);//ищем юнита и убираем
+	void AddUnit(TUnit* unit);//РґРѕР±Р°РІР»СЏРµРј СЋРЅРёС‚Р° РІ РєРѕРЅРµС†	
+	void DeleteUnit(TUnit* unit);//РёС‰РµРј СЋРЅРёС‚Р° Рё СѓР±РёСЂР°РµРј
 	
 	void PrintInfo();
 

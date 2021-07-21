@@ -1,6 +1,6 @@
 #include "KeyPressEvent.h"
 
-void TKeyPressEvent::Initialization(int* players_id, std::string* nmes)//говорим какие игроки есть
+void TKeyPressEvent::Initialization(int* players_id, std::string* nmes)//РіРѕРІРѕСЂРёРј РєР°РєРёРµ РёРіСЂРѕРєРё РµСЃС‚СЊ
 {
 	for (size_t i = 0; i < MAX_NUMBER_OF_PLAYERS; i++)
 	{
@@ -11,7 +11,7 @@ void TKeyPressEvent::Initialization(int* players_id, std::string* nmes)//говорим
 	name = names[0];
 }
 
-void TKeyPressEvent::NextTurn()//следующий ход(циклично)
+void TKeyPressEvent::NextTurn()//СЃР»РµРґСѓСЋС‰РёР№ С…РѕРґ(С†РёРєР»РёС‡РЅРѕ)
 {
 	i_id = (i_id + 1) % MAX_NUMBER_OF_PLAYERS;
 	turn = ids[i_id];
@@ -74,7 +74,7 @@ void TKeyPressEvent::ClearHistory()
 
 void TKeyPressEvent::RepackHistory(std::string str_to_ins)
 {
-	for (size_t i = number_of_history_notes - 1; i > 0; i--)//передвинули все элементы на 1
+	for (size_t i = number_of_history_notes - 1; i > 0; i--)//РїРµСЂРµРґРІРёРЅСѓР»Рё РІСЃРµ СЌР»РµРјРµРЅС‚С‹ РЅР° 1
 	{
 		history[i] = history[i - 1];
 	}
@@ -144,7 +144,7 @@ void TKeyPressEvent::UpdateExitConfirm(sf::Text* txt_yes, sf::Text* txt_no)
 
 void TKeyPressEvent::UpdateTilesText(TBattleground* bg, sf::Text* focus_tile_txt, sf::Text* tab_text, sf::String unit_info_str)
 {
-	////////////////Инфа о текущей клетке
+	////////////////РРЅС„Р° Рѕ С‚РµРєСѓС‰РµР№ РєР»РµС‚РєРµ
 	sf::Vector2i v_f = bg->GetFocusTile();
 	sf::String tmp_s = "Selected tile :" + std::to_string(v_f.x) + "  " + std::to_string(v_f.y) + "\n";
 
@@ -158,7 +158,7 @@ void TKeyPressEvent::UpdateTilesText(TBattleground* bg, sf::Text* focus_tile_txt
 	}
 	std::string focus_unit_pos = "";
 
-	if (EState == MOVE)// и если нажата M 
+	if (EState == MOVE)// Рё РµСЃР»Рё РЅР°Р¶Р°С‚Р° M 
 	{
 		focus_unit_pos = "\n\nFrom[" + std::to_string(memorized_unit->GetX()) + "][" + std::to_string(memorized_unit->GetY()) +
 			"] to [" + std::to_string(bg->GetFocusTile().x) + "][" + std::to_string(bg->GetFocusTile().y) + "]";
@@ -326,9 +326,9 @@ void TKeyPressEvent::ArrowsPressed(TBattleground* bg, sf::Sprite* sprite, sf::Ev
 
 void TKeyPressEvent::PressedEnter(TBattleground* bg)
 {
-	if (focus_unit != NULL) //навели на юнита
+	if (focus_unit != NULL) //РЅР°РІРµР»Рё РЅР° СЋРЅРёС‚Р°
 	{
-		if ((focus_unit->GetSide() != turn) && (EState != ATTACK))//если навели на вражеского юнита
+		if ((focus_unit->GetSide() != turn) && (EState != ATTACK))//РµСЃР»Рё РЅР°РІРµР»Рё РЅР° РІСЂР°Р¶РµСЃРєРѕРіРѕ СЋРЅРёС‚Р°
 		{
 			exceptions = ENEMY_UNIT;
 			return;
@@ -336,27 +336,27 @@ void TKeyPressEvent::PressedEnter(TBattleground* bg)
 
 		switch (enter_pressed)
 		{
-		case false://если до этого энтер не был нажат
+		case false://РµСЃР»Рё РґРѕ СЌС‚РѕРіРѕ СЌРЅС‚РµСЂ РЅРµ Р±С‹Р» РЅР°Р¶Р°С‚
 		{
-			bg->StopFocus();//запрещаем игроку передвигать фокус
-			enter_pressed = true;//говорим что энтер нажат
+			bg->StopFocus();//Р·Р°РїСЂРµС‰Р°РµРј РёРіСЂРѕРєСѓ РїРµСЂРµРґРІРёРіР°С‚СЊ С„РѕРєСѓСЃ
+			enter_pressed = true;//РіРѕРІРѕСЂРёРј С‡С‚Рѕ СЌРЅС‚РµСЂ РЅР°Р¶Р°С‚
 			break;
 		}
-		case true://чтобы вновь позволить игроку передвигать фокус
+		case true://С‡С‚РѕР±С‹ РІРЅРѕРІСЊ РїРѕР·РІРѕР»РёС‚СЊ РёРіСЂРѕРєСѓ РїРµСЂРµРґРІРёРіР°С‚СЊ С„РѕРєСѓСЃ
 		{
-			if (EState == NOTHING)//если игрок не выбрал никакого действия то возвращаем фокус
+			if (EState == NOTHING)//РµСЃР»Рё РёРіСЂРѕРє РЅРµ РІС‹Р±СЂР°Р» РЅРёРєР°РєРѕРіРѕ РґРµР№СЃС‚РІРёСЏ С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµРј С„РѕРєСѓСЃ
 			{
 				bg->ReleaseFocus();
 				enter_pressed = false;
 				break;
 			}
 
-			if (EState == MOVE)// и если пытаемся переместиться на место занятое другим юнитом
+			if (EState == MOVE)// Рё РµСЃР»Рё РїС‹С‚Р°РµРјСЃСЏ РїРµСЂРµРјРµСЃС‚РёС‚СЊСЃСЏ РЅР° РјРµСЃС‚Рѕ Р·Р°РЅСЏС‚РѕРµ РґСЂСѓРіРёРј СЋРЅРёС‚РѕРј
 			{
 				exceptions = ALREADY_TAKEN;
 				break;
 			}
-			if ((EState == ATTACK) && (memorized_unit != focus_unit))//если мы атакуем юнита и при этом только вражеского
+			if ((EState == ATTACK) && (memorized_unit != focus_unit))//РµСЃР»Рё РјС‹ Р°С‚Р°РєСѓРµРј СЋРЅРёС‚Р° Рё РїСЂРё СЌС‚РѕРј С‚РѕР»СЊРєРѕ РІСЂР°Р¶РµСЃРєРѕРіРѕ
 			{
 				float damage = focus_unit->GetCurrentHP();
 				exceptions = bg->Attack(memorized_unit, focus_unit);
@@ -372,12 +372,12 @@ void TKeyPressEvent::PressedEnter(TBattleground* bg)
 
 				AddHistory(tmp_h_str);
 
-				focus_unit = bg->GetFocusUnit();//перемещаем фокус на атакованного юнита
+				focus_unit = bg->GetFocusUnit();//РїРµСЂРµРјРµС‰Р°РµРј С„РѕРєСѓСЃ РЅР° Р°С‚Р°РєРѕРІР°РЅРЅРѕРіРѕ СЋРЅРёС‚Р°
 
 
-				memorized_unit = NULL;//забываем атаковавшего юнита
-				EState = NOTHING;//атака завершена и персонаж переходит в нейтральное состояние
-				enter_pressed = false;//отпускаем энтер
+				memorized_unit = NULL;//Р·Р°Р±С‹РІР°РµРј Р°С‚Р°РєРѕРІР°РІС€РµРіРѕ СЋРЅРёС‚Р°
+				EState = NOTHING;//Р°С‚Р°РєР° Р·Р°РІРµСЂС€РµРЅР° Рё РїРµСЂСЃРѕРЅР°Р¶ РїРµСЂРµС…РѕРґРёС‚ РІ РЅРµР№С‚СЂР°Р»СЊРЅРѕРµ СЃРѕСЃС‚РѕСЏРЅРёРµ
+				enter_pressed = false;//РѕС‚РїСѓСЃРєР°РµРј СЌРЅС‚РµСЂ
 				NextTurn();
 
 			}
@@ -387,17 +387,17 @@ void TKeyPressEvent::PressedEnter(TBattleground* bg)
 			break;
 		}
 	}
-	else//если место фокуса не персонаж
+	else//РµСЃР»Рё РјРµСЃС‚Рѕ С„РѕРєСѓСЃР° РЅРµ РїРµСЂСЃРѕРЅР°Р¶
 	{
 		if (enter_pressed == false)
 		{
 			exceptions = NOT_A_UNIT;
 		}
-		if (EState == MOVE)// и если нажата M 
+		if (EState == MOVE)// Рё РµСЃР»Рё РЅР°Р¶Р°С‚Р° M 
 		{
 			sf::Vector2i history_move = memorized_unit->GetPos();
 
-			exceptions = bg->Move(memorized_unit, bg->GetFocusTile().x, bg->GetFocusTile().y);//перемещаем юнита в новое место
+			exceptions = bg->Move(memorized_unit, bg->GetFocusTile().x, bg->GetFocusTile().y);//РїРµСЂРµРјРµС‰Р°РµРј СЋРЅРёС‚Р° РІ РЅРѕРІРѕРµ РјРµСЃС‚Рѕ
 
 
 			if (exceptions == ALL_OK)
@@ -410,13 +410,13 @@ void TKeyPressEvent::PressedEnter(TBattleground* bg)
 				AddHistory(tmp_h_str);
 
 				NextTurn();
-				focus_unit = bg->GetFocusUnit();//т.к. юнит переместился, то нужно перевести указатель на "новое место" юнита
+				focus_unit = bg->GetFocusUnit();//С‚.Рє. СЋРЅРёС‚ РїРµСЂРµРјРµСЃС‚РёР»СЃСЏ, С‚Рѕ РЅСѓР¶РЅРѕ РїРµСЂРµРІРµСЃС‚Рё СѓРєР°Р·Р°С‚РµР»СЊ РЅР° "РЅРѕРІРѕРµ РјРµСЃС‚Рѕ" СЋРЅРёС‚Р°
 
 
 				memorized_unit = NULL;
 
 				EState = NOTHING;
-				enter_pressed = false;//отпускаем энтер
+				enter_pressed = false;//РѕС‚РїСѓСЃРєР°РµРј СЌРЅС‚РµСЂ
 			}
 
 		}
@@ -429,19 +429,19 @@ void TKeyPressEvent::PressedEnter(TBattleground* bg)
 
 void TKeyPressEvent::PressedM(TBattleground* bg)
 {
-	if (enter_pressed == true)//если энтер нажат
+	if (enter_pressed == true)//РµСЃР»Рё СЌРЅС‚РµСЂ РЅР°Р¶Р°С‚
 	{
 
-		if (EState == MOVE)//если нажимаем повторно, то отменяем действие
+		if (EState == MOVE)//РµСЃР»Рё РЅР°Р¶РёРјР°РµРј РїРѕРІС‚РѕСЂРЅРѕ, С‚Рѕ РѕС‚РјРµРЅСЏРµРј РґРµР№СЃС‚РІРёРµ
 		{
 			EState = NOTHING;
 			enter_pressed = false;
 			memorized_unit = NULL;
 			return;
 		}
-		EState = MOVE;//говорим,что мы теперь двигаем юнита
-		memorized_unit = bg->GetFocusUnit();//запоминаем указатель на юнит, который нужно передвинуть
-		bg->ReleaseFocus();//позволяем игроку выбрать место куда переместиться
+		EState = MOVE;//РіРѕРІРѕСЂРёРј,С‡С‚Рѕ РјС‹ С‚РµРїРµСЂСЊ РґРІРёРіР°РµРј СЋРЅРёС‚Р°
+		memorized_unit = bg->GetFocusUnit();//Р·Р°РїРѕРјРёРЅР°РµРј СѓРєР°Р·Р°С‚РµР»СЊ РЅР° СЋРЅРёС‚, РєРѕС‚РѕСЂС‹Р№ РЅСѓР¶РЅРѕ РїРµСЂРµРґРІРёРЅСѓС‚СЊ
+		bg->ReleaseFocus();//РїРѕР·РІРѕР»СЏРµРј РёРіСЂРѕРєСѓ РІС‹Р±СЂР°С‚СЊ РјРµСЃС‚Рѕ РєСѓРґР° РїРµСЂРµРјРµСЃС‚РёС‚СЊСЃСЏ
 	}
 	else
 	{
@@ -452,20 +452,20 @@ void TKeyPressEvent::PressedM(TBattleground* bg)
 
 void TKeyPressEvent::PressedA(TBattleground* bg)
 {
-	if (enter_pressed == true)//если энтер нажат то можно выполнять атаку
+	if (enter_pressed == true)//РµСЃР»Рё СЌРЅС‚РµСЂ РЅР°Р¶Р°С‚ С‚Рѕ РјРѕР¶РЅРѕ РІС‹РїРѕР»РЅСЏС‚СЊ Р°С‚Р°РєСѓ
 	{
-		if (EState == ATTACK)//если нажимаем повторно, то отменяем действие
+		if (EState == ATTACK)//РµСЃР»Рё РЅР°Р¶РёРјР°РµРј РїРѕРІС‚РѕСЂРЅРѕ, С‚Рѕ РѕС‚РјРµРЅСЏРµРј РґРµР№СЃС‚РІРёРµ
 		{
 			EState = NOTHING;
 			enter_pressed = false;
 			memorized_unit = NULL;
 			return;
 		}
-		EState = ATTACK;//говорим что совершается атака
-		memorized_unit = bg->GetFocusUnit();//запоминаем кто атакует
-		bg->ReleaseFocus();//позволяем игроку выбрать место кого атаковать
+		EState = ATTACK;//РіРѕРІРѕСЂРёРј С‡С‚Рѕ СЃРѕРІРµСЂС€Р°РµС‚СЃСЏ Р°С‚Р°РєР°
+		memorized_unit = bg->GetFocusUnit();//Р·Р°РїРѕРјРёРЅР°РµРј РєС‚Рѕ Р°С‚Р°РєСѓРµС‚
+		bg->ReleaseFocus();//РїРѕР·РІРѕР»СЏРµРј РёРіСЂРѕРєСѓ РІС‹Р±СЂР°С‚СЊ РјРµСЃС‚Рѕ РєРѕРіРѕ Р°С‚Р°РєРѕРІР°С‚СЊ
 	}
-	else//если энтер не нажат то говорим что персонаж не выбран
+	else//РµСЃР»Рё СЌРЅС‚РµСЂ РЅРµ РЅР°Р¶Р°С‚ С‚Рѕ РіРѕРІРѕСЂРёРј С‡С‚Рѕ РїРµСЂСЃРѕРЅР°Р¶ РЅРµ РІС‹Р±СЂР°РЅ
 	{
 		exceptions = NO_CHARACTERS_SELECTED;
 	}

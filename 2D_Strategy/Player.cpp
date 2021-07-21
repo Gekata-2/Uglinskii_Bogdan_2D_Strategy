@@ -16,14 +16,14 @@ int TPlayer::GetNumberOfUnits()
 	return number_of_units;
 }
 
-void TPlayer::AddUnit(TUnit* unit)//добавляем юнита в конец
+void TPlayer::AddUnit(TUnit* unit)//РґРѕР±Р°РІР»СЏРµРј СЋРЅРёС‚Р° РІ РєРѕРЅРµС†
 {
 	units.push_back(unit);
 	number_of_units++;
 }
 
 
-void TPlayer::DeleteUnit(TUnit* unit)//ищем юнита и убираем
+void TPlayer::DeleteUnit(TUnit* unit)//РёС‰РµРј СЋРЅРёС‚Р° Рё СѓР±РёСЂР°РµРј
 {
 	std::list<TUnit*>::iterator it = units.begin();
 

@@ -1,14 +1,16 @@
 #include <iostream>
 #include <vector>
 #include <sstream>
-//#include <windows.h>
+
+#include <SFML/Graphics.hpp>
+
 #include "Battleground.h"
 #include "Archer.h"
 #include "Swordsman.h"
 #include "KeyPressEvent.h"
 #include "Player.h"
 
-#include <SFML/Graphics.hpp>
+
 
 
 
@@ -78,18 +80,18 @@ int main()
 	TPlayer P2(13, "ZXC");
 	
 
-	int players_id[MAX_NUMBER_OF_PLAYERS] = {P1.GetID(),P2.GetID()};//массив с id игроков
+	int players_id[MAX_NUMBER_OF_PLAYERS] = {P1.GetID(),P2.GetID()};//РјР°СЃСЃРёРІ СЃ id РёРіСЂРѕРєРѕРІ
 	std::string players_names[MAX_NUMBER_OF_PLAYERS] = { P1.GetName(), P2.GetName() };
 
-	const int player_size = 6;//количество персонажей у игрока
+	const int player_size = 6;//РєРѕР»РёС‡РµСЃС‚РІРѕ РїРµСЂСЃРѕРЅР°Р¶РµР№ Сѓ РёРіСЂРѕРєР°
 	const int number_of_swordsman = 4;
 	const int number_of_archer = 2;
 
-	//добавляем на поле игроков
+	//РґРѕР±Р°РІР»СЏРµРј РЅР° РїРѕР»Рµ РёРіСЂРѕРєРѕРІ
 	bg.AddPlayer(&P1);
 	bg.AddPlayer(&P2);
 
-	//генерируем юнитов для 1-го игрока
+	//РіРµРЅРµСЂРёСЂСѓРµРј СЋРЅРёС‚РѕРІ РґР»СЏ 1-РіРѕ РёРіСЂРѕРєР°
 	std::vector<TUnit*> unit_vec1;
 	unit_vec1.resize(player_size);
 	CreateSetOfSwordsmans(&unit_vec1, P1.GetID(), number_of_swordsman, 0,"Bogdan");
@@ -108,7 +110,7 @@ int main()
 	bg.AddUnit(unit_vec1[5], 7, 0);
 
 
-	//генерируем юнитов для 2-го игрока
+	//РіРµРЅРµСЂРёСЂСѓРµРј СЋРЅРёС‚РѕРІ РґР»СЏ 2-РіРѕ РёРіСЂРѕРєР°
 	std::vector<TUnit*> unit_vec2;
 	unit_vec2.resize(player_size);
 	CreateSetOfSwordsmans(&unit_vec2, P2.GetID(), number_of_swordsman, 0, "ZXC");
@@ -127,13 +129,13 @@ int main()
 	bg.AddUnit(unit_vec2[4], 0, 7);
 	bg.AddUnit(unit_vec2[5], 7, 7);
 
-	std::string winner = "test";//имя победителя
+	std::string winner = "test";//РёРјСЏ РїРѕР±РµРґРёС‚РµР»СЏ
 
 
 	TKeyPressEvent key_pressed;
 	key_pressed.Initialization(players_id, players_names);
 
-	/////////Спрайт карты/////////
+	/////////РЎРїСЂР°Р№С‚ РєР°СЂС‚С‹/////////
 	sf::Image map_image;
 	map_image.loadFromFile("images/map.png");
 	sf::Texture map;
@@ -141,7 +143,7 @@ int main()
 	sf::Sprite s_map;
 	s_map.setTexture(map);
 
-	/////////Спрат выбранной клетки/////////
+	/////////РЎРїСЂР°С‚ РІС‹Р±СЂР°РЅРЅРѕР№ РєР»РµС‚РєРё/////////
 	sf::Image focus_tile_image;
 	focus_tile_image.loadFromFile("images/focus_tile_tr.png");
 	sf::Texture focus_tile_texture;
@@ -152,16 +154,16 @@ int main()
 	s_focus_tile.setTextureRect(sf::IntRect(0, 0, 90, 90));
 	s_focus_tile.setPosition(83+ BATTLE_WIDTH_OFFSET-3, 83+ BATTLE_HEIGHT_OFFSET-3);
 
-	key_pressed.SetFocusUnit(bg.GetFocusUnit());//по умолчанию выбранная клетка - 0,0
+	key_pressed.SetFocusUnit(bg.GetFocusUnit());//РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ РІС‹Р±СЂР°РЅРЅР°СЏ РєР»РµС‚РєР° - 0,0
 
-	/////////Спрайт юнитов/////////
+	/////////РЎРїСЂР°Р№С‚ СЋРЅРёС‚РѕРІ/////////
 	sf::Texture unit_map;
 	unit_map.loadFromImage(map_image);
 	sf::Sprite s_unit_map;
 	s_unit_map.setTexture(unit_map);
 
 	
-	///////////Шрифт/////////////
+	///////////РЁСЂРёС„С‚/////////////
 	sf::Font font_SalsaRegular;
 	font_SalsaRegular.loadFromFile("Salsa-Regular.ttf");
 
@@ -170,67 +172,67 @@ int main()
 
 	//------------------Main Menu---------------------//
 	
-	    /***Фигуры****/
+	    /***Р¤РёРіСѓСЂС‹****/
 
-	//Прямоугольник changelog
+	//РџСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРє changelog
 	sf::RectangleShape rectangle_changelog(sf::Vector2f(432.f, 568.f));
 	rectangle_changelog.setFillColor(sf::Color(30, 65, 14, 107));
 	rectangle_changelog.setOutlineColor(sf::Color(92, 128, 1));
 	rectangle_changelog.setOutlineThickness(5);
 	rectangle_changelog.setPosition(97, 305);
 
-	//Прямоугольник play
+	//РџСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРє play
 	sf::RectangleShape rectangle_play(sf::Vector2f(781.f, 268.f));
 	rectangle_play.setFillColor(sf::Color(255, 255, 255, 250));
 	rectangle_play.setOutlineColor(sf::Color(92, 128, 1));
 	rectangle_play.setOutlineThickness(5);
 	rectangle_play.setPosition(570, 305);
 
-	//Прямоугольник exit
+	//РџСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРє exit
 	sf::RectangleShape rectangle_exit(sf::Vector2f(781.f, 268.f));
 	rectangle_exit.setFillColor(sf::Color(255, 255, 255, 250));
 	rectangle_exit.setOutlineColor(sf::Color(92, 128, 1));
 	rectangle_exit.setOutlineThickness(5);
 	rectangle_exit.setPosition(570, 605);
 
-	//Прямоугольник feedback
+	//РџСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРє feedback
 	sf::RectangleShape rectangle_feedback(sf::Vector2f(432.f, 568.f));
 	rectangle_feedback.setFillColor(sf::Color(30, 65, 14, 107));
 	rectangle_feedback.setOutlineColor(sf::Color(92, 128, 1));
 	rectangle_feedback.setOutlineThickness(5);
 	rectangle_feedback.setPosition(1391, 305);
 
-		/***Текст****/
+		/***РўРµРєСЃС‚****/
 
-	//кнопка играть
+	//РєРЅРѕРїРєР° РёРіСЂР°С‚СЊ
 	sf::Text text_play("", font_IMFellEnglishSCRegular, 288);
 	text_play.setString("Play");
-	text_play.setFillColor(sf::Color::Black);//просто шаблон текста
+	text_play.setFillColor(sf::Color::Black);//РїСЂРѕСЃС‚Рѕ С€Р°Р±Р»РѕРЅ С‚РµРєСЃС‚Р°
 	text_play.setPosition(687, 225);
-	//копка выхода
+	//РєРѕРїРєР° РІС‹С…РѕРґР°
 	sf::Text text_exit("", font_IMFellEnglishSCRegular, 288);
 	text_exit.setString("Exit");
-	text_exit.setFillColor(sf::Color::Black);//просто шаблон текста
+	text_exit.setFillColor(sf::Color::Black);//РїСЂРѕСЃС‚Рѕ С€Р°Р±Р»РѕРЅ С‚РµРєСЃС‚Р°
 	text_exit.setPosition(672, 535);
-	//название игры
+	//РЅР°Р·РІР°РЅРёРµ РёРіСЂС‹
 	sf::Text text_name("", font_IMFellEnglishSCRegular, 96);
 	text_name.setString("Swords and frogs...");
-	text_name.setFillColor(sf::Color(251, 97, 7));//просто шаблон текста
+	text_name.setFillColor(sf::Color(251, 97, 7));//РїСЂРѕСЃС‚Рѕ С€Р°Р±Р»РѕРЅ С‚РµРєСЃС‚Р°
 	text_name.setPosition(600, 50);
 	//feedback
 	sf::Text text_feedback("", font_IMFellEnglishSCRegular, 60);
 	text_feedback.setString("FEEDBACK");
-	text_feedback.setFillColor(sf::Color(227, 145, 21));//просто шаблон текста
+	text_feedback.setFillColor(sf::Color(227, 145, 21));//РїСЂРѕСЃС‚Рѕ С€Р°Р±Р»РѕРЅ С‚РµРєСЃС‚Р°
 	text_feedback.setPosition(1425, 230);
 	//feedback text
 	sf::Text text_feedback_text("", font_SalsaRegular, 36);
 	text_feedback_text.setString("Do you have any bugs,\ncool ideas or general\nfeedback?\nSend me a massage \non my mail:\nsosorii2002@gmail.ru");
-	text_feedback_text.setFillColor(sf::Color::White);//просто шаблон текста
+	text_feedback_text.setFillColor(sf::Color::White);//РїСЂРѕСЃС‚Рѕ С€Р°Р±Р»РѕРЅ С‚РµРєСЃС‚Р°
 	text_feedback_text.setPosition(1400, 305);
 	//changelog
 	sf::Text text_changelog("", font_IMFellEnglishSCRegular, 60);
 	text_changelog.setString("CHANGELOG");
-	text_changelog.setFillColor(sf::Color(227, 145, 21));//просто шаблон текста
+	text_changelog.setFillColor(sf::Color(227, 145, 21));//РїСЂРѕСЃС‚Рѕ С€Р°Р±Р»РѕРЅ С‚РµРєСЃС‚Р°
 	text_changelog.setPosition(100, 230);
 	//changelog text
 	sf::Text text_changelog_text("", font_SalsaRegular, 24);
@@ -243,10 +245,10 @@ int main()
 	changelog_str += "v 0.8.1 \n -added after battle statistic\n";
 	changelog_str += "v 0.9.1 \n -added history";
 	text_changelog_text.setString(changelog_str);
-	text_changelog_text.setFillColor(sf::Color::White);//просто шаблон текста
+	text_changelog_text.setFillColor(sf::Color::White);//РїСЂРѕСЃС‚Рѕ С€Р°Р±Р»РѕРЅ С‚РµРєСЃС‚Р°
 	text_changelog_text.setPosition(105, 305);
 
-		//***Картинки***//
+		//***РљР°СЂС‚РёРЅРєРё***//
 	sf::Image menu_image;
 	menu_image.loadFromFile("images/menu.png");
 	sf::Texture meny_texture;
@@ -255,56 +257,56 @@ int main()
 	s_menu.setTexture(meny_texture);
 	//------------------Exit Menu---------------------//
 
-		/***Фигуры****/
+		/***Р¤РёРіСѓСЂС‹****/
 
-	//большой прямоугольнки
+	//Р±РѕР»СЊС€РѕР№ РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРєРё
 	sf::RectangleShape rectangle_exit_confirm(sf::Vector2f(736.f, 187.f));
 	rectangle_exit_confirm.setFillColor(sf::Color(255,255,255));
 	rectangle_exit_confirm.setOutlineColor(sf::Color(92, 128, 1, 250));
 	rectangle_exit_confirm.setOutlineThickness(5);
 	rectangle_exit_confirm.setPosition(590, 445);
 
-	//прямоугольник да
+	//РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРє РґР°
 	sf::RectangleShape rectangle_yes(sf::Vector2f(250.f, 130.f));
 	rectangle_yes.setFillColor(sf::Color(30, 65, 14, 20));
 	rectangle_yes.setPosition(640, 472);
 
-	//прямоугольник нет
+	//РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРє РЅРµС‚
 	sf::RectangleShape rectangle_no(sf::Vector2f(250.f, 130.f));
 	rectangle_no.setFillColor(sf::Color(30, 65, 14, 20));
 	rectangle_no.setPosition(1005, 472);
 
-		/***Текст****/
+		/***РўРµРєСЃС‚****/
 
-	//подтверждение выхода
+	//РїРѕРґС‚РІРµСЂР¶РґРµРЅРёРµ РІС‹С…РѕРґР°
 	sf::Text text_exit_confirm("", font_IMFellEnglishSCRegular, 64);
 	text_exit_confirm.setString("Are you sure you want to exit?");
 	text_exit_confirm.setFillColor(sf::Color(251, 97, 7));
 	text_exit_confirm.setPosition(550, 350);
 
-	//да
+	//РґР°
 	sf::Text text_yes("", font_IMFellEnglishSCRegular, 80);
 	text_yes.setString("Yes");
 	text_yes.setFillColor(sf::Color(0,0,0));
 	text_yes.setPosition(675, 472);
 
-	//нет
+	//РЅРµС‚
 	sf::Text text_no("", font_IMFellEnglishSCRegular, 80);
 	text_no.setString("No");
 	text_no.setFillColor(sf::Color(0, 0,0));
 	text_no.setPosition(1040, 472);
 
 	//------------------Battle---------------------//
-		/***Фигуры****/
+		/***Р¤РёРіСѓСЂС‹****/
 
-	//История
+	//РСЃС‚РѕСЂРёСЏ
 	sf::RectangleShape rectangle_history(sf::Vector2f(400.f, 830.f));
 	rectangle_history.setOutlineColor(sf::Color(92, 128, 1));
 	rectangle_history.setOutlineThickness(5);
 	rectangle_history.setFillColor(sf::Color(124, 181, 24, 110));
 	rectangle_history.setPosition(80, 50);
 
-	//Информация о герое
+	//РРЅС„РѕСЂРјР°С†РёСЏ Рѕ РіРµСЂРѕРµ
 	sf::RectangleShape rectangle_unit_info(sf::Vector2f(400.f, 280.f));
 	rectangle_unit_info.setOutlineColor(sf::Color(92, 128, 1));
 	rectangle_unit_info.setOutlineThickness(5);
@@ -317,56 +319,56 @@ int main()
 	rectangle_unit_abilities.setFillColor(sf::Color(124, 181, 24, 110));
 	rectangle_unit_abilities.setPosition(545, 950);
 
-		/***Текст****/
+		/***РўРµРєСЃС‚****/
 	
-	//время по нажатию TAB
+	//РІСЂРµРјСЏ РїРѕ РЅР°Р¶Р°С‚РёСЋ TAB
 	sf::Text tab_text("", font_SalsaRegular, 20);
-	tab_text.setFillColor(sf::Color(251, 97, 7));//текст при табуляции
+	tab_text.setFillColor(sf::Color(251, 97, 7));//С‚РµРєСЃС‚ РїСЂРё С‚Р°Р±СѓР»СЏС†РёРё
 	tab_text.setPosition(875, 10);
 
-	//информация о выбранной клетке
+	//РёРЅС„РѕСЂРјР°С†РёСЏ Рѕ РІС‹Р±СЂР°РЅРЅРѕР№ РєР»РµС‚РєРµ
 	sf::Text focus_tile_text("", font_SalsaRegular, 25);
-	focus_tile_text.setFillColor(sf::Color::White);//информация о текущей выбранной клетки
+	focus_tile_text.setFillColor(sf::Color::White);//РёРЅС„РѕСЂРјР°С†РёСЏ Рѕ С‚РµРєСѓС‰РµР№ РІС‹Р±СЂР°РЅРЅРѕР№ РєР»РµС‚РєРё
 	focus_tile_text.setPosition(1445, 50);
-	//загаловок история 
+	//Р·Р°РіР°Р»РѕРІРѕРє РёСЃС‚РѕСЂРёСЏ 
 	sf::Text history_header_text("", font_IMFellEnglishSCRegular, 36);
-	history_header_text.setFillColor(sf::Color(227, 145, 21));//информация о возможностях юнита
+	history_header_text.setFillColor(sf::Color(227, 145, 21));//РёРЅС„РѕСЂРјР°С†РёСЏ Рѕ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЏС… СЋРЅРёС‚Р°
 	history_header_text.setString("Actions history:");
 	history_header_text.setPosition(80, 7);
 
-	//сама история 
+	//СЃР°РјР° РёСЃС‚РѕСЂРёСЏ 
 	sf::Text history_text("", font_SalsaRegular, 36);
 	history_text.setString("test");
-	history_text.setFillColor(sf::Color::White);//информация о возможностях юнита
+	history_text.setFillColor(sf::Color::White);//РёРЅС„РѕСЂРјР°С†РёСЏ Рѕ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЏС… СЋРЅРёС‚Р°
 	history_text.setPosition(85, 48);
 
-	//загаловок "информация о юните"
+	//Р·Р°РіР°Р»РѕРІРѕРє "РёРЅС„РѕСЂРјР°С†РёСЏ Рѕ СЋРЅРёС‚Рµ"
 	sf::Text unit_info_header_text("", font_IMFellEnglishSCRegular, 36);
-	unit_info_header_text.setFillColor(sf::Color(227, 145, 21));//информация о возможностях юнита
+	unit_info_header_text.setFillColor(sf::Color(227, 145, 21));//РёРЅС„РѕСЂРјР°С†РёСЏ Рѕ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЏС… СЋРЅРёС‚Р°
 	unit_info_header_text.setString("Unit Information:");
 	unit_info_header_text.setPosition(1442, 7);
 	
-	//загаловок "Действия"
+	//Р·Р°РіР°Р»РѕРІРѕРє "Р”РµР№СЃС‚РІРёСЏ"
 	sf::Text unit_actions_header_text("", font_IMFellEnglishSCRegular, 48);
-	unit_actions_header_text.setFillColor(sf::Color(227, 145, 21));//информация о возможностях юнита
+	unit_actions_header_text.setFillColor(sf::Color(227, 145, 21));//РёРЅС„РѕСЂРјР°С†РёСЏ Рѕ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЏС… СЋРЅРёС‚Р°
 	unit_actions_header_text.setString("Actions:");
 	unit_actions_header_text.setPosition(550, 890);
-	//сами действия
+	//СЃР°РјРё РґРµР№СЃС‚РІРёСЏ
 	sf::Text unit_actions("", font_SalsaRegular, 25);
-	unit_actions.setFillColor(sf::Color::White);//информация о возможностях юнита
+	unit_actions.setFillColor(sf::Color::White);//РёРЅС„РѕСЂРјР°С†РёСЏ Рѕ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЏС… СЋРЅРёС‚Р°
 	unit_actions.setPosition(550, 950);
 
-	//исключения
+	//РёСЃРєР»СЋС‡РµРЅРёСЏ
 	sf::Text exceptions("", font_SalsaRegular, 22);
-	exceptions.setFillColor(sf::Color(251, 97, 7));//информацию об ошибках
+	exceptions.setFillColor(sf::Color(251, 97, 7));//РёРЅС„РѕСЂРјР°С†РёСЋ РѕР± РѕС€РёР±РєР°С…
 	exceptions.setPosition(1440, 530);
 
-	//чья очеред ходить
+	//С‡СЊСЏ РѕС‡РµСЂРµРґ С…РѕРґРёС‚СЊ
 	sf::Text t_turn("", font_SalsaRegular, 25);
-	t_turn.setFillColor(sf::Color(251, 97, 7));//информацию об ошибках
+	t_turn.setFillColor(sf::Color(251, 97, 7));//РёРЅС„РѕСЂРјР°С†РёСЋ РѕР± РѕС€РёР±РєР°С…
 	t_turn.setPosition(1440, 500);
 
-		/***Картинки***/
+		/***РљР°СЂС‚РёРЅРєРё***/
 
 	sf::Image battle_image;
 	battle_image.loadFromFile("images/battle.png");
@@ -377,28 +379,28 @@ int main()
 
 	//------------------WIN---------------------//
  
-		/***Фигуры****/
+		/***Р¤РёРіСѓСЂС‹****/
 
-	//Статистика
+	//РЎС‚Р°С‚РёСЃС‚РёРєР°
 	sf::RectangleShape rectangle_statistics(sf::Vector2f(540.f, 652.f));
 	rectangle_statistics.setOutlineColor(sf::Color(92, 128, 1));
 	rectangle_statistics.setOutlineThickness(5);
 	rectangle_statistics.setFillColor(sf::Color(124, 181, 24, 85));
 	rectangle_statistics.setPosition(102, 280);
 
-		/***Текст****/
+		/***РўРµРєСЃС‚****/
 	
 	sf::Text text_winner("", font_IMFellEnglishSCRegular, 144);
-	text_winner.setFillColor(sf::Color(251, 97, 7));//информацию об ошибках
+	text_winner.setFillColor(sf::Color(251, 97, 7));//РёРЅС„РѕСЂРјР°С†РёСЋ РѕР± РѕС€РёР±РєР°С…
 	text_winner.setPosition(370, 20);
 
 	sf::Text statistic_header_text("", font_IMFellEnglishSCRegular, 64);
 	statistic_header_text.setString("Statistic:");
-	statistic_header_text.setFillColor(sf::Color(227, 145, 21));//информацию об ошибках
+	statistic_header_text.setFillColor(sf::Color(227, 145, 21));//РёРЅС„РѕСЂРјР°С†РёСЋ РѕР± РѕС€РёР±РєР°С…
 	statistic_header_text.setPosition(110, 200);
 
 	sf::Text statistic_text("", font_SalsaRegular, 40);
-	statistic_text.setFillColor(sf::Color::White);//информацию об ошибках
+	statistic_text.setFillColor(sf::Color::White);//РёРЅС„РѕСЂРјР°С†РёСЋ РѕР± РѕС€РёР±РєР°С…
 	statistic_text.setPosition(116, 292);
 
 	std::string statistic = "test";
@@ -406,10 +408,10 @@ int main()
 
 	sf::Text exit_to_main_menu_text("", font_SalsaRegular, 36);
 	exit_to_main_menu_text.setString("Press Esc to exit to the main menu");
-	exit_to_main_menu_text.setFillColor(sf::Color::Black);//информацию об ошибках
+	exit_to_main_menu_text.setFillColor(sf::Color::Black);//РёРЅС„РѕСЂРјР°С†РёСЋ РѕР± РѕС€РёР±РєР°С…
 	exit_to_main_menu_text.setPosition(711, 963);
 
-		/***Красивая картинка***/
+		/***РљСЂР°СЃРёРІР°СЏ РєР°СЂС‚РёРЅРєР°***/
 	sf::Image win_image;
 	win_image.loadFromFile("images/win_texture.png");
 	sf::Texture win_texture;
@@ -429,7 +431,7 @@ int main()
 
 	sf::Clock clock;
 	
-	///обаботка ошибок
+	///РѕР±Р°Р±РѕС‚РєР° РѕС€РёР±РѕРє
 	sf::Clock exception_clock;
 
 	bool show_exceptions=false;
@@ -444,9 +446,9 @@ int main()
 
 	bool show_exit=false;
 
-	while (window.isOpen())//3 цикла вложенных
+	while (window.isOpen())//3 С†РёРєР»Р° РІР»РѕР¶РµРЅРЅС‹С…
 	{
-		sf::Event event;//переменная-событие
+		sf::Event event;//РїРµСЂРµРјРµРЅРЅР°СЏ-СЃРѕР±С‹С‚РёРµ
 
 		if (EDislpay == CLOSE)
 		{
@@ -459,7 +461,7 @@ int main()
 
 			while (window.pollEvent(event)) 
 			{
-				if (event.type == sf::Event::Closed)//если мы  каким то способом сгенерировали  событие "закрытие" , то закрываем окно
+				if (event.type == sf::Event::Closed)//РµСЃР»Рё РјС‹  РєР°РєРёРј С‚Рѕ СЃРїРѕСЃРѕР±РѕРј СЃРіРµРЅРµСЂРёСЂРѕРІР°Р»Рё  СЃРѕР±С‹С‚РёРµ "Р·Р°РєСЂС‹С‚РёРµ" , С‚Рѕ Р·Р°РєСЂС‹РІР°РµРј РѕРєРЅРѕ
 				{
 					std::cout << "window is closed";
 					EDislpay = CLOSE;
@@ -470,12 +472,12 @@ int main()
 					{
 						switch (show_exit)
 						{
-						case true://если уже показываем подтверждение выхода то выходим из этого меню				
+						case true://РµСЃР»Рё СѓР¶Рµ РїРѕРєР°Р·С‹РІР°РµРј РїРѕРґС‚РІРµСЂР¶РґРµРЅРёРµ РІС‹С…РѕРґР° С‚Рѕ РІС‹С…РѕРґРёРј РёР· СЌС‚РѕРіРѕ РјРµРЅСЋ				
 						{
 							show_exit = false;
 							break;
 						}
-						case false://если не показываем меную выхода,то начинаем его показывать
+						case false://РµСЃР»Рё РЅРµ РїРѕРєР°Р·С‹РІР°РµРј РјРµРЅСѓСЋ РІС‹С…РѕРґР°,С‚Рѕ РЅР°С‡РёРЅР°РµРј РµРіРѕ РїРѕРєР°Р·С‹РІР°С‚СЊ
 						{
 							show_exit = true;
 							break;
@@ -485,34 +487,34 @@ int main()
 						}
 					}
 					if ((event.key.code == sf::Keyboard::Up) || (event.key.code == sf::Keyboard::Down))
-					{//если нажаты стрелки
+					{//РµСЃР»Рё РЅР°Р¶Р°С‚С‹ СЃС‚СЂРµР»РєРё
 						if (show_exit==false)
 						{
 							key_pressed.ArrowsPressedMenu(event);
 						}
 					}
 					if ((event.key.code == sf::Keyboard::Left) || (event.key.code == sf::Keyboard::Right))
-					{//если нажаты стрелки
+					{//РµСЃР»Рё РЅР°Р¶Р°С‚С‹ СЃС‚СЂРµР»РєРё
 						if (show_exit==true)
 						{
 							key_pressed.ArrowsPressedExit(event);
 						}		
 					}
 					if(event.key.code == sf::Keyboard::Enter)
-					{//если клавиша Enter
+					{//РµСЃР»Рё РєР»Р°РІРёС€Р° Enter
 
 						switch (show_exit)
 						{
-							case true://если уже показываем подтверждение выхода то выходим из этого меню				
+							case true://РµСЃР»Рё СѓР¶Рµ РїРѕРєР°Р·С‹РІР°РµРј РїРѕРґС‚РІРµСЂР¶РґРµРЅРёРµ РІС‹С…РѕРґР° С‚Рѕ РІС‹С…РѕРґРёРј РёР· СЌС‚РѕРіРѕ РјРµРЅСЋ				
 								{
 									switch (key_pressed.GetExit())
 									{
-									case true://если подтверждаем то выходим
+									case true://РµСЃР»Рё РїРѕРґС‚РІРµСЂР¶РґР°РµРј С‚Рѕ РІС‹С…РѕРґРёРј
 									{
 										EDislpay = CLOSE;
 										break;
 									}
-									case false://иначе выходим из подтверждения выхода
+									case false://РёРЅР°С‡Рµ РІС‹С…РѕРґРёРј РёР· РїРѕРґС‚РІРµСЂР¶РґРµРЅРёСЏ РІС‹С…РѕРґР°
 									{
 										show_exit = false;
 										break;
@@ -522,7 +524,7 @@ int main()
 									}
 									break;
 								}
-							case false://если не показываем меную выхода,то начинаем его показывать
+							case false://РµСЃР»Рё РЅРµ РїРѕРєР°Р·С‹РІР°РµРј РјРµРЅСѓСЋ РІС‹С…РѕРґР°,С‚Рѕ РЅР°С‡РёРЅР°РµРј РµРіРѕ РїРѕРєР°Р·С‹РІР°С‚СЊ
 								{
 									switch (key_pressed.GetMenuState())
 									{
@@ -549,16 +551,16 @@ int main()
 			}
 			key_pressed.UpdateSelectMenu(&text_play, &text_exit);
 			
-			///Рисуем задний фон///
+			///Р РёСЃСѓРµРј Р·Р°РґРЅРёР№ С„РѕРЅ///
 			window.draw(s_menu);
 
-			///Рисуем прямоугольнки///
+			///Р РёСЃСѓРµРј РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРєРё///
 			window.draw(rectangle_changelog);
 			window.draw(rectangle_feedback);
 			window.draw(rectangle_play); 
 			window.draw(rectangle_exit);
 
-			///Рисуем текст///
+			///Р РёСЃСѓРµРј С‚РµРєСЃС‚///
 			window.draw(text_play);
 			window.draw(text_exit);
 			window.draw(text_name);
@@ -567,17 +569,17 @@ int main()
 			window.draw(text_feedback);
 			window.draw(text_feedback_text);
 
-			///Рисуем выход///
+			///Р РёСЃСѓРµРј РІС‹С…РѕРґ///
 			if (show_exit == true)
 			{
 				key_pressed.UpdateExitConfirm(&text_yes, &text_no);
 
-				///прямоугольники///
+				///РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРєРё///
 				window.draw(rectangle_exit_confirm);
 				window.draw(rectangle_yes);
 				window.draw(rectangle_no);
 
-				///текст///
+				///С‚РµРєСЃС‚///
 				window.draw(text_exit_confirm);
 				window.draw(text_yes);
 				window.draw(text_no);	
@@ -589,7 +591,7 @@ int main()
 
 		while (EDislpay == BATTLE)
 		{
-			///////////////////////////////Отображение исключений/////////////////////
+			///////////////////////////////РћС‚РѕР±СЂР°Р¶РµРЅРёРµ РёСЃРєР»СЋС‡РµРЅРёР№/////////////////////
 			if (show_exceptions == true)
 			{
 				exceptions_time += exception_clock.getElapsedTime().asMicroseconds();
@@ -608,10 +610,10 @@ int main()
 
 			window.clear(sf::Color(255,255,255));
 
-			///////////////////////////////Обработка клавиш/////////////////////
-			while (window.pollEvent(event))//если никакого события не произошло, то в цикл не попадаем
+			///////////////////////////////РћР±СЂР°Р±РѕС‚РєР° РєР»Р°РІРёС€/////////////////////
+			while (window.pollEvent(event))//РµСЃР»Рё РЅРёРєР°РєРѕРіРѕ СЃРѕР±С‹С‚РёСЏ РЅРµ РїСЂРѕРёР·РѕС€Р»Рѕ, С‚Рѕ РІ С†РёРєР» РЅРµ РїРѕРїР°РґР°РµРј
 			{
-				if (event.type == sf::Event::Closed)//если мы  каким то способом сгенерировали  событие "закрытие" , то закрываем окно
+				if (event.type == sf::Event::Closed)//РµСЃР»Рё РјС‹  РєР°РєРёРј С‚Рѕ СЃРїРѕСЃРѕР±РѕРј СЃРіРµРЅРµСЂРёСЂРѕРІР°Р»Рё  СЃРѕР±С‹С‚РёРµ "Р·Р°РєСЂС‹С‚РёРµ" , С‚Рѕ Р·Р°РєСЂС‹РІР°РµРј РѕРєРЅРѕ
 				{
 					EDislpay = CLOSE;
 				}
@@ -623,32 +625,32 @@ int main()
 						EDislpay = MENU;
 					}
 					if ((event.key.code == sf::Keyboard::Tab))
-					{//если клавиша ТАБ
+					{//РµСЃР»Рё РєР»Р°РІРёС€Р° РўРђР‘
 						key_pressed.PressedTab(&tab_text, &time_s);
 					}
 					if ((event.key.code == sf::Keyboard::Left) || (event.key.code == sf::Keyboard::Right) 
 						|| (event.key.code == sf::Keyboard::Up) || (event.key.code == sf::Keyboard::Down))
-					{//если нажаты стрелки
+					{//РµСЃР»Рё РЅР°Р¶Р°С‚С‹ СЃС‚СЂРµР»РєРё
 						key_pressed.ArrowsPressed(&bg, &s_focus_tile, event);
 					}
 					if ((event.key.code == sf::Keyboard::Enter))
-					{//если клавиша Enter
+					{//РµСЃР»Рё РєР»Р°РІРёС€Р° Enter
 						key_pressed.PressedEnter(&bg);
 					}
 					if ((event.key.code == sf::Keyboard::M))
-					{//если клавиша M
+					{//РµСЃР»Рё РєР»Р°РІРёС€Р° M
 						key_pressed.PressedM(&bg);
 					}
 					if (event.key.code == sf::Keyboard::A)
-					{//если клавиша A
+					{//РµСЃР»Рё РєР»Р°РІРёС€Р° A
 						key_pressed.PressedA(&bg);
 					}
 				}
 			}
 
-			///////////////////////////////Рисуем карту/////////////////////
+			///////////////////////////////Р РёСЃСѓРµРј РєР°СЂС‚Сѓ/////////////////////
 
-			window.draw(s_battle);//рисуем задник
+			window.draw(s_battle);//СЂРёСЃСѓРµРј Р·Р°РґРЅРёРє
 
 			for (int i = 0; i < HEIGHT_MAP; i++)
 			{
@@ -663,8 +665,8 @@ int main()
 					window.draw(s_map);
 				}
 			}
-			///////////////////////////////Рисуем юнитов/////////////////////
-			bg.FillUnitsMap();//заполняем карту юнитами
+			///////////////////////////////Р РёСЃСѓРµРј СЋРЅРёС‚РѕРІ/////////////////////
+			bg.FillUnitsMap();//Р·Р°РїРѕР»РЅСЏРµРј РєР°СЂС‚Сѓ СЋРЅРёС‚Р°РјРё
 			for (int i = 0; i < HEIGHT_MAP - 2; i++)
 			{
 				for (int j = 0; j < WIDTH_MAP - 2; j++)
@@ -682,7 +684,7 @@ int main()
 
 			}
 
-			///////////////////////////////Проверка на победу/////////////////////
+			///////////////////////////////РџСЂРѕРІРµСЂРєР° РЅР° РїРѕР±РµРґСѓ/////////////////////
 			if ( (P2.GetNumberOfUnits()==0)||(P1.GetNumberOfUnits()==0) )
 			{
 				if (P2.GetNumberOfUnits() == 0)
@@ -703,7 +705,7 @@ int main()
 				EDislpay = WIN;
 			}
 
-			///////////////////////////////Обновляем тексты/////////////////////
+			///////////////////////////////РћР±РЅРѕРІР»СЏРµРј С‚РµРєСЃС‚С‹/////////////////////
 			key_pressed.UpdateTilesText(&bg, &focus_tile_text, &tab_text, bg.GetInfoAboutTile());
 			key_pressed.UpdateUnitAbilitiesText(&unit_actions);
 			key_pressed.UpdateExceptions(&exceptions, &show_exceptions, &exceptions_time);
@@ -712,12 +714,12 @@ int main()
 
 			t_turn.setString("Turn: "+ key_pressed.GetName());
 
-			///Рисуем прямоугольники///
+			///Р РёСЃСѓРµРј РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРєРё///
 			window.draw(rectangle_history);
 			window.draw(rectangle_unit_info);
 			window.draw(rectangle_unit_abilities);
 			
-			///Рисуем тексты ///
+			///Р РёСЃСѓРµРј С‚РµРєСЃС‚С‹ ///
 			window.draw(focus_tile_text);
 			window.draw(unit_actions_header_text);	
 			window.draw(unit_actions);
@@ -729,10 +731,10 @@ int main()
 			
 			window.draw(unit_info_header_text);
 				
-			///Рисуем выбраннуб клетку///
+			///Р РёСЃСѓРµРј РІС‹Р±СЂР°РЅРЅСѓР± РєР»РµС‚РєСѓ///
 			window.draw(s_focus_tile);
 
-			///Рисуем исключения///
+			///Р РёСЃСѓРµРј РёСЃРєР»СЋС‡РµРЅРёСЏ///
 			window.draw(exceptions);
 			window.display();
 
@@ -790,7 +792,7 @@ int main()
 
 					EDislpay = MENU;
 				}
-				if (event.type == sf::Event::Closed)//если мы  каким то способом сгенерировали  событие "закрытие" , то закрываем окно
+				if (event.type == sf::Event::Closed)//РµСЃР»Рё РјС‹  РєР°РєРёРј С‚Рѕ СЃРїРѕСЃРѕР±РѕРј СЃРіРµРЅРµСЂРёСЂРѕРІР°Р»Рё  СЃРѕР±С‹С‚РёРµ "Р·Р°РєСЂС‹С‚РёРµ" , С‚Рѕ Р·Р°РєСЂС‹РІР°РµРј РѕРєРЅРѕ
 				{
 					EDislpay = CLOSE;
 				}

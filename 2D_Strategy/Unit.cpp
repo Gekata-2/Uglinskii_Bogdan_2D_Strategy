@@ -1,9 +1,9 @@
 #include "Unit.h"
 
-//--------Гэттеры----------//
+//--------Р“СЌС‚С‚РµСЂС‹----------//
 
 /**
-Базовый урон
+Р‘Р°Р·РѕРІС‹Р№ СѓСЂРѕРЅ
 */
 float TUnit::GetBaseDamage() const
 {
@@ -11,7 +11,7 @@ float TUnit::GetBaseDamage() const
 }
 
 /**
-Здоровье
+Р—РґРѕСЂРѕРІСЊРµ
 */
 float TUnit::GetCurrentHP() const
 {
@@ -24,7 +24,7 @@ float TUnit::GetMaxHP() const
 }
 
 /**
-Радиус атаки
+Р Р°РґРёСѓСЃ Р°С‚Р°РєРё
 */
 float TUnit::GetMaxAttackRadius() const
 {
@@ -32,7 +32,7 @@ float TUnit::GetMaxAttackRadius() const
 }
 
 /**
-Позиция на доске
+РџРѕР·РёС†РёСЏ РЅР° РґРѕСЃРєРµ
 */
 sf::Vector2i TUnit::GetPos() const
 {
@@ -42,7 +42,7 @@ sf::Vector2i TUnit::GetPos() const
 }
 
 /**
-Горизонтальная компонента места на доске
+Р“РѕСЂРёР·РѕРЅС‚Р°Р»СЊРЅР°СЏ РєРѕРјРїРѕРЅРµРЅС‚Р° РјРµСЃС‚Р° РЅР° РґРѕСЃРєРµ
 */
 int TUnit::GetX() const
 {
@@ -50,7 +50,7 @@ int TUnit::GetX() const
 }
 
 /**
-Вертикальная компонента места на доске
+Р’РµСЂС‚РёРєР°Р»СЊРЅР°СЏ РєРѕРјРїРѕРЅРµРЅС‚Р° РјРµСЃС‚Р° РЅР° РґРѕСЃРєРµ
 */
 int TUnit::GetY() const
 {
@@ -58,7 +58,7 @@ int TUnit::GetY() const
 }
 
 /**
-Максимальное число клеток ,которые юнит может пройти за один ход
+РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ С‡РёСЃР»Рѕ РєР»РµС‚РѕРє ,РєРѕС‚РѕСЂС‹Рµ СЋРЅРёС‚ РјРѕР¶РµС‚ РїСЂРѕР№С‚Рё Р·Р° РѕРґРёРЅ С…РѕРґ
 */
 int TUnit::GetMaxMoveTiles() const
 {
@@ -66,7 +66,7 @@ int TUnit::GetMaxMoveTiles() const
 }
 
 /**
-Присутствие на доске
+РџСЂРёСЃСѓС‚СЃС‚РІРёРµ РЅР° РґРѕСЃРєРµ
 */
 bool TUnit::IsOnBattleground() const
 {
@@ -74,7 +74,7 @@ bool TUnit::IsOnBattleground() const
 }
 
 /**
-Имя
+РРјСЏ
 */
 std::string TUnit::GetName() const
 {
@@ -86,7 +86,7 @@ std::string TUnit::GetOwnerName() const
 }
 
 /**
-Тип юнита
+РўРёРї СЋРЅРёС‚Р°
 */
 std::string TUnit::GetType() const
 {
@@ -99,7 +99,7 @@ int TUnit::GetSide() const
 }
 
 
-//-------Сеттеры----------//
+//-------РЎРµС‚С‚РµСЂС‹----------//
 void TUnit::SetCurrentHP(float new_hp)
 {
 	current_HP = new_hp;
