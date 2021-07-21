@@ -26,6 +26,7 @@ class TBattleground
 	bool focus_stoped = false;
 	std::vector<TPlayer*> p_vec;
 	int number_of_players = 0;
+	sf::Vector2i focus_tile;
 
 public:	 std::string TileBackgroundMap[HEIGHT_MAP] =
     {
@@ -40,8 +41,7 @@ public:	 std::string TileBackgroundMap[HEIGHT_MAP] =
 		"0     sss0",
 		"0000000000",
 	};
-	  sf::Vector2i focus_tile;
-	  TUnit* p_focus_tile = NULL;
+	
 	 std::string TileUnitsMap[HEIGHT_MAP-2] = 
 	  {
 		"        ",
@@ -74,8 +74,6 @@ public:
 		focus_tile.x = 0;
 		focus_tile.y = 0;
 
-		p_focus_tile = tiles[0][0];
-
 		p_vec.resize(2);
 	}
 
@@ -105,7 +103,7 @@ public:
 
 	int Move(TUnit* unit,int x,int y);
 
-	sf::Vector2i MoveFocusTile(sf::Event event);
+	void MoveFocusTile(sf::Event event);
 	
 	sf::Vector2i GetFocusTile()
 	{
@@ -116,21 +114,8 @@ public:
 	int Attack(TUnit* attack_unit, TUnit* attacked_unit);
 	void Death(TUnit* unit);
 
-	void ClearAllUnits()
-	{
-		for (size_t i = 0; i < bg_size; i++)
-		{
-			for (size_t j = 0; j < bg_size; j++)
-			{
-
-				if (tiles[i][j] != NULL)
-				{
-					Death(tiles[i][j]);
-				}
-			}
-
-		}
-	}
+	void ClearAllUnits();
+	
 	
 	~TBattleground()
 	{

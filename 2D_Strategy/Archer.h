@@ -12,7 +12,7 @@ public:
 		max_attack_radius = 3;
 		max_move_tiles = 7;
 	
-		if (def_name == "\0")//генераця имени
+		if (def_name == "\0")//генерация имени
 		{
 			for (size_t i = 0; i < 5; i++)
 			{
@@ -25,13 +25,12 @@ public:
 			name = def_name;
 		}
 
-
 		pos_x = position_x;
 		pos_y = position_y;
 
 		type = "Archer";
 
-		PrintInfo();
+		//PrintInfo();
 	}
 
 	void PrintInfo() const override;

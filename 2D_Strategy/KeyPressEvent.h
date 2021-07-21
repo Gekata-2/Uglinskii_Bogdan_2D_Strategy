@@ -32,6 +32,7 @@ class TKeyPressEvent
 
 	std::string history[HISTORY_SIZE] = {"\0"};
 	int number_of_history_notes = 0;
+	int history_pos = 0;
 	
 	TUnit* focus_unit=NULL;
 	TUnit* memorized_unit=NULL;
@@ -46,7 +47,7 @@ public:
 
 	void SetTurn(int tn);
 	int GetTurn();
-	void NextTurn();//следующий ход(циклично)
+	void NextTurn();
 
 	int GetMenuState();
 	int GetExit();
@@ -55,6 +56,7 @@ public:
 
 	void ClearHistory();
 	void RepackHistory(std::string str_to_ins);
+	void AddHistory(std::string str_to_ins);
 
 	void UpdateSelectMenu(sf::Text* txt_play, sf::Text* txt_exit);
 	void UpdateExitConfirm(sf::Text* txt_yes, sf::Text* txt_no);
@@ -63,15 +65,14 @@ public:
 	void UpdateTimer(sf::Text* tab_text, int* time);
 	void UpdateExceptions(sf::Text* exception_text, bool* show_exception, int* exceptions_time);
 
-	void ArrowsPressdMenu(sf::Event event);
+	void ArrowsPressedMenu(sf::Event event);
 	void ArrowsPressedExit(sf::Event event);
-	sf::Vector2i ArrowsPressd(TBattleground* bg, sf::Sprite* sprite, sf::Event event);
+	void ArrowsPressed(TBattleground* bg, sf::Sprite* sprite, sf::Event event);
 
 	void PressedEnter(TBattleground* bg);
 	void PressedM(TBattleground* bg);
 	void PressedA(TBattleground* bg);
-	sf::String PressedTab(sf::Text* tab_text, int* time);
-	
-	
+	void PressedTab(sf::Text* tab_text, int* time);
+
 };
 

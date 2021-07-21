@@ -20,10 +20,6 @@ void TPlayer::AddUnit(TUnit* unit)//добавляем юнита в конец
 {
 	units.push_back(unit);
 	number_of_units++;
-
-	std::list<TUnit*>::iterator it = units.end();
-	it--;
-	std::cout << (*it)->GetInfo();
 }
 
 

@@ -116,7 +116,7 @@ void TBattleground::AddUnit(TUnit* unit, int pos_x, int pos_y)
 	tiles[pos_x][pos_y] = unit;
 	unit->SetPos(pos_x, pos_y);
 	unit->SetOnBattleground();
-	tiles[pos_x][pos_y]->PrintInfo();
+	//tiles[pos_x][pos_y]->PrintInfo();
 }
 
 
@@ -140,7 +140,6 @@ void TBattleground::PrintUnits() const
 				{
 					std::cout << "A:" << tiles[i][j]->GetCurrentHP() << "/" << tiles[i][j]->GetMaxHP();
 				}
-				//std::cout << " 1 ";
 			}
 		
 		}
@@ -169,28 +168,41 @@ void TBattleground::FillUnitsMap()
 	}
 }
 
+void TBattleground::ClearAllUnits()
+{
+	for (size_t i = 0; i < bg_size; i++)
+	{
+		for (size_t j = 0; j < bg_size; j++)
+		{
+
+			if (tiles[i][j] != NULL)
+			{
+				Death(tiles[i][j]);
+			}
+		}
+
+	}
+}
 
 
 sf::String TBattleground::GetInfoAboutTile(int x,int y) const
 {
 	sf::String str;
-	//std::cout << "Focus tile : " << std::to_string(focus_tile.x) << " " << std::to_string(focus_tile.y)<<std::endl;
 		if (tiles[focus_tile.x][focus_tile.y] != NULL)
 		{
 			str=tiles[focus_tile.x][focus_tile.y]->GetInfo();
-		//	tiles[focus_tile.x][focus_tile.y]->PrintInfo();
+		
 		}
 		else
 		{
 			str = "NULL";
 		}
-	
 	return str;
 
 }
 
 
-sf::Vector2i TBattleground::MoveFocusTile(sf::Event event)
+void TBattleground::MoveFocusTile(sf::Event event)
 {
 	if (focus_stoped==false)
 	{
@@ -221,12 +233,8 @@ sf::Vector2i TBattleground::MoveFocusTile(sf::Event event)
 			{
 				focus_tile.y += 1;
 			}
-		}
-		
-		
+		}		
 	}
-	p_focus_tile = tiles[focus_tile.x][focus_tile.y];
-	return focus_tile;
 }
 
 

@@ -14,24 +14,27 @@ protected:
 	int max_attack_radius = 1;//максимальный радиус атаки
 	int max_move_tiles=1;//максимальное чилсло клеток, которые юнит может пройти за ход
 	std::string name = "\0";
+	std::string owner_name = "\0";
 	float base_attack_damage = 1;
 	std::string type = "\0";
+
 	int side = 0;
 	bool is_on_battleground = false;//находитс€ ли юнит на доске
 public:
 	//геттеры
-	virtual float		GetCurrentHP() const;//здоровь€
-	virtual float		GetMaxHP() const;//здоровь€
+	virtual float		GetCurrentHP() const;//текущего здоровь€
+	virtual float		GetMaxHP() const;//максимального здоровь€
 	virtual float		GetBaseDamage() const;//базовый урон
 	virtual float		GetMaxAttackRadius() const;//максимальный радиус атаки
 
-	virtual sf::Vector2i GetPos() const;//получить текущую позицию на доске в виде массива
+	virtual sf::Vector2i GetPos() const;//получить текущую позицию на доске в виде вектора
 	virtual int			 GetX() const;//получить координату X
 	virtual int		     GetY() const;//получить координату Y
 	virtual int		     GetMaxMoveTiles() const;
 	virtual int			 GetSide() const;
 	virtual bool		 IsOnBattleground() const;//находитс€ ли сейчас юнит на доске
 	virtual std::string GetName() const;//им€
+	virtual std::string GetOwnerName() const;//им€
 	virtual std::string GetType() const;
 	virtual std::string GetInfo() const = 0;
 
@@ -42,12 +45,9 @@ public:
 	virtual void SetMaxAttackRadius(float new_max_radius);//радиус атаки
 	virtual void SetMaxMoveTiles(int new_max_move_tiles);
 	virtual void SetSide(int sd);
+	virtual void SetOwnerName(std::string str);
 
 	virtual void PrintInfo() const =0 ;//вывести информацию о юните
-
-private:
-	 virtual void SetPos(int x, int y);//установить позицию.Ќикто кроме доски не может пользоватьс€ 
-
-	friend class TBattleground;
+	virtual void SetPos(int x, int y);//установить позицию
 };
 

@@ -20,7 +20,6 @@ private:
 	std::string name;
 	int id;
 
-
 public:
 
 	TPlayer(int i, std::string nm)
@@ -38,7 +37,6 @@ public:
 	void DeleteUnit(TUnit* unit);//ищем юнита и убираем
 	
 	void PrintInfo();
-
 
 };
 

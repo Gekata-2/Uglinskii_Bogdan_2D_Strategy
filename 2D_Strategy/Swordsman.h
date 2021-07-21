@@ -5,6 +5,7 @@
 class TSwordsman : public TUnit
 {
 public:
+
 	TSwordsman(std::string def_name = "\0",int position_x=-1,int position_y=-1)
 	{
 		current_HP = 100;
@@ -32,15 +33,12 @@ public:
 
 		type = "Swordsman";
 
-		PrintInfo();
+		//PrintInfo();
 
 	}
 	void PrintInfo() const override;
 
 	std::string  GetInfo() const;
 	
-
-	
-
 };
 

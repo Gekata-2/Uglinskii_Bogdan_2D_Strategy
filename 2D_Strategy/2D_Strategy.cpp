@@ -1,27 +1,30 @@
 #include <iostream>
 #include <vector>
 #include <sstream>
+//#include <windows.h>
 #include "Battleground.h"
 #include "Archer.h"
 #include "Swordsman.h"
 #include "KeyPressEvent.h"
 #include "Player.h"
-#include <windows.h>
+
 #include <SFML/Graphics.hpp>
 
 
 
-void GenerateUnit(TUnit** unit, std::string type, int side,std::string name="\0")
+void GenerateUnit(TUnit** unit, std::string type, int side, std::string owner_name = "\0",std::string name = "\0")
 {
 	if (type == "Archer")
 	{
 		*unit = new TArcher(name);
 		(*unit)->SetSide(side);
+		(*unit)->SetOwnerName(owner_name);
 	}
 	if (type == "Swordsman")
 	{
 		*unit = new TSwordsman(name);
 		(*unit)->SetSide(side);
+		(*unit)->SetOwnerName(owner_name);
 	}
 }
 
@@ -31,7 +34,7 @@ void CreateSetOfUnits(std::vector<TUnit*>* vec,int side)
 		for (size_t i = 0; i < vec->size(); i++)
 		{
 				std::cout << "i=" << i << "\n";
-				tp = rand() % 2;
+				tp = (i+1) % 2;
 				if (tp==0)
 				{
 					GenerateUnit(&(*vec)[i],"Archer",side);
@@ -43,10 +46,25 @@ void CreateSetOfUnits(std::vector<TUnit*>* vec,int side)
 		}
 }
 
+void CreateSetOfSwordsmans(std::vector<TUnit*>* vec, int side,int quantity,int start, std::string owner_name = "\0")
+{
+	for (size_t i = start; i < quantity+start; i++)
+	{
+		GenerateUnit(&(*vec)[i], "Swordsman", side, owner_name);
+	}
+}
 
+void CreateSetOfAtchers(std::vector<TUnit*>* vec, int side, int quantity, int start, std::string owner_name = "\0")
+{
+	for (size_t i = start; i < quantity+start; i++)
+	{
+		GenerateUnit(&(*vec)[i], "Archer", side, owner_name);
+	}
+}
 
 int main()
 {
+	sf::RenderWindow window(sf::VideoMode(1920, 1080), "Swords and frogs...",sf::Style::Fullscreen);
 	
     TBattleground bg;
 
@@ -56,16 +74,16 @@ int main()
 	TArcher ArA;
 	TArcher ArB;
 
-
 	TPlayer P1(58, "Bogdan");
-	TPlayer P2(69, "ZXC");
-
+	TPlayer P2(13, "ZXC");
 	
 
 	int players_id[MAX_NUMBER_OF_PLAYERS] = {P1.GetID(),P2.GetID()};//массив с id игроков
 	std::string players_names[MAX_NUMBER_OF_PLAYERS] = { P1.GetName(), P2.GetName() };
 
-	int player_size = 1;//количество персонажей у игрока
+	const int player_size = 6;//количество персонажей у игрока
+	const int number_of_swordsman = 4;
+	const int number_of_archer = 2;
 
 	//добавляем на поле игроков
 	bg.AddPlayer(&P1);
@@ -74,34 +92,42 @@ int main()
 	//генерируем юнитов для 1-го игрока
 	std::vector<TUnit*> unit_vec1;
 	unit_vec1.resize(player_size);
-	CreateSetOfUnits(&unit_vec1, P1.GetID());
+	CreateSetOfSwordsmans(&unit_vec1, P1.GetID(), number_of_swordsman, 0,"Bogdan");
+	CreateSetOfAtchers(&unit_vec1, P1.GetID(), number_of_archer, number_of_swordsman,"Bogdan");
+	//CreateSetOfUnits(&unit_vec1, P1.GetID());
 	
 	for (size_t i = 0; i < player_size; i++)
 	{
-		P1.AddUnit(unit_vec1[i]);
-		bg.AddUnit(unit_vec1[i], i, 0);
-		
+		P1.AddUnit(unit_vec1[i]);	
 	}
+	bg.AddUnit(unit_vec1[0], 1, 1);
+	bg.AddUnit(unit_vec1[1], 3, 1);
+	bg.AddUnit(unit_vec1[2], 4, 1);
+	bg.AddUnit(unit_vec1[3], 6, 1);
+	bg.AddUnit(unit_vec1[4], 0, 0);
+	bg.AddUnit(unit_vec1[5], 7, 0);
+
 
 	//генерируем юнитов для 2-го игрока
 	std::vector<TUnit*> unit_vec2;
 	unit_vec2.resize(player_size);
-	CreateSetOfUnits(&unit_vec2, P2.GetID());
+	CreateSetOfSwordsmans(&unit_vec2, P2.GetID(), number_of_swordsman, 0, "ZXC");
+	CreateSetOfAtchers(&unit_vec2, P2.GetID(), number_of_archer, number_of_swordsman, "ZXC");
+	//CreateSetOfUnits(&unit_vec2, P2.GetID());
 
 	for (size_t i = 0; i < player_size; i++)
 	{
 		P2.AddUnit(unit_vec2[i]);
-		bg.AddUnit(unit_vec2[i], i, 7);
 	}
+		
+	bg.AddUnit(unit_vec2[0], 1, 6);
+	bg.AddUnit(unit_vec2[1], 3, 6);
+	bg.AddUnit(unit_vec2[2], 4, 6);
+	bg.AddUnit(unit_vec2[3], 6, 6);
+	bg.AddUnit(unit_vec2[4], 0, 7);
+	bg.AddUnit(unit_vec2[5], 7, 7);
+
 	std::string winner = "test";//имя победителя
-
-	std::cout << "|||||||||||||||||||||||||||||||||||||||||||||\n";
-	P1.PrintInfo();
-	std::cout << "|||||||||||||||||||||||||||||||||||||||||||||\n";
-	P2.PrintInfo();
-
-
-    sf::RenderWindow window(sf::VideoMode(1920, 1080), "Swords and frogs...");
 
 
 	TKeyPressEvent key_pressed;
@@ -141,10 +167,6 @@ int main()
 
 	sf::Font font_IMFellEnglishSCRegular;
 	font_IMFellEnglishSCRegular.loadFromFile("IMFellEnglishSC-Regular.ttf");
-	/*
-	Text text("", font, 35);
-	text.setFillColor(Color::Blue);//просто шаблон текста
-	*/
 
 	//------------------Main Menu---------------------//
 	
@@ -253,6 +275,7 @@ int main()
 	rectangle_no.setPosition(1005, 472);
 
 		/***Текст****/
+
 	//подтверждение выхода
 	sf::Text text_exit_confirm("", font_IMFellEnglishSCRegular, 64);
 	text_exit_confirm.setString("Are you sure you want to exit?");
@@ -307,24 +330,24 @@ int main()
 	focus_tile_text.setPosition(1445, 50);
 	//загаловок история 
 	sf::Text history_header_text("", font_IMFellEnglishSCRegular, 36);
-	 history_header_text.setFillColor(sf::Color(227, 145, 21));//информация о возможностях юнита
-	 history_header_text.setString("Actions history:");
-	 history_header_text.setPosition(80, 7);
+	history_header_text.setFillColor(sf::Color(227, 145, 21));//информация о возможностях юнита
+	history_header_text.setString("Actions history:");
+	history_header_text.setPosition(80, 7);
 
-	 //сама истори 
-	 sf::Text history_text("", font_SalsaRegular, 36);
-	 history_text.setString("test");
-	 history_text.setFillColor(sf::Color::White);//информация о возможностях юнита
-	 history_text.setPosition(85, 48);
+	//сама история 
+	sf::Text history_text("", font_SalsaRegular, 36);
+	history_text.setString("test");
+	history_text.setFillColor(sf::Color::White);//информация о возможностях юнита
+	history_text.setPosition(85, 48);
 
-	 //загаловок "информация о юните"
-	 sf::Text unit_info_header_text("", font_IMFellEnglishSCRegular, 36);
-	 unit_info_header_text.setFillColor(sf::Color(227, 145, 21));//информация о возможностях юнита
-	 unit_info_header_text.setString("Unit Information:");
-	 unit_info_header_text.setPosition(1442, 7);
-
+	//загаловок "информация о юните"
+	sf::Text unit_info_header_text("", font_IMFellEnglishSCRegular, 36);
+	unit_info_header_text.setFillColor(sf::Color(227, 145, 21));//информация о возможностях юнита
+	unit_info_header_text.setString("Unit Information:");
+	unit_info_header_text.setPosition(1442, 7);
+	
 	//загаловок "Действия"
-	 sf::Text unit_actions_header_text("", font_IMFellEnglishSCRegular, 48);
+	sf::Text unit_actions_header_text("", font_IMFellEnglishSCRegular, 48);
 	unit_actions_header_text.setFillColor(sf::Color(227, 145, 21));//информация о возможностях юнита
 	unit_actions_header_text.setString("Actions:");
 	unit_actions_header_text.setPosition(550, 890);
@@ -342,7 +365,9 @@ int main()
 	sf::Text t_turn("", font_SalsaRegular, 25);
 	t_turn.setFillColor(sf::Color(251, 97, 7));//информацию об ошибках
 	t_turn.setPosition(1440, 500);
+
 		/***Картинки***/
+
 	sf::Image battle_image;
 	battle_image.loadFromFile("images/battle.png");
 	sf::Texture battle_texture;
@@ -361,7 +386,6 @@ int main()
 	rectangle_statistics.setFillColor(sf::Color(124, 181, 24, 85));
 	rectangle_statistics.setPosition(102, 280);
 
-	
 		/***Текст****/
 	
 	sf::Text text_winner("", font_IMFellEnglishSCRegular, 144);
@@ -384,8 +408,6 @@ int main()
 	exit_to_main_menu_text.setString("Press Esc to exit to the main menu");
 	exit_to_main_menu_text.setFillColor(sf::Color::Black);//информацию об ошибках
 	exit_to_main_menu_text.setPosition(711, 963);
-
-
 
 		/***Красивая картинка***/
 	sf::Image win_image;
@@ -418,18 +440,19 @@ int main()
 
 	enum { MENU, BATTLE, WIN, CLOSE }EDislpay;
 
-	EDislpay = WIN;
+	EDislpay = MENU;
 
 	bool show_exit=false;
 
 	while (window.isOpen())//3 цикла вложенных
 	{
 		sf::Event event;//переменная-событие
-		std::cout << "window : " << window.isOpen() << "\n";
+
 		if (EDislpay == CLOSE)
 		{
 			window.close();
 		}
+
 		while (EDislpay==MENU)
 		{
 			window.clear(sf::Color(14, 42, 71));
@@ -460,13 +483,12 @@ int main()
 						default:
 							break;
 						}
-
 					}
 					if ((event.key.code == sf::Keyboard::Up) || (event.key.code == sf::Keyboard::Down))
 					{//если нажаты стрелки
 						if (show_exit==false)
 						{
-							key_pressed.ArrowsPressdMenu(event);
+							key_pressed.ArrowsPressedMenu(event);
 						}
 					}
 					if ((event.key.code == sf::Keyboard::Left) || (event.key.code == sf::Keyboard::Right))
@@ -481,7 +503,7 @@ int main()
 
 						switch (show_exit)
 						{
-								case true://если уже показываем подтверждение выхода то выходим из этого меню				
+							case true://если уже показываем подтверждение выхода то выходим из этого меню				
 								{
 									switch (key_pressed.GetExit())
 									{
@@ -500,8 +522,7 @@ int main()
 									}
 									break;
 								}
-
-								case false://если не показываем меную выхода,то начинаем его показывать
+							case false://если не показываем меную выхода,то начинаем его показывать
 								{
 									switch (key_pressed.GetMenuState())
 									{
@@ -526,8 +547,6 @@ int main()
 				}
 
 			}
-		std::cout << "Menu:" << key_pressed.GetMenuState();
-		std::cout << "	Exit:" << show_exit << "\n";
 			key_pressed.UpdateSelectMenu(&text_play, &text_exit);
 			
 			///Рисуем задний фон///
@@ -584,10 +603,8 @@ int main()
 			}
 
 			time_s = clock.getElapsedTime().asSeconds();
-		//	std::cout << "time =" << time_s << std::endl;
 
 			exception_clock.restart();
-			//	clock.restart();
 
 			window.clear(sf::Color(255,255,255));
 
@@ -604,7 +621,6 @@ int main()
 					{
 						std::cout << "Return to menu";
 						EDislpay = MENU;
-						//window.close();
 					}
 					if ((event.key.code == sf::Keyboard::Tab))
 					{//если клавиша ТАБ
@@ -613,7 +629,7 @@ int main()
 					if ((event.key.code == sf::Keyboard::Left) || (event.key.code == sf::Keyboard::Right) 
 						|| (event.key.code == sf::Keyboard::Up) || (event.key.code == sf::Keyboard::Down))
 					{//если нажаты стрелки
-						key_pressed.ArrowsPressd(&bg, &s_focus_tile, event);
+						key_pressed.ArrowsPressed(&bg, &s_focus_tile, event);
 					}
 					if ((event.key.code == sf::Keyboard::Enter))
 					{//если клавиша Enter
@@ -687,7 +703,6 @@ int main()
 				EDislpay = WIN;
 			}
 
-			//std::cout << "Number of units P2: " << P2.GetNumberOfUnits() << "\n";
 			///////////////////////////////Обновляем тексты/////////////////////
 			key_pressed.UpdateTilesText(&bg, &focus_tile_text, &tab_text, bg.GetInfoAboutTile());
 			key_pressed.UpdateUnitAbilitiesText(&unit_actions);
@@ -695,10 +710,8 @@ int main()
 			key_pressed.UpdateTimer(&tab_text, &time_s);
 			history_text.setString(key_pressed.GetHistory());
 
-		
 			t_turn.setString("Turn: "+ key_pressed.GetName());
 
-		
 			///Рисуем прямоугольники///
 			window.draw(rectangle_history);
 			window.draw(rectangle_unit_info);
@@ -710,8 +723,6 @@ int main()
 			window.draw(unit_actions);
 			window.draw(tab_text);
 			window.draw(t_turn);
-		
-		//	window.draw();
 
 			window.draw(history_header_text);
 			window.draw(history_text);
@@ -736,26 +747,44 @@ int main()
 				{
 					std::cout << "Return to menu";
 
-					CreateSetOfUnits(&unit_vec1, P1.GetID());
-					CreateSetOfUnits(&unit_vec2, P2.GetID());
+					//CreateSetOfUnits(&unit_vec1, P1.GetID());
+					
+					CreateSetOfSwordsmans(&unit_vec1, P1.GetID(), number_of_swordsman, 0);
+					CreateSetOfAtchers(&unit_vec1, P1.GetID(), number_of_archer, number_of_swordsman);
+
+					//CreateSetOfUnits(&unit_vec2, P2.GetID());
+
+					CreateSetOfSwordsmans(&unit_vec2, P2.GetID(), number_of_swordsman, 0);
+					CreateSetOfAtchers(&unit_vec2, P2.GetID(), number_of_archer, number_of_swordsman);
 
 					if((P1.GetNumberOfUnits()==0)||(P2.GetNumberOfUnits() == 0))
 					{
 						bg.ClearAllUnits();
 						key_pressed.ClearHistory();
 
-						for (size_t i = 0; i < player_size; i++)
+						for(size_t i = 0; i < player_size; i++)
 						{
 							P1.AddUnit(unit_vec1[i]);
-							bg.AddUnit(unit_vec1[i], i, 0);
-
 						}
+						bg.AddUnit(unit_vec1[0], 1, 1);
+						bg.AddUnit(unit_vec1[1], 3, 1);
+						bg.AddUnit(unit_vec1[2], 4, 1);
+						bg.AddUnit(unit_vec1[3], 6, 1);
+						bg.AddUnit(unit_vec1[4], 0, 0);
+						bg.AddUnit(unit_vec1[5], 7, 0);
 
 						for (size_t i = 0; i < player_size; i++)
 						{
 							P2.AddUnit(unit_vec2[i]);
-							bg.AddUnit(unit_vec2[i], i, 7);
 						}
+
+						bg.AddUnit(unit_vec2[0], 1, 6);
+						bg.AddUnit(unit_vec2[1], 3, 6);
+						bg.AddUnit(unit_vec2[2], 4, 6);
+						bg.AddUnit(unit_vec2[3], 6, 6);
+						bg.AddUnit(unit_vec2[4], 0, 7);
+						bg.AddUnit(unit_vec2[5], 7, 7);
+
 					}
 					
 
@@ -770,21 +799,16 @@ int main()
 			window.draw(s_win_b);
 			
 			window.draw(rectangle_statistics);
-			
-
 		
 			text_winner.setString("The winner is: "+winner);
 
 			window.draw(text_winner);
 			window.draw(statistic_header_text);
 			window.draw(statistic_text);
-			
 			window.draw(exit_to_main_menu_text);
 			
-
 			window.draw(s_win);
 
-			
 			
 			window.display();
 		}

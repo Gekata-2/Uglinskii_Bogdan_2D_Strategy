@@ -80,6 +80,10 @@ std::string TUnit::GetName() const
 {
 	return name;
 }
+std::string TUnit::GetOwnerName() const
+{
+	return owner_name;
+}
 
 /**
 Тип юнита
@@ -131,3 +135,7 @@ void TUnit::SetSide(int sd)
 	side = sd;
 }
 
+void TUnit::SetOwnerName(std::string str)
+{
+	owner_name = str;
+}

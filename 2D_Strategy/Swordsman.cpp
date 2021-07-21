@@ -9,7 +9,7 @@ void TSwordsman::PrintInfo() const
 std::string TSwordsman::GetInfo() const
 {
 	std::string str;
-	str = "Type:" + type + "\nName : " + name + +"\nSide : " + std::to_string(side) +
+	str = "Type:" + type + "\nName : " + name + +"\nSide : " + owner_name +
 		"\nHP : " + std::to_string(current_HP) + "/"+std::to_string(max_HP) + "\nmana = " + std::to_string(mana)+ 
 		"\nBase attack damage = " + std::to_string(base_attack_damage)
 		+ "\nMax attack radius = " + std::to_string(max_attack_radius) + 

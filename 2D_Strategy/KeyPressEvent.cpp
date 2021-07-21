@@ -1,4 +1,5 @@
 #include "KeyPressEvent.h"
+
 void TKeyPressEvent::Initialization(int* players_id, std::string* nmes)//говорим какие игроки есть
 {
 	for (size_t i = 0; i < MAX_NUMBER_OF_PLAYERS; i++)
@@ -56,7 +57,7 @@ std::string TKeyPressEvent::GetHistory()
 {
 	std::string temp_string = "\0";
 
-	for (size_t i = 0; i < number_of_history_notes; i++)
+	for (size_t i = 0; i < HISTORY_SIZE; i++)
 	{
 		temp_string += history[i];
 	}
@@ -73,13 +74,24 @@ void TKeyPressEvent::ClearHistory()
 
 void TKeyPressEvent::RepackHistory(std::string str_to_ins)
 {
-	std::string temp_string = "\0";
-
 	for (size_t i = number_of_history_notes - 1; i > 0; i--)//передвинули все элементы на 1
 	{
 		history[i] = history[i - 1];
 	}
+
 	history[0] = str_to_ins;
+}
+
+void TKeyPressEvent::AddHistory(std::string str_to_ins)
+{
+	history[history_pos] = str_to_ins;
+
+	history_pos++;
+	
+	if (history_pos== HISTORY_SIZE)
+	{
+		history_pos = 0;
+	}
 }
 
 void TKeyPressEvent::UpdateSelectMenu(sf::Text* txt_play, sf::Text* txt_exit)
@@ -109,22 +121,20 @@ void TKeyPressEvent::UpdateSelectMenu(sf::Text* txt_play, sf::Text* txt_exit)
 
 void TKeyPressEvent::UpdateExitConfirm(sf::Text* txt_yes, sf::Text* txt_no)
 {
-
 	switch (exit)
 	{
-
 	case true:
-	{
-		txt_yes->setScale(1.2, 1.2);
-		txt_no->setScale(1.0, 1.0);
-		break;
-	}
+		{
+			txt_yes->setScale(1.2, 1.2);
+			txt_no->setScale(1.0, 1.0);
+			break;
+		}
 	case false:
-	{
-		txt_no->setScale(1.2, 1.2);
-		txt_yes->setScale(1.0, 1.0);
-		break;
-	}
+		{
+			txt_no->setScale(1.2, 1.2);
+			txt_yes->setScale(1.0, 1.0);
+			break;
+		}
 	default:
 		break;
 	}
@@ -177,11 +187,11 @@ void TKeyPressEvent::UpdateUnitAbilitiesText(sf::Text* unit_abilities)
 	if (EState == MOVE)
 	{
 
-		all_abilities = "[M-move character]\n";
+		all_abilities = "[M-move character]\nPress M to cancel action";
 	}
 	if (EState == ATTACK)
 	{
-		all_abilities = "[A-move attack]\n";
+		all_abilities = "[A-move attack]\nPress A to cancel action";
 	}
 	unit_abilities->setString(all_abilities);
 
@@ -195,8 +205,7 @@ void TKeyPressEvent::UpdateTimer(sf::Text* tab_text, int* time)
 	case true:
 	{
 
-		str = "Time(TAB)" + std::to_string(*time / 60) + ":" + std::to_string(*time - (*time / 60) * 60);
-		//str += "	In seconds :" + std::to_string(*time);
+		str = "Time(TAB) " + std::to_string(*time / 60) + " :" + std::to_string(*time - (*time / 60) * 60);
 
 		tab_text->setString(str);
 		break;
@@ -251,7 +260,7 @@ void TKeyPressEvent::UpdateExceptions(sf::Text* exception_text, bool* show_excep
 	}
 	case TOO_FAR_TO_ATTACK:
 	{
-		exception_text->setString("Distance between units is more than maximum\n range of attack unit");
+		exception_text->setString("Distance between units is more\nthan maximum\nrange of attack unit");
 		*show_exception = true;
 		break;
 	}
@@ -272,7 +281,7 @@ void TKeyPressEvent::UpdateExceptions(sf::Text* exception_text, bool* show_excep
 	}
 }
 
-void TKeyPressEvent::ArrowsPressdMenu(sf::Event event)
+void TKeyPressEvent::ArrowsPressedMenu(sf::Event event)
 {
 	if (event.key.code == sf::Keyboard::Up)
 	{
@@ -304,19 +313,15 @@ void TKeyPressEvent::ArrowsPressedExit(sf::Event event)
 }
 
 
-sf::Vector2i TKeyPressEvent::ArrowsPressd(TBattleground* bg, sf::Sprite* sprite, sf::Event event)
+void TKeyPressEvent::ArrowsPressed(TBattleground* bg, sf::Sprite* sprite, sf::Event event)
 {
 	std::cout << "Arrow is pressed" << (char)event.key.code << std::endl;
 	bg->MoveFocusTile(event);
 
 	focus_unit = bg->GetFocusUnit();
 
-
 	sf::Vector2i v_f = bg->GetFocusTile();
-
 	sprite->setPosition((v_f.y + 1) * 83 + BATTLE_WIDTH_OFFSET - 3, (v_f.x + 1) * 83 + BATTLE_HEIGHT_OFFSET - 3);
-
-	return v_f;
 }
 
 void TKeyPressEvent::PressedEnter(TBattleground* bg)
@@ -328,7 +333,7 @@ void TKeyPressEvent::PressedEnter(TBattleground* bg)
 			exceptions = ENEMY_UNIT;
 			return;
 		}
-		//std::cout << "ENTER:" << focus_unit->GetInfo() << std::endl;
+
 		switch (enter_pressed)
 		{
 		case false://если до этого энтер не был нажат
@@ -358,22 +363,14 @@ void TKeyPressEvent::PressedEnter(TBattleground* bg)
 
 				damage = damage - focus_unit->GetCurrentHP();
 
-				if (exceptions == FRIENDLY_UNIT)
+				if((exceptions == FRIENDLY_UNIT)||(exceptions == TOO_FAR_TO_ATTACK))
 				{
 					break;
 				}
+			
+				std::string tmp_h_str = "attack:  " + memorized_unit->GetName() + "->" + focus_unit->GetName() + "\ndamage:" + std::to_string(damage) + ";\n";
 
-				if (number_of_history_notes == HISTORY_SIZE)
-				{
-					std::string tmp_h_str = "attack:  " + memorized_unit->GetName() + "-->" + focus_unit->GetName() + "\ndamage:" + std::to_string(damage) + ";\n";
-					RepackHistory(tmp_h_str);
-				}
-				else
-				{
-					history[number_of_history_notes] += "attack:  " + memorized_unit->GetName() + "-->" + focus_unit->GetName() + "\ndamage:" + std::to_string(damage) + ";\n";
-					number_of_history_notes++;
-				}
-
+				AddHistory(tmp_h_str);
 
 				focus_unit = bg->GetFocusUnit();//перемещаем фокус на атакованного юнита
 
@@ -405,19 +402,12 @@ void TKeyPressEvent::PressedEnter(TBattleground* bg)
 
 			if (exceptions == ALL_OK)
 			{
-				if (number_of_history_notes == HISTORY_SIZE)
-				{
-					std::string tmp_h_str = "move:" + memorized_unit->GetName() + "\n[" + std::to_string(history_move.x) + "][" + std::to_string(history_move.y)
-						+ "] -> [" + std::to_string(memorized_unit->GetPos().x) + "][" + std::to_string(memorized_unit->GetPos().y) + "];\n";
-					RepackHistory(tmp_h_str);
-				}
-				else
-				{
-					history[number_of_history_notes] = "move:" + memorized_unit->GetName() + "\n[" + std::to_string(history_move.x) + "][" + std::to_string(history_move.y)
-						+ "] -> [" + std::to_string(memorized_unit->GetPos().x) + "][" + std::to_string(memorized_unit->GetPos().y) + "];\n";
-					number_of_history_notes++;
-				}
-
+			
+				std::string tmp_h_str = "move:" + memorized_unit->GetName() + "\n[" + std::to_string(history_move.x) + "][" + std::to_string(history_move.y)
+					+ "] -> [" + std::to_string(memorized_unit->GetPos().x) + "][" + std::to_string(memorized_unit->GetPos().y) + "];\n";
+				std::cout << tmp_h_str;
+				
+				AddHistory(tmp_h_str);
 
 				NextTurn();
 				focus_unit = bg->GetFocusUnit();//т.к. юнит переместился, то нужно перевести указатель на "новое место" юнита
@@ -452,7 +442,6 @@ void TKeyPressEvent::PressedM(TBattleground* bg)
 		EState = MOVE;//говорим,что мы теперь двигаем юнита
 		memorized_unit = bg->GetFocusUnit();//запоминаем указатель на юнит, который нужно передвинуть
 		bg->ReleaseFocus();//позволяем игроку выбрать место куда переместиться
-		//enter_pressed = false;
 	}
 	else
 	{
@@ -483,34 +472,20 @@ void TKeyPressEvent::PressedA(TBattleground* bg)
 }
 
 
-sf::String TKeyPressEvent::PressedTab(sf::Text* tab_text, int* time)
-{
-	sf::String str;
-
-	if ((EState == MOVE) || (EState == ATTACK))
-	{
-		showTab = false;
-	}
+void TKeyPressEvent::PressedTab(sf::Text* tab_text, int* time)
+{	
 	switch (showTab)
 	{
 	case true:
-	{
-
-		str = "Time(TAB)" + std::to_string(*time / 60) + ":" + std::to_string(*time - (*time / 60) * 60);
-		str += "	In seconds :" + std::to_string(*time);
-		tab_text->setString(str);
-
-		showTab = false;
-		break;
-	}
+		{
+			showTab = false;
+			break;
+		}
 	case false:
-	{
-		tab_text->setString("");
-
-		showTab = true;
-		break;
+		{
+			
+			showTab = true;
+			break;
+		}
 	}
-	}
-
-	return str;
 }
